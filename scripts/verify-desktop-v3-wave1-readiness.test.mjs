@@ -30,6 +30,7 @@ describe("verify-desktop-v3-wave1-readiness", () => {
     const helpText = buildDesktopV3Wave1ReadinessHelpText();
 
     expect(helpText).toContain("source-of-truth document gate");
+    expect(helpText).toContain("LocalDatabase governance");
     expect(helpText).toContain("child smoke archive/latest summary paths");
   });
 

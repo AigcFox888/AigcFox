@@ -23,12 +23,14 @@
 
 - `pnpm test:desktop-v3-wave1-readiness`
 - `pnpm qa:desktop-v3-wave1-readiness`
+- `pnpm qa:desktop-v3-localdb-governance`
 - `pnpm qa:desktop-v3-runtime-boundary`
 
 当前 `qa:desktop-v3-wave1-readiness` 的固定步骤：
 
 - `desktop-v3-document-check`
 - `desktop-v3-runtime-boundary`
+- `desktop-v3-localdb-governance`
 - `lint`
 - `typecheck`
 - `test`
@@ -59,6 +61,7 @@
 - `pnpm qa:desktop-v3-wave1-readiness` 成功
 - `desktop-v3-document-check` 成功
 - `desktop-v3-runtime-boundary` 成功
+- `desktop-v3-localdb-governance` 成功
 - `responsive smoke` 成功
 - `tauri dev smoke` 成功
 - `packaged app smoke` 成功
