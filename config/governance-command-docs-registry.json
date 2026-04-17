@@ -33,6 +33,17 @@
       ]
     },
     {
+      "command": "pnpm qa:desktop-v3-runtime-boundary",
+      "script": "qa:desktop-v3-runtime-boundary",
+      "purpose": "desktop-v3 renderer runtime boundary governance verification entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/260-desktop-v3-wave1-execution-baseline.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      ]
+    },
+    {
       "command": "pnpm qa:desktop-v3-tauri-dev-smoke",
       "script": "qa:desktop-v3-tauri-dev-smoke",
       "purpose": "desktop-v3 tauri dev smoke entry",

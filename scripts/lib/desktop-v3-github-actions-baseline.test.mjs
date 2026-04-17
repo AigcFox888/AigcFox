@@ -73,6 +73,7 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "README docs",
       "active-doc explicit coverage",
       "fast-test entrypoint wiring",
+      "runtime boundary governance",
     ]);
   });
 

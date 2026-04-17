@@ -67,8 +67,12 @@ describe("desktop-v3 wave1 readiness steps", () => {
     const steps = buildDesktopV3Wave1ReadinessSteps(config);
 
     expect(steps.at(0)?.key).toBe("desktop-v3-document-check");
+    expect(steps.at(1)?.key).toBe("desktop-v3-runtime-boundary");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-packaged-app-smoke");
+    expect(steps.find((step) => step.key === "desktop-v3-runtime-boundary")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_RUNTIME_BOUNDARY_OUTPUT_DIR: "/tmp/wave1-ready/runtime-boundary",
+    });
     expect(steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_SMOKE_OUTPUT_DIR: "/tmp/wave1-ready/responsive-smoke",
     });
@@ -106,6 +110,7 @@ describe("desktop-v3 wave1 readiness steps", () => {
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-manual");
     expect(steps.at(-1)?.key).toBe("desktop-v3-linux-package");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-boundary");
   });
 });
 

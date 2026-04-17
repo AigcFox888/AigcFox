@@ -39,6 +39,7 @@ React UI
 规则：
 
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
+- 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
 - Rust 侧能力先进入 `runtime/*`，`commands/*` 只保留薄层转发
 

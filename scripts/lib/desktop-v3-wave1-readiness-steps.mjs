@@ -66,6 +66,17 @@ function buildDesktopV3PackageStep(config) {
 export function buildDesktopV3Wave1ReadinessSteps(config) {
   const steps = [
     buildDocumentStep("desktop-v3-document-check"),
+    buildPnpmStep("desktop-v3-runtime-boundary", ["qa:desktop-v3-runtime-boundary"], {
+      artifacts: {
+        latestSummaryPath: config.runtimeBoundaryLatestSummaryPath,
+        outputDir: config.runtimeBoundaryOutputDir,
+        summaryPath: path.join(config.runtimeBoundaryOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_RUNTIME_BOUNDARY_OUTPUT_DIR: config.runtimeBoundaryOutputDir,
+      },
+      label: "desktop-v3-runtime-boundary",
+    }),
     buildPnpmStep("desktop-v3-lint", ["--filter", "@aigcfox/desktop-v3", "lint"]),
     buildPnpmStep("desktop-v3-typecheck", ["--filter", "@aigcfox/desktop-v3", "typecheck"]),
     buildPnpmStep("desktop-v3-test", ["--filter", "@aigcfox/desktop-v3", "test"]),

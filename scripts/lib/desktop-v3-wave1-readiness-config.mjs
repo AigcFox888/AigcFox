@@ -64,6 +64,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
     ),
     responsiveSmokeOutputDir: path.join(outputDir, "responsive-smoke"),
     rootDir,
+    runtimeBoundaryLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-runtime-boundary-summary.json",
+    ),
+    runtimeBoundaryOutputDir: path.join(outputDir, "runtime-boundary"),
     runId,
     summaryPath: path.join(outputDir, "summary.json"),
     tauriDevSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(

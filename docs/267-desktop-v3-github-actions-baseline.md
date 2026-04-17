@@ -25,6 +25,7 @@
 
 - README docs
 - active-doc explicit coverage
+- runtime boundary governance
 - fast-test entrypoint wiring
 
 ## desktop-v3-package.yml
