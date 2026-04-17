@@ -14,11 +14,13 @@ describe("renderer ready reporter", () => {
   });
 
   it("reports the renderer boot marker when enabled", async () => {
-    const invokeMock = vi.fn().mockResolvedValue(undefined);
+    const reportRendererBoot = vi.fn().mockResolvedValue(undefined);
 
     const reported = reportDesktopV3RendererReady({
       enabled: false,
-      invokeImpl: invokeMock,
+      desktopRuntime: {
+        reportRendererBoot,
+      },
       route: "#/diagnostics",
       runtimeMode: "tauri",
       schedule(callback) {
@@ -28,21 +30,21 @@ describe("renderer ready reporter", () => {
 
     expect(reported).toBe(true);
     await Promise.resolve();
-    expect(invokeMock).toHaveBeenCalledWith("desktop_report_renderer_boot", {
-      route: "#/diagnostics",
-      runtime: "tauri",
-      stage: "app",
-    });
+    expect(reportRendererBoot).toHaveBeenCalledWith("#/diagnostics", "tauri", "app");
   });
 
   it("falls back to the dev http beacon when tauri invoke is unavailable", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
-    const invokeMock = vi.fn().mockRejectedValue(new Error("bridge unavailable"));
+    const reportRendererBoot = vi
+      .fn()
+      .mockRejectedValue(new Error("desktop runtime unavailable"));
 
     const reported = reportDesktopV3RendererReady({
       enabled: true,
+      desktopRuntime: {
+        reportRendererBoot,
+      },
       fetchImpl: fetchMock,
-      invokeImpl: invokeMock,
       route: "#/diagnostics",
       runtimeMode: "tauri",
       schedule(callback) {
