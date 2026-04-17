@@ -25,6 +25,7 @@ on:
       - "docs/264-desktop-v3-wave1-execution-runbook.md"
       - "docs/267-desktop-v3-github-actions-baseline.md"
       - "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      - "docs/281-desktop-v3-post-reinstall-recovery-entry.md"
       - "apps/desktop-v3/README.md"
   pull_request:
     branches:
@@ -49,6 +50,7 @@ on:
       - "docs/264-desktop-v3-wave1-execution-runbook.md"
       - "docs/267-desktop-v3-github-actions-baseline.md"
       - "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      - "docs/281-desktop-v3-post-reinstall-recovery-entry.md"
       - "apps/desktop-v3/README.md"
 
 concurrency:
