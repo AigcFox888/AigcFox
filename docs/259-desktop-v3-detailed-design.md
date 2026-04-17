@@ -95,7 +95,7 @@ apps/desktop-v3/
 - 做 TypeScript 侧错误归一和契约对齐
 - Tauri command adapter 需要可独立验证 command 名、payload 透传和 invoke 错误归一
 - Windows 宿主验证拆成两段：`tauri dev` 只证明宿主窗口真实启动；packaged runtime smoke 才作为 renderer / invoke / backend 主证据
-- 当前默认宿主切到 `Windows + PowerShell` 后，不再把 `WSLg` 特定图形兼容处理当作主链前提
+- 当前默认开发环境固定为 `Windows + WSL2`，真实窗口 proof 默认在固定 `WSL` 单执行面下通过 `WSLg` 完成；不要把 `WSLg` 特定图形兼容处理当作唯一主链前提，也不要把同一条验证链切回 `PowerShell`
 
 默认原则仍然是：优先走 command，而不是让页面直接发 HTTP。
 

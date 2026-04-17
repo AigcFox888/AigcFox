@@ -26,6 +26,8 @@
 
 ## 快速验证
 
+默认在 `WSL` 执行面运行；不要把同一条验证链切回 `PowerShell`。
+
 ```bash
 pnpm test:desktop-v3-wave1-readiness
 ```
@@ -41,6 +43,8 @@ pnpm test:desktop-v3-wave1-readiness
 - smoke contract
 
 ## 完整验证
+
+默认在 `WSL` 执行面运行；不要在 `PowerShell` 与 `WSL` 上并行混跑同一条链路。
 
 ```bash
 pnpm qa:desktop-v3-wave1-readiness

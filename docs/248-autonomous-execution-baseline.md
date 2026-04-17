@@ -39,7 +39,7 @@
 3. 重读 `docs/248-autonomous-execution-baseline.md`
 4. 重读当前任务所属的 source-of-truth 文档链
 5. 明确本轮范围、写入边界和验证计划
-6. 如果当前机器是 `Windows + WSL2` 混合宿主，先固定本轮唯一执行面；不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
+6. 如果当前机器是 `Windows + WSL2` 混合宿主，先固定本轮唯一执行面；默认执行面固定为 `WSL`，不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
 
 ## 当前边界映射
 
@@ -108,7 +108,7 @@
 补充宿主规则：
 
 - `Windows + WSL2` 混合宿主不等于允许双宿主混跑同一条开发链
-- 单轮任务只能选一个主执行面；如果已在 `WSL` 运行依赖、watcher、构建或测试，就不要再在 `PowerShell` 上重复启动同一套链路，反之亦然
+- 单轮任务只能选一个主执行面；默认主执行面是 `WSL`；如果已在 `WSL` 运行依赖、watcher、构建或测试，就不要再在 `PowerShell` 上重复启动同一套链路，反之亦然
 - 只有桥接型只读探测或明确必须经过 Windows 宿主的单次操作，才允许临时跨到另一侧执行
 
 ## 真实验证规则

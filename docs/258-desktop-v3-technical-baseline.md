@@ -95,7 +95,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 
 虽然当前 Wave 1 不实现完整交付更新，但技术基线已经冻结：
 
-- 开发主链：`Windows + PowerShell -> GitHub -> GitHub Actions`
+- 开发主链：`Windows + WSL2（默认固定 WSL 单执行面） -> GitHub -> GitHub Actions`
 - 三端打包交给 CI
 - 生产更新源必须使用自有 HTTPS 下载源
 - 不以 GitHub 作为中国用户的生产更新源

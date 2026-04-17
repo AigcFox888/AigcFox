@@ -17,7 +17,7 @@
 
 ```mermaid
 graph TD
-    DEV["Windows + PowerShell Dev"] --> GH["GitHub / Pull Request"]
+    DEV["Windows + WSL2 Dev / 默认固定 WSL 单执行面"] --> GH["GitHub / Pull Request"]
     GH --> GHA["GitHub Actions Package Matrix"]
     GHA --> STAGE["Staging Artifacts + Signatures"]
     STAGE --> PROMOTE["Promote / Release Decision"]

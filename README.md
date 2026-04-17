@@ -2,7 +2,8 @@
 
 当前仓库只保留 `desktop-v3` 客户端骨架、交付治理文档和与之直接相关的工作流与脚本。
 
-当前默认开发宿主已经切到 `Windows + PowerShell`，仓库物理路径按 `D:\xiangmu\AigcFox` 记录。
+当前默认开发环境按 `Windows + WSL2` 记录，仓库路径按 `D:\xiangmu\AigcFox` 与 `/mnt/d/xiangmu/aigcfox` 记录。
+单轮开发与验证默认固定在 `WSL` 执行面，禁止在 `PowerShell` 与 `WSL` 之间双宿主混跑同一条依赖、构建、测试与 dev server 链路。
 
 ## 重装后快速恢复入口
 

@@ -7,8 +7,8 @@
 - 当前 `desktop-v3 Wave 1 Skeleton` 已完成并冻结，代码目录是 `apps/desktop-v3/`。
 - 当前 desktop active documentation line 是 `desktop-v3 Delivery / Updater Baseline`，代码目录仍是 `apps/desktop-v3/`。
 - 当前 `desktop-v3 Delivery / Updater Baseline` 已完成本地与远端 proof 收口，收口记录见 `docs/280-desktop-v3-delivery-updater-closeout.md`。
-- 当前默认宿主恢复主链固定为 `Windows + PowerShell`，仓库路径按 `D:\xiangmu\AigcFox` 记录。
-- 如果当前机器采用 `Windows + WSL2` 混合宿主，单轮开发与验证必须先选定一个唯一执行面；不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`，否则会导致 Codex 与本地进程相互争抢、明显变卡。
+- 当前默认宿主恢复主链固定为 `Windows + WSL2`，仓库路径按 `D:\xiangmu\AigcFox` 与 `/mnt/d/xiangmu/aigcfox` 记录。
+- 如果当前机器采用 `Windows + WSL2` 混合宿主，单轮开发与验证默认固定在 `WSL` 执行面；不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`，否则会导致 Codex 与本地进程相互争抢、明显变卡。
 - 当前只开发骨架，不开发历史业务，也不把任何历史方案融入 `desktop-v3`。
 - 仓库内 `docs/` 是当前执行版事实来源；只保留 `desktop-v3` 骨架文档、交付治理文档、UI 规范、工程契约与 ADR。
 
@@ -55,7 +55,7 @@
 - 每次开始新任务或从中断恢复任务前，默认先重读 `docs/248-autonomous-execution-baseline.md`，再进入当前任务所需的 source-of-truth 文档。
 - 默认采用多线程 / 多任务推进；只要任务边界、写入范围和验证链路彼此独立，就优先并行拆分，不要无意义地长期串行。
 - 默认自动连续推进当前任务；只要仍在当前 source-of-truth 边界内，且没有出现必须由用户拍板的范围变化、阶段切换、高风险不可逆操作、关键外部输入缺失或多方案后果明显不同的分叉，就不要停下来等待用户再次发送“继续”或“下一步”。
-- 如果当前开发机实际运行在 `Windows + WSL2` 混合环境，开始本轮任务前必须先固定当前唯一执行面，并在整个任务内保持一致；禁止一边在 `PowerShell` 跑依赖、watcher、构建或测试，另一边又在 `WSL` 跑同一套链路。
+- 如果当前开发机实际运行在 `Windows + WSL2` 混合环境，开始本轮任务前必须先固定当前唯一执行面，并在整个任务内保持一致；默认执行面是 `WSL`，除非本轮任务明确要求只在 Windows 宿主完成单次桥接操作；禁止一边在 `PowerShell` 跑依赖、watcher、构建或测试，另一边又在 `WSL` 跑同一套链路。
 - 当前 active scope 只包括 `desktop-v3` 新架构骨架与交付治理文档。
 - 当前 `desktop-v3 Delivery / Updater Baseline` 已完成 closeout；后续仍只允许做文档维护、治理修订和 proof 回归，不允许直接跳进实现。
 - `desktop-v3` 骨架当前允许做的范围只包括：

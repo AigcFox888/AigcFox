@@ -17,6 +17,10 @@
 
 ## 当前执行入口
 
+- 当前默认开发环境：`Windows + WSL2`
+- 当前默认执行面：`WSL`
+- 不要把同一条 `Wave 1` 验证链再并行切回 `PowerShell`
+
 - `pnpm test:desktop-v3-wave1-readiness`
 - `pnpm qa:desktop-v3-wave1-readiness`
 

@@ -6,10 +6,10 @@
 
 ## 当前默认宿主
 
-- 当前默认开发宿主：`Windows + PowerShell`
-- 当前默认仓库路径：`D:\xiangmu\AigcFox`
-- 当前不再把 `Ubuntu + WSL2` 作为默认恢复主链
-- 如果当前机器实际采用 `Windows + WSL2` 混合环境，恢复后先决定本轮唯一执行面；不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
+- 当前默认开发宿主：`Windows + WSL2`
+- 当前默认仓库路径：`D:\xiangmu\AigcFox`（Windows） / `/mnt/d/xiangmu/aigcfox`（WSL）
+- 当前默认执行面固定为 `WSL`
+- 如果当前机器实际采用 `Windows + WSL2` 混合环境，不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
 
 ## 项目作用
 

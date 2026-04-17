@@ -11,7 +11,7 @@
 - 当前 desktop active documentation line：`desktop-v3 Delivery / Updater Baseline`
 - 当前 `desktop-v3 Wave 1` 已完成本地与远端 clean closeout 证据
 - 当前 `desktop-v3 Delivery / Updater Baseline` 已完成本地与远端 proof 收口，收口记录见 [280-desktop-v3-delivery-updater-closeout.md](./280-desktop-v3-delivery-updater-closeout.md)
-- 当前默认宿主恢复主链：`Windows + PowerShell`
+- 当前默认宿主恢复主链：`Windows + WSL2`
 - 当前只开发骨架，不进入业务层实现，不开发历史业务，也不把历史方案融到新主线
 
 ## 重装 / 系统恢复优先入口

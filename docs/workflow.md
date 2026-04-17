@@ -67,7 +67,8 @@ feature/* -> dev -> main
 
 ```text
 desktop-v3:
-本地 Windows + PowerShell 开发与真实宿主验证
+本地 Windows + WSL2 开发与真实宿主验证
+（默认固定 WSL 单执行面）
 -> push 到 GitHub
 -> desktop-v3-ci 复跑 desktop-v3 Wave 1 fast tests + readiness
 -> verification artifacts

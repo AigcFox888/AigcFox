@@ -2,7 +2,8 @@
 
 `apps/desktop-v3` 是当前新客户端主线目录。
 
-当前默认开发宿主按 `Windows + PowerShell` 记录，仓库路径按 `D:\xiangmu\AigcFox` 记录。
+当前默认开发环境按 `Windows + WSL2` 记录，仓库路径按 `D:\xiangmu\AigcFox` 与 `/mnt/d/xiangmu/aigcfox` 记录。
+单轮开发与验证默认固定在 `WSL` 执行面；如果必须经过 Windows 宿主，只允许做单次桥接型操作，不把同一条开发链切回 `PowerShell`。
 
 ## 阅读顺序
 
@@ -65,12 +66,13 @@ pnpm --filter @aigcfox/desktop-v3 build
 cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 ```
 
-## Windows + PowerShell 宿主口径
+## 宿主执行口径
 
-- 默认本地开发与恢复链按 `Windows + PowerShell` 执行
-- 当前不再把 `Ubuntu + WSL2` 作为默认恢复主链
+- 默认开发环境按 `Windows + WSL2` 记录，默认执行面固定为 `WSL`
+- 当前不再把 `Windows + PowerShell` 作为默认开发主链
+- 如果必须经过 Windows 宿主，只允许做单次桥接型操作，不在 Windows 侧重复启动同一仓库的依赖安装、dev server、watcher、构建或测试
 - 三端正式构件仍由 `GitHub Actions` 统一产出
-- 如果当前机器实际采用 `Windows + WSL2` 混合环境，单轮开发与验证必须只选一个执行面；不要在 `PowerShell` 与 `WSL` 上同时对同一仓库混跑依赖安装、dev server、watcher、构建或测试，否则本地进程会互相争抢并让 Codex 明显变卡
+- 不要在 `PowerShell` 与 `WSL` 上同时对同一仓库混跑依赖安装、dev server、watcher、构建或测试，否则本地进程会互相争抢并让 Codex 明显变卡
 
 ## 当前布局基线
 

@@ -15,6 +15,8 @@
 
 ## 命令
 
+默认在 `WSL` 执行面运行；不要在 `PowerShell` 与 `WSL` 上并行混跑同一条 delivery/updater 文档验证链。
+
 ```bash
 pnpm test:desktop-v3-delivery-updater-docs
 pnpm qa:desktop-v3-delivery-updater-docs

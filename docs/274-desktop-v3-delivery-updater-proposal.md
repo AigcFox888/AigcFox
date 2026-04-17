@@ -69,7 +69,7 @@ desktop-v3 Delivery / Updater Baseline
 
 这条提案线当前只负责解决以下问题：
 
-1. `Windows + PowerShell -> GitHub -> GitHub Actions -> 三端包 -> 七牛 / 自有 HTTPS` 的正式交付链怎么定。
+1. `Windows + WSL2（默认固定 WSL 单执行面） -> GitHub -> GitHub Actions -> 三端包 -> 七牛 / 自有 HTTPS` 的正式交付链怎么定。
 2. `desktop-v3` 后续自动更新必须依赖什么官方能力、什么签名与发布格式。
 3. 面向中国用户的正式更新源、CDN 和 HTTPS 边界怎么定。
 4. 强更新、可延期更新、会话内禁止强退这三类更新策略怎么定。
