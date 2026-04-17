@@ -61,6 +61,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
       "desktop-v3-platform-config-governance-summary.json",
     ),
     platformConfigGovernanceOutputDir: path.join(outputDir, "platform-config-governance"),
+    updaterGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-updater-governance-summary.json",
+    ),
+    updaterGovernanceOutputDir: path.join(outputDir, "updater-governance"),
     capabilityGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-capability-governance-summary.json",

@@ -12,6 +12,7 @@
 - `desktop-v3` 最小更新 UX 壳层怎么接入
 
 当前不讨论任何业务功能页面。
+当前这些组件仍停留在设计目标；仓库用 `pnpm qa:desktop-v3-updater-governance` 冻结客户端代码面的 updater 未实现边界。真正进入实现前，必须把 updater runtime / guard / capability / config 一起做结构化重写，而不是在当前骨架上继续补丁堆叠。
 
 ## 总体架构
 

@@ -44,6 +44,10 @@
 - [Tauri v2 updater plugin](https://v2.tauri.app/plugin/updater/)
 - [Tauri v2 GitHub pipeline docs](https://v2.tauri.app/distribute/pipelines/github/)
 
+当前仓库还额外冻结一条实现前置边界：
+
+- 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `desktop-v3` 客户端代码面做静态门禁；在 updater 结构化重写落地前，`Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 都不允许提前引入 plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
+
 ## 渠道基线
 
 当前渠道固定为三类：

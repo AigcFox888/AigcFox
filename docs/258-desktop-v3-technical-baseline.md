@@ -39,6 +39,7 @@
 - 有 I/O 的 command 默认按 `async` 设计；SQLite 扩张前禁止继续在当前同步 localdb 路径上堆逻辑
 - 当前用 `pnpm qa:desktop-v3-localdb-governance` 对 `runtime/localdb` 文件集、`rusqlite` 触点和 `LocalDatabase` 外部使用面做静态门禁；SQLite 依赖当前只允许停留在 `runtime/localdb/* + error.rs`，`LocalDatabase` 在模块外只允许由 `runtime/mod.rs` 持有
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
+- 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
 - 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源`
 

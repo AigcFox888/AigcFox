@@ -41,6 +41,7 @@ describe("desktop-v3 wave1 readiness config", () => {
     expect(config.commandGovernanceOutputDir).toBe(path.join(config.outputDir, "command-governance"));
     expect(config.localdbGovernanceOutputDir).toBe(path.join(config.outputDir, "localdb-governance"));
     expect(config.platformConfigGovernanceOutputDir).toBe(path.join(config.outputDir, "platform-config-governance"));
+    expect(config.updaterGovernanceOutputDir).toBe(path.join(config.outputDir, "updater-governance"));
     expect(config.packagedAppSmokeOutputDir).toBe(path.join(config.outputDir, "packaged-app-smoke"));
     expect(config.responsiveSmokeOutputDir).toBe(path.join(config.outputDir, "responsive-smoke"));
     expect(config.tauriDevSmokeOutputDir).toBe(path.join(config.outputDir, "tauri-dev-smoke"));
@@ -76,6 +77,7 @@ describe("desktop-v3 wave1 readiness steps", () => {
     expect(steps.at(3)?.key).toBe("desktop-v3-command-governance");
     expect(steps.at(4)?.key).toBe("desktop-v3-capability-governance");
     expect(steps.at(5)?.key).toBe("desktop-v3-platform-config-governance");
+    expect(steps.at(6)?.key).toBe("desktop-v3-updater-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-packaged-app-smoke");
     expect(steps.find((step) => step.key === "desktop-v3-runtime-boundary")?.env).toEqual({
@@ -92,6 +94,9 @@ describe("desktop-v3 wave1 readiness steps", () => {
     });
     expect(steps.find((step) => step.key === "desktop-v3-platform-config-governance")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_PLATFORM_CONFIG_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/platform-config-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-updater-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_UPDATER_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/updater-governance",
     });
     expect(steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_SMOKE_OUTPUT_DIR: "/tmp/wave1-ready/responsive-smoke",
@@ -134,6 +139,7 @@ describe("desktop-v3 wave1 readiness steps", () => {
     expect(steps.map((step) => step.key)).toContain("desktop-v3-command-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-localdb-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-platform-config-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-updater-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-boundary");
   });
 });
