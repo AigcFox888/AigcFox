@@ -52,7 +52,7 @@ describe("DiagnosticsPage", () => {
   it("renders diagnostics overview values from one query result", async () => {
     vi.mocked(getDiagnosticsOverview).mockResolvedValue(buildDiagnosticsOverview());
 
-    renderWithQueryClient(<DiagnosticsPage />);
+    const view = renderWithQueryClient(<DiagnosticsPage />);
 
     expect(await screen.findByText("本地 Runtime")).toBeTruthy();
 
@@ -68,22 +68,26 @@ describe("DiagnosticsPage", () => {
     expect(within(livenessCard).getByText("req_liveness")).toBeTruthy();
     expect(within(readinessCard).getByText("req_readiness")).toBeTruthy();
     expect(screen.getAllByText("control-plane-api").length).toBe(2);
+
+    view.unmount();
+    view.queryClient.clear();
   });
 
   it("refetches diagnostics overview on desktop refresh event", async () => {
-    vi.mocked(getDiagnosticsOverview)
-      .mockResolvedValueOnce(buildDiagnosticsOverview())
-      .mockResolvedValueOnce(buildDiagnosticsOverview());
+    vi.mocked(getDiagnosticsOverview).mockImplementation(async () => buildDiagnosticsOverview());
 
-    renderWithQueryClient(<DiagnosticsPage />);
+    const view = renderWithQueryClient(<DiagnosticsPage />);
 
     await screen.findByText("本地 Runtime");
-    const initialCallCount = vi.mocked(getDiagnosticsOverview).mock.calls.length;
+    expect(vi.mocked(getDiagnosticsOverview).mock.calls.length).toBe(1);
 
     window.dispatchEvent(new CustomEvent("desktop-v3:refresh-requested"));
 
     await waitFor(() => {
-      expect(vi.mocked(getDiagnosticsOverview).mock.calls.length).toBeGreaterThan(initialCallCount);
+      expect(vi.mocked(getDiagnosticsOverview).mock.calls.length).toBe(2);
     });
+
+    view.unmount();
+    view.queryClient.clear();
   });
 });
