@@ -51,6 +51,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
     hostPlatform: process.platform,
     isWslHost: isDesktopV3Wave1WslHost(env),
     latestSummaryPath: resolveLatestVerificationSummaryPath(rootDir, "desktop-v3-wave1-readiness-summary.json"),
+    commandGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-command-governance-summary.json",
+    ),
+    commandGovernanceOutputDir: path.join(outputDir, "command-governance"),
     localdbGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-localdb-governance-summary.json",

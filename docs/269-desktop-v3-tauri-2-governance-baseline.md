@@ -40,6 +40,7 @@ React UI
 
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
 - 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
+- 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
 - Rust 侧能力先进入 `runtime/*`，`commands/*` 只保留薄层转发
 
@@ -116,12 +117,20 @@ React UI
 - 参数接收
 - 调 runtime
 - 返回统一结果或统一错误
+- 保持当前 proof 所需的 `trace_desktop_command` 标记
 
 不负责：
 
 - 复杂业务编排
 - 跨多个本地子系统的流程堆叠
 - 直接在 command 文件里拼接大量存储或 HTTP 细节
+
+当前再冻结一条规则：
+
+- 用 `pnpm qa:desktop-v3-command-governance` 把 `commands/*` 文件集固定在 `backend / diagnostics / preferences / renderer / mod.rs`
+- 当前 Tauri command 公开面固定在 `desktop_get_backend_liveness / desktop_get_backend_readiness / desktop_get_diagnostics_snapshot / desktop_get_theme_preference / desktop_set_theme_preference / desktop_report_renderer_boot`
+- `commands/*` 只允许停留在 `tauri::State`、`trace_desktop_command`、`CommandError`、`DesktopRuntime` 和 `runtime::models::*` 的 import 面
+- 任何新的 command、helper、直接子运行时依赖或 I/O 细节进入 `commands/*`，都视为治理回退；先重写 runtime / command 边界，再谈扩展
 
 ### 2. 有 I/O 的 command 默认走 `async`
 

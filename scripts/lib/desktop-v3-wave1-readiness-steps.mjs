@@ -88,6 +88,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-localdb-governance",
     }),
+    buildPnpmStep("desktop-v3-command-governance", ["qa:desktop-v3-command-governance"], {
+      artifacts: {
+        latestSummaryPath: config.commandGovernanceLatestSummaryPath,
+        outputDir: config.commandGovernanceOutputDir,
+        summaryPath: path.join(config.commandGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_COMMAND_GOVERNANCE_OUTPUT_DIR: config.commandGovernanceOutputDir,
+      },
+      label: "desktop-v3-command-governance",
+    }),
     buildPnpmStep("desktop-v3-lint", ["--filter", "@aigcfox/desktop-v3", "lint"]),
     buildPnpmStep("desktop-v3-typecheck", ["--filter", "@aigcfox/desktop-v3", "typecheck"]),
     buildPnpmStep("desktop-v3-test", ["--filter", "@aigcfox/desktop-v3", "test"]),

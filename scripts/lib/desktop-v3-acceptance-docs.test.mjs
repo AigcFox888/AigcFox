@@ -15,6 +15,7 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain(".github/workflows/desktop-v3-package.yml");
     expect(acceptanceDocText).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-wave1-readiness");
+    expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(acceptanceDocText).toContain("只上传 CI artifacts");
     expect(acceptanceDocText).toContain("不作为客户端更新源");

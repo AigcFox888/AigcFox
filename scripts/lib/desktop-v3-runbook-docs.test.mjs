@@ -15,6 +15,7 @@ describe("desktop-v3 runbook docs", () => {
 
     expect(text).toContain("等价格式检查");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
+    expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(text).toContain("README docs");
