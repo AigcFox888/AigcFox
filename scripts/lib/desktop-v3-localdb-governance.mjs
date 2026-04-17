@@ -8,6 +8,8 @@ import { resolveLatestVerificationSummaryPath } from "./verification-summary-out
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 export const rootDir = path.resolve(currentDir, "..", "..");
+export const desktopV3RustSourceDir = "apps/desktop-v3/src-tauri/src";
+export const desktopV3CommandsDir = "apps/desktop-v3/src-tauri/src/commands";
 export const desktopV3LocaldbDir = "apps/desktop-v3/src-tauri/src/runtime/localdb";
 export const desktopV3LocaldbAllowedPublicMethods = Object.freeze([
   "new",
@@ -16,6 +18,18 @@ export const desktopV3LocaldbAllowedPublicMethods = Object.freeze([
   "set_preference",
   "probe",
   "get_sync_cache_stats",
+]);
+export const desktopV3LocaldbAllowedFiles = Object.freeze([
+  `${desktopV3LocaldbDir}/migrations.rs`,
+  `${desktopV3LocaldbDir}/mod.rs`,
+]);
+export const desktopV3LocaldbAllowedSqliteTouchFiles = Object.freeze([
+  "apps/desktop-v3/src-tauri/src/error.rs",
+  `${desktopV3LocaldbDir}/migrations.rs`,
+  `${desktopV3LocaldbDir}/mod.rs`,
+]);
+export const desktopV3LocaldbAllowedExternalReferenceFiles = Object.freeze([
+  "apps/desktop-v3/src-tauri/src/runtime/mod.rs",
 ]);
 
 function resolveRunId(env, now) {
@@ -42,6 +56,10 @@ function countOccurrences(sourceText, targetCharacter) {
   }
 
   return count;
+}
+
+function sortStrings(values) {
+  return [...values].sort((left, right) => left.localeCompare(right));
 }
 
 function sortMethods(methods) {
@@ -107,6 +125,36 @@ function addViolation(violations, seen, violation) {
 
   seen.add(key);
   violations.push(violation);
+}
+
+function findPatternLocation(sourceText, patterns) {
+  const lines = sourceText.split(/\r?\n/u);
+
+  for (let index = 0; index < lines.length; index += 1) {
+    for (const pattern of patterns) {
+      const column = lines[index].indexOf(pattern);
+
+      if (column !== -1) {
+        return {
+          column: column + 1,
+          line: index + 1,
+        };
+      }
+    }
+  }
+
+  return {
+    column: 1,
+    line: 1,
+  };
+}
+
+function isWithinDirectory(filePath, directoryPath) {
+  return filePath === directoryPath || filePath.startsWith(`${directoryPath}/`);
+}
+
+function touchesSqlite(sourceText) {
+  return sourceText.includes("rusqlite");
 }
 
 export function collectDesktopV3LocaldbMembersFromSource(sourceText, absoluteFilePath, options = {}) {
@@ -198,15 +246,14 @@ export function collectDesktopV3LocaldbMembersFromSource(sourceText, absoluteFil
   };
 }
 
-export async function listDesktopV3LocaldbRustFiles(config, options = {}) {
-  const readdirImpl = options.readdirImpl ?? fs.readdir;
+async function collectRustFiles(directoryPath, readdirImpl) {
   const collected = [];
 
-  async function walk(directoryPath) {
-    const entries = await readdirImpl(directoryPath, { withFileTypes: true });
+  async function walk(currentPath) {
+    const entries = await readdirImpl(currentPath, { withFileTypes: true });
 
     for (const entry of entries) {
-      const absolutePath = path.join(directoryPath, entry.name);
+      const absolutePath = path.join(currentPath, entry.name);
 
       if (entry.isDirectory()) {
         await walk(absolutePath);
@@ -219,9 +266,21 @@ export async function listDesktopV3LocaldbRustFiles(config, options = {}) {
     }
   }
 
-  await walk(config.localdbDir);
+  await walk(directoryPath);
 
   return collected.sort((left, right) => left.localeCompare(right));
+}
+
+export async function listDesktopV3LocaldbRustFiles(config, options = {}) {
+  const readdirImpl = options.readdirImpl ?? fs.readdir;
+
+  return collectRustFiles(config.localdbDir, readdirImpl);
+}
+
+async function listDesktopV3RustSourceFiles(config, options = {}) {
+  const readdirImpl = options.readdirImpl ?? fs.readdir;
+
+  return collectRustFiles(config.rustSourceDir, readdirImpl);
 }
 
 export async function collectDesktopV3LocaldbGovernanceViolations(config, options = {}) {
@@ -229,16 +288,62 @@ export async function collectDesktopV3LocaldbGovernanceViolations(config, option
   const absoluteFilePaths = Array.isArray(options.filePaths)
     ? options.filePaths
     : await listDesktopV3LocaldbRustFiles(config, options);
+  const rustSourceFilePaths = Array.isArray(options.rustSourceFilePaths)
+    ? options.rustSourceFilePaths
+    : await listDesktopV3RustSourceFiles(config, options);
   const allowedMethodSet = new Set(config.allowedPublicMethods);
+  const allowedLocaldbFileSet = new Set(config.allowedLocaldbFiles);
+  const allowedSqliteTouchFileSet = new Set(config.allowedSqliteTouchFiles);
+  const allowedExternalReferenceFileSet = new Set(config.allowedExternalReferenceFiles);
   const methods = [];
   const violations = [];
   const seenViolations = new Set();
-  const scannedFiles = absoluteFilePaths.map((filePath) =>
+  const localdbFiles = absoluteFilePaths.map((filePath) =>
     normalizeWorkspaceRelativePath(config.rootDir, filePath),
   );
+  const scannedFiles = rustSourceFilePaths.map((filePath) =>
+    normalizeWorkspaceRelativePath(config.rootDir, filePath),
+  );
+  const sourceTextByFilePath = new Map();
+
+  async function readSourceText(filePath) {
+    if (!sourceTextByFilePath.has(filePath)) {
+      sourceTextByFilePath.set(filePath, await readFileImpl(filePath, "utf8"));
+    }
+
+    return sourceTextByFilePath.get(filePath);
+  }
+
+  for (const filePath of localdbFiles) {
+    if (allowedLocaldbFileSet.has(filePath)) {
+      continue;
+    }
+
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `LocalDatabase file ${filePath} is outside the frozen Wave 1 localdb file set (${config.allowedLocaldbFiles.join(", ")}). Rewrite the adapter/blocking bridge explicitly before splitting more files into the current localdb shape.`,
+      filePath,
+      kind: "localdb-file-expansion",
+      line: 1,
+    });
+  }
+
+  for (const expectedFilePath of config.allowedLocaldbFiles) {
+    if (localdbFiles.includes(expectedFilePath)) {
+      continue;
+    }
+
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Frozen Wave 1 localdb file ${expectedFilePath} is missing. Update docs and perform a structural rewrite before changing the file boundary.`,
+      filePath: expectedFilePath,
+      kind: "localdb-file-missing",
+      line: 1,
+    });
+  }
 
   for (const absoluteFilePath of absoluteFilePaths) {
-    const sourceText = await readFileImpl(absoluteFilePath, "utf8");
+    const sourceText = await readSourceText(absoluteFilePath);
     const result = collectDesktopV3LocaldbMembersFromSource(sourceText, absoluteFilePath, {
       rootDir: config.rootDir,
     });
@@ -255,6 +360,8 @@ export async function collectDesktopV3LocaldbGovernanceViolations(config, option
   const privateMethods = sortMethods(sortedMethods.filter((method) => method.visibility === "private"));
   const restrictedMethods = sortMethods(sortedMethods.filter((method) => method.visibility === "restricted"));
   const publicMethodNames = new Set(publicMethods.map((method) => method.name));
+  const sqliteTouchFiles = [];
+  const localdbReferenceFiles = [];
 
   for (const method of publicMethods) {
     if (allowedMethodSet.has(method.name)) {
@@ -292,13 +399,100 @@ export async function collectDesktopV3LocaldbGovernanceViolations(config, option
     });
   }
 
+  for (const absoluteFilePath of rustSourceFilePaths) {
+    const sourceText = await readSourceText(absoluteFilePath);
+    const filePath = normalizeWorkspaceRelativePath(config.rootDir, absoluteFilePath);
+
+    if (touchesSqlite(sourceText)) {
+      sqliteTouchFiles.push(filePath);
+
+      if (!allowedSqliteTouchFileSet.has(filePath)) {
+        const location = findPatternLocation(sourceText, ["rusqlite_migration", "rusqlite"]);
+
+        addViolation(violations, seenViolations, {
+          column: location.column,
+          detail: `SQLite dependency usage escaped the frozen Wave 1 boundary. ${filePath} touches rusqlite directly, but only ${config.allowedSqliteTouchFiles.join(", ")} may hold SQLite crate references before the adapter/blocking-bridge rewrite.`,
+          filePath,
+          kind: "localdb-sqlite-touch-expansion",
+          line: location.line,
+        });
+      }
+    }
+
+    if (sourceText.includes("LocalDatabase")) {
+      localdbReferenceFiles.push(filePath);
+
+      if (!isWithinDirectory(filePath, desktopV3LocaldbDir) && !allowedExternalReferenceFileSet.has(filePath)) {
+        const location = findPatternLocation(sourceText, ["LocalDatabase"]);
+
+        addViolation(violations, seenViolations, {
+          column: location.column,
+          detail: `LocalDatabase usage escaped the frozen Wave 1 boundary. ${filePath} references LocalDatabase directly, but only ${config.allowedExternalReferenceFiles.join(", ")} may touch it outside ${desktopV3LocaldbDir}.`,
+          filePath,
+          kind: "localdb-reference-file-expansion",
+          line: location.line,
+        });
+      }
+    }
+
+    if (isWithinDirectory(filePath, desktopV3CommandsDir) && sourceText.includes("runtime::localdb")) {
+      const location = findPatternLocation(sourceText, ["runtime::localdb"]);
+
+      addViolation(violations, seenViolations, {
+        column: location.column,
+        detail: "commands/* must not import runtime::localdb directly. Keep SQLite behind DesktopRuntime and rewrite the runtime boundary before widening command access.",
+        filePath,
+        kind: "localdb-command-import-drift",
+        line: location.line,
+      });
+    }
+  }
+
+  const uniqueSqliteTouchFiles = sortStrings([...new Set(sqliteTouchFiles)]);
+  const uniqueLocaldbReferenceFiles = sortStrings([...new Set(localdbReferenceFiles)]);
+  const externalLocaldbReferenceFiles = uniqueLocaldbReferenceFiles.filter(
+    (filePath) => !isWithinDirectory(filePath, desktopV3LocaldbDir),
+  );
+
+  for (const expectedFilePath of config.allowedSqliteTouchFiles) {
+    if (uniqueSqliteTouchFiles.includes(expectedFilePath)) {
+      continue;
+    }
+
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Frozen Wave 1 SQLite touchpoint ${expectedFilePath} is missing. Update docs and perform a structural rewrite before changing the SQLite dependency boundary.`,
+      filePath: expectedFilePath,
+      kind: "localdb-sqlite-touch-missing",
+      line: 1,
+    });
+  }
+
+  for (const expectedFilePath of config.allowedExternalReferenceFiles) {
+    if (externalLocaldbReferenceFiles.includes(expectedFilePath)) {
+      continue;
+    }
+
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Frozen Wave 1 LocalDatabase external touchpoint ${expectedFilePath} is missing. Update docs and perform a structural rewrite before changing the runtime ownership boundary.`,
+      filePath: expectedFilePath,
+      kind: "localdb-reference-file-missing",
+      line: 1,
+    });
+  }
+
   return {
+    externalLocaldbReferenceFiles,
+    localdbFiles: sortStrings(localdbFiles),
+    localdbReferenceFiles: uniqueLocaldbReferenceFiles,
     methods: sortedMethods,
     missingPublicMethods,
     privateMethods,
     publicMethods,
     restrictedMethods,
-    scannedFiles: [...scannedFiles].sort((left, right) => left.localeCompare(right)),
+    scannedFiles: sortStrings(scannedFiles),
+    sqliteTouchFiles: uniqueSqliteTouchFiles,
     violations: sortViolations(violations),
   };
 }
@@ -306,11 +500,17 @@ export async function collectDesktopV3LocaldbGovernanceViolations(config, option
 export function createDesktopV3LocaldbGovernanceSummary(config) {
   return decorateVerificationArtifactRefs(
     {
+      allowedExternalReferenceFiles: [...config.allowedExternalReferenceFiles],
+      allowedLocaldbFiles: [...config.allowedLocaldbFiles],
       allowedPublicMethods: [...config.allowedPublicMethods],
+      allowedSqliteTouchFiles: [...config.allowedSqliteTouchFiles],
       checkedAt: null,
       error: null,
+      externalLocaldbReferenceFiles: [],
       latestSummaryPath: config.latestSummaryPath,
       localdbDir: desktopV3LocaldbDir,
+      localdbFiles: [],
+      localdbReferenceFiles: [],
       methodCount: 0,
       methods: [],
       missingPublicMethods: [],
@@ -321,6 +521,7 @@ export function createDesktopV3LocaldbGovernanceSummary(config) {
       runId: config.runId,
       scannedFileCount: 0,
       scannedFiles: [],
+      sqliteTouchFiles: [],
       status: "running",
       summaryPath: config.summaryPath,
       violationCount: 0,
@@ -360,7 +561,10 @@ export function resolveDesktopV3LocaldbGovernanceConfig(options = {}) {
     path.join(workspaceRoot, "output", "verification", `desktop-v3-localdb-governance-${runId}`);
 
   return {
+    allowedExternalReferenceFiles: [...desktopV3LocaldbAllowedExternalReferenceFiles],
+    allowedLocaldbFiles: [...desktopV3LocaldbAllowedFiles],
     allowedPublicMethods: [...desktopV3LocaldbAllowedPublicMethods],
+    allowedSqliteTouchFiles: [...desktopV3LocaldbAllowedSqliteTouchFiles],
     latestSummaryPath: resolveLatestVerificationSummaryPath(
       workspaceRoot,
       "desktop-v3-localdb-governance-summary.json",
@@ -368,6 +572,7 @@ export function resolveDesktopV3LocaldbGovernanceConfig(options = {}) {
     localdbDir: path.join(workspaceRoot, desktopV3LocaldbDir),
     outputDir,
     rootDir: workspaceRoot,
+    rustSourceDir: path.join(workspaceRoot, desktopV3RustSourceDir),
     runId,
     summaryPath: path.join(outputDir, "summary.json"),
   };

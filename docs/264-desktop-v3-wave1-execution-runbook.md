@@ -81,6 +81,6 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 renderer / invoke 证明以 `packaged app smoke` 为主证据
 - 当前 capability / permission / IPC 对齐回归由 `pnpm qa:desktop-v3-capability-governance` 先行拦截
 - 当前 Rust command 边界回归由 `pnpm qa:desktop-v3-command-governance` 先行拦截
-- 当前 LocalDatabase 公开面回归由 `pnpm qa:desktop-v3-localdb-governance` 先行拦截
+- 当前 LocalDatabase 回归由 `pnpm qa:desktop-v3-localdb-governance` 先行拦截；它会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase` 仅由 `runtime/mod.rs` 在模块外持有的边界
 - 当前 renderer runtime 边界回归由 `pnpm qa:desktop-v3-runtime-boundary` 先行拦截
 - 当前 README docs、fast-test entrypoint wiring 与 active-doc explicit coverage 都必须保持通过

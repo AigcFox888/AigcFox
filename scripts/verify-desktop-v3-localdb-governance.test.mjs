@@ -15,12 +15,16 @@ describe("verify-desktop-v3-localdb-governance", () => {
       collectViolationsImpl: async () => {
         invoked = true;
         return {
+          externalLocaldbReferenceFiles: [],
+          localdbFiles: [],
+          localdbReferenceFiles: [],
           methods: [],
           missingPublicMethods: [],
           privateMethods: [],
           publicMethods: [],
           restrictedMethods: [],
           scannedFiles: [],
+          sqliteTouchFiles: [],
           violations: [],
         };
       },
@@ -36,27 +40,46 @@ describe("verify-desktop-v3-localdb-governance", () => {
 
   it("persists a passing summary before logging success", async () => {
     const config = {
+      allowedExternalReferenceFiles: ["apps/desktop-v3/src-tauri/src/runtime/mod.rs"],
+      allowedLocaldbFiles: [
+        "apps/desktop-v3/src-tauri/src/runtime/localdb/migrations.rs",
+        "apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs",
+      ],
       allowedPublicMethods: ["new"],
+      allowedSqliteTouchFiles: ["apps/desktop-v3/src-tauri/src/error.rs"],
       latestSummaryPath: "/tmp/localdb-governance/latest.json",
       outputDir: "/tmp/localdb-governance",
       summaryPath: "/tmp/localdb-governance/summary.json",
     };
     const consoleLogImpl = vi.fn();
     const collectViolationsImpl = vi.fn(async () => ({
+      externalLocaldbReferenceFiles: ["apps/desktop-v3/src-tauri/src/runtime/mod.rs"],
+      localdbFiles: ["apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs"],
+      localdbReferenceFiles: [
+        "apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs",
+        "apps/desktop-v3/src-tauri/src/runtime/mod.rs",
+      ],
       methods: [{ filePath: "apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs", line: 18, name: "new", visibility: "public" }],
       missingPublicMethods: [],
       privateMethods: [],
       publicMethods: [{ filePath: "apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs", line: 18, name: "new", visibility: "public" }],
       restrictedMethods: [],
       scannedFiles: ["apps/desktop-v3/src-tauri/src/runtime/localdb/mod.rs"],
+      sqliteTouchFiles: ["apps/desktop-v3/src-tauri/src/error.rs"],
       violations: [],
     }));
     const createSummaryImpl = vi.fn(() => ({
+      allowedExternalReferenceFiles: [...config.allowedExternalReferenceFiles],
+      allowedLocaldbFiles: [...config.allowedLocaldbFiles],
       allowedPublicMethods: [...config.allowedPublicMethods],
+      allowedSqliteTouchFiles: [...config.allowedSqliteTouchFiles],
       checkedAt: null,
       error: null,
+      externalLocaldbReferenceFiles: [],
       latestSummaryPath: config.latestSummaryPath,
       localdbDir: "apps/desktop-v3/src-tauri/src/runtime/localdb",
+      localdbFiles: [],
+      localdbReferenceFiles: [],
       methodCount: 0,
       methods: [],
       missingPublicMethods: [],
@@ -67,6 +90,7 @@ describe("verify-desktop-v3-localdb-governance", () => {
       runId: "localdb-governance-test",
       scannedFileCount: 0,
       scannedFiles: [],
+      sqliteTouchFiles: [],
       status: "running",
       summaryPath: config.summaryPath,
       violationCount: 0,

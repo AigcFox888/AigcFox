@@ -46,6 +46,7 @@
 - `packaged app smoke`
 
 当前 `desktop-v3` 已补齐三段真实验证链：`responsive smoke`、`tauri dev smoke`、`packaged app smoke`。
+当前 `desktop-v3-localdb-governance` 已不只冻结 `LocalDatabase` 公开方法，还会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase -> DesktopRuntime` 的单一持有边界。
 
 ## 当前输出
 

@@ -25,6 +25,9 @@ export function buildDesktopV3LocaldbGovernanceHelpText() {
     "",
     "Checks:",
     "  - LocalDatabase public methods stay frozen at new / initialize / get_preference / set_preference / probe / get_sync_cache_stats",
+    "  - runtime/localdb file set stays frozen at mod.rs + migrations.rs",
+    "  - rusqlite touchpoints stay confined to runtime/localdb/* + error.rs",
+    "  - LocalDatabase stays owned by runtime/mod.rs outside the localdb module",
     "  - LocalDatabase does not add crate-visible or super-visible methods",
     "  - LocalDatabase does not expose public struct fields",
   ].join("\n");
@@ -55,16 +58,23 @@ export async function runDesktopV3LocaldbGovernanceCli(options = {}) {
 
       try {
         const {
+          externalLocaldbReferenceFiles,
+          localdbFiles,
+          localdbReferenceFiles,
           methods,
           missingPublicMethods,
           privateMethods,
           publicMethods,
           restrictedMethods,
           scannedFiles,
+          sqliteTouchFiles,
           violations,
         } = await collectViolationsImpl(config);
 
         summary.checkedAt = new Date().toISOString();
+        summary.externalLocaldbReferenceFiles = externalLocaldbReferenceFiles;
+        summary.localdbFiles = localdbFiles;
+        summary.localdbReferenceFiles = localdbReferenceFiles;
         summary.methodCount = methods.length;
         summary.methods = methods;
         summary.missingPublicMethods = missingPublicMethods;
@@ -73,6 +83,7 @@ export async function runDesktopV3LocaldbGovernanceCli(options = {}) {
         summary.restrictedMethods = restrictedMethods;
         summary.scannedFileCount = scannedFiles.length;
         summary.scannedFiles = scannedFiles;
+        summary.sqliteTouchFiles = sqliteTouchFiles;
         summary.violationCount = violations.length;
         summary.violations = violations;
         summary.status = violations.length === 0 ? "passed" : "failed";

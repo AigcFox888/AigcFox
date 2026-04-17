@@ -16,6 +16,8 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");
+    expect(text).toContain("runtime/localdb/mod.rs + migrations.rs");
+    expect(text).toContain("runtime/mod.rs");
     expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
   });
 

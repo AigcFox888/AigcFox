@@ -153,6 +153,7 @@ React UI
 但从现在起冻结一条规则：
 
 - 当前用 `pnpm qa:desktop-v3-localdb-governance` 把 `LocalDatabase` 公开面固定死在 `new / initialize / get_preference / set_preference / probe / get_sync_cache_stats`
+- 当前同一条 gate 还把 localdb 文件集固定在 `runtime/localdb/mod.rs + migrations.rs`，把 `rusqlite` / `rusqlite_migration` 触点固定在 `runtime/localdb/* + error.rs`，并把 `LocalDatabase` 在模块外的直接引用固定在 `runtime/mod.rs`
 - 只要本地数据库操作从“单值偏好 / 简单统计”扩到列表、批量写入、复杂查询或同步编排，就不能继续直接在当前路径上叠逻辑
 - 必须先重写为独立的 localdb adapter / blocking bridge，再继续扩功能
 

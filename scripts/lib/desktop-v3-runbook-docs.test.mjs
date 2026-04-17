@@ -19,6 +19,8 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");
+    expect(text).toContain("runtime/localdb/mod.rs + migrations.rs");
+    expect(text).toContain("runtime/mod.rs");
     expect(text).toContain("README docs");
     expect(text).toContain("fast-test entrypoint wiring");
   });

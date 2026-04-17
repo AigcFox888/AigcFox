@@ -37,6 +37,7 @@
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 capability / permission / invoke_handler / tauri command type map 做静态门禁
 - 任何新 plugin、新窗口、新宿主 JS API 在进入实现前，必须先补 capability / permission 设计
 - 有 I/O 的 command 默认按 `async` 设计；SQLite 扩张前禁止继续在当前同步 localdb 路径上堆逻辑
+- 当前用 `pnpm qa:desktop-v3-localdb-governance` 对 `runtime/localdb` 文件集、`rusqlite` 触点和 `LocalDatabase` 外部使用面做静态门禁；SQLite 依赖当前只允许停留在 `runtime/localdb/* + error.rs`，`LocalDatabase` 在模块外只允许由 `runtime/mod.rs` 持有
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
 - 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源`
 
