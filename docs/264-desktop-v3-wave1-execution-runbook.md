@@ -42,6 +42,7 @@ pnpm test:desktop-v3-wave1-readiness
 - capability governance
 - Rust command governance
 - LocalDatabase governance
+- platform-config governance
 - runtime boundary governance
 - fast-test entrypoint wiring
 - smoke contract
@@ -61,15 +62,16 @@ pnpm qa:desktop-v3-wave1-readiness
 3. `pnpm qa:desktop-v3-localdb-governance`
 4. `pnpm qa:desktop-v3-command-governance`
 5. `pnpm qa:desktop-v3-capability-governance`
-6. `pnpm --filter @aigcfox/desktop-v3 lint`
-7. `pnpm --filter @aigcfox/desktop-v3 typecheck`
-8. `pnpm --filter @aigcfox/desktop-v3 test`
-9. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
-10. `pnpm --filter @aigcfox/desktop-v3 build`
-11. `pnpm qa:desktop-v3-responsive-smoke`
-12. `pnpm qa:desktop-v3-tauri-dev-smoke`
-13. `pnpm qa:desktop-v3-linux-package`
-14. `pnpm qa:desktop-v3-packaged-app-smoke`
+6. `pnpm qa:desktop-v3-platform-config-governance`
+7. `pnpm --filter @aigcfox/desktop-v3 lint`
+8. `pnpm --filter @aigcfox/desktop-v3 typecheck`
+9. `pnpm --filter @aigcfox/desktop-v3 test`
+10. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
+11. `pnpm --filter @aigcfox/desktop-v3 build`
+12. `pnpm qa:desktop-v3-responsive-smoke`
+13. `pnpm qa:desktop-v3-tauri-dev-smoke`
+14. `pnpm qa:desktop-v3-linux-package`
+15. `pnpm qa:desktop-v3-packaged-app-smoke`
 
 ## 输出
 
@@ -82,5 +84,6 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 capability / permission / IPC 对齐回归由 `pnpm qa:desktop-v3-capability-governance` 先行拦截
 - 当前 Rust command 边界回归由 `pnpm qa:desktop-v3-command-governance` 先行拦截
 - 当前 LocalDatabase 回归由 `pnpm qa:desktop-v3-localdb-governance` 先行拦截；它会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase` 仅由 `runtime/mod.rs` 在模块外持有的边界
+- 当前 shared `tauri.conf.json` 回归由 `pnpm qa:desktop-v3-platform-config-governance` 先行拦截；它会同时冻结当前唯一配置文件集和共享字段面，防止把平台打包细节或 updater 配置继续堆回 `tauri.conf.json`
 - 当前 renderer runtime 边界回归由 `pnpm qa:desktop-v3-runtime-boundary` 先行拦截
 - 当前 README docs、fast-test entrypoint wiring 与 active-doc explicit coverage 都必须保持通过

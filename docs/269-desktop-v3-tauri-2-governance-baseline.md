@@ -171,6 +171,12 @@ React UI
 - 共享 build 入口
 - 共享 icon 基线
 
+当前再冻结一条规则：
+
+- 当前用 `pnpm qa:desktop-v3-platform-config-governance` 把 `src-tauri/tauri.conf.json` 文件集固定死在共享单文件，并把 top-level / build / app / bundle 字段面冻结在当前 Wave 1 骨架所需集合
+- 当前 `tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json` 只保留为未来拆分方案中的目标文件名，不允许提前落文件、提前接 workflow，也不允许把对应平台细项先塞回共享配置凑合过
+- 当前主窗口的 URL、尺寸和导航边界继续由 Rust `window.rs` 创建，不把窗口细节重新塞回 `tauri.conf.json`
+
 以下内容一旦进入实现，必须拆分到平台覆盖配置：
 
 - Windows 打包细节

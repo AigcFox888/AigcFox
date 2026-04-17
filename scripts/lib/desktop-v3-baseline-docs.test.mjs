@@ -48,8 +48,10 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-platform-config-governance");
     expect(governanceText).toContain("LocalDatabase");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");
+    expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
     expect(governanceText).toContain("runtime/mod.rs");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源");
@@ -59,6 +61,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-capability-governance");
     expect(executionText).toContain("desktop-v3-command-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
+    expect(executionText).toContain("desktop-v3-platform-config-governance");
     expect(executionText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(executionText).toContain("desktop-v3-runtime-boundary");
     expect(executionText).toContain("responsive smoke");

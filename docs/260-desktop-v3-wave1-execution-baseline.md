@@ -26,6 +26,7 @@
 - `pnpm qa:desktop-v3-capability-governance`
 - `pnpm qa:desktop-v3-command-governance`
 - `pnpm qa:desktop-v3-localdb-governance`
+- `pnpm qa:desktop-v3-platform-config-governance`
 - `pnpm qa:desktop-v3-runtime-boundary`
 
 当前 `qa:desktop-v3-wave1-readiness` 的固定步骤：
@@ -35,6 +36,7 @@
 - `desktop-v3-localdb-governance`
 - `desktop-v3-command-governance`
 - `desktop-v3-capability-governance`
+- `desktop-v3-platform-config-governance`
 - `lint`
 - `typecheck`
 - `test`
@@ -47,6 +49,7 @@
 
 当前 `desktop-v3` 已补齐三段真实验证链：`responsive smoke`、`tauri dev smoke`、`packaged app smoke`。
 当前 `desktop-v3-localdb-governance` 已不只冻结 `LocalDatabase` 公开方法，还会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase -> DesktopRuntime` 的单一持有边界。
+当前 `desktop-v3-platform-config-governance` 会冻结 `src-tauri/tauri.conf.json` 共享字段集，并确保 `tauri.linux/windows/macos.conf.json` 仍停留在未来拆分方案，不被提前堆回当前骨架分支。
 
 ## 当前输出
 
@@ -69,6 +72,7 @@
 - `desktop-v3-localdb-governance` 成功
 - `desktop-v3-command-governance` 成功
 - `desktop-v3-capability-governance` 成功
+- `desktop-v3-platform-config-governance` 成功
 - `responsive smoke` 成功
 - `tauri dev smoke` 成功
 - `packaged app smoke` 成功

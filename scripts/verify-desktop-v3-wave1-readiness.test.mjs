@@ -33,6 +33,7 @@ describe("verify-desktop-v3-wave1-readiness", () => {
     expect(helpText).toContain("LocalDatabase governance");
     expect(helpText).toContain("Rust command governance");
     expect(helpText).toContain("capability governance");
+    expect(helpText).toContain("platform-config governance");
     expect(helpText).toContain("child smoke archive/latest summary paths");
   });
 

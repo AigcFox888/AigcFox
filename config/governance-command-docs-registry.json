@@ -70,6 +70,19 @@
       ]
     },
     {
+      "command": "pnpm qa:desktop-v3-platform-config-governance",
+      "script": "qa:desktop-v3-platform-config-governance",
+      "purpose": "desktop-v3 shared Tauri platform-config governance verification entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/258-desktop-v3-technical-baseline.md",
+        "docs/260-desktop-v3-wave1-execution-baseline.md",
+        "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      ]
+    },
+    {
       "command": "pnpm qa:desktop-v3-runtime-boundary",
       "script": "qa:desktop-v3-runtime-boundary",
       "purpose": "desktop-v3 renderer runtime boundary governance verification entry",
