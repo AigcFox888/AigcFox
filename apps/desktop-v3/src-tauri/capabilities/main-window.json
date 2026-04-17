@@ -1,0 +1,23 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-window",
+  "description": "Minimal IPC capability for the desktop-v3 main window.",
+  "remote": {
+    "urls": [
+      "http://127.0.0.1:1420/*",
+      "http://localhost:1420/*"
+    ]
+  },
+  "windows": ["main"],
+  "permissions": [
+    "core:app:default",
+    "core:event:default",
+    "core:webview:default",
+    "core:window:default",
+    "desktop-preferences-read",
+    "desktop-preferences-write",
+    "desktop-diagnostics-read",
+    "desktop-backend-probe-read",
+    "desktop-renderer-boot-write"
+  ]
+}

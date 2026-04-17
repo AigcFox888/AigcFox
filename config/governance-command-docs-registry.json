@@ -1,0 +1,121 @@
+{
+  "scope": "desktop-v3-active-surface",
+  "entries": [
+    {
+      "command": "pnpm test:desktop-v3-wave1-readiness",
+      "script": "test:desktop-v3-wave1-readiness",
+      "purpose": "desktop-v3 Wave 1 skeleton fast verification entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/267-desktop-v3-github-actions-baseline.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-wave1-readiness",
+      "script": "qa:desktop-v3-wave1-readiness",
+      "purpose": "desktop-v3 Wave 1 skeleton end-to-end readiness entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/260-desktop-v3-wave1-execution-baseline.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/267-desktop-v3-github-actions-baseline.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-responsive-smoke",
+      "script": "qa:desktop-v3-responsive-smoke",
+      "purpose": "desktop-v3 responsive browser smoke entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-tauri-dev-smoke",
+      "script": "qa:desktop-v3-tauri-dev-smoke",
+      "purpose": "desktop-v3 tauri dev smoke entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-linux-package",
+      "script": "qa:desktop-v3-linux-package",
+      "purpose": "desktop-v3 Linux package smoke entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-packaged-app-smoke",
+      "script": "qa:desktop-v3-packaged-app-smoke",
+      "purpose": "desktop-v3 packaged app smoke entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:github-actions-lint",
+      "script": "qa:github-actions-lint",
+      "purpose": "desktop-v3 GitHub Actions workflow lint entry",
+      "requiredDocPaths": [
+        "docs/workflow.md",
+        "docs/267-desktop-v3-github-actions-baseline.md",
+        "docs/277-desktop-v3-delivery-updater-execution-baseline.md",
+        "docs/279-desktop-v3-delivery-updater-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:governance-command-docs",
+      "script": "qa:governance-command-docs",
+      "purpose": "desktop-v3 active command surface governance verification entry",
+      "requiredDocPaths": [
+        "docs/workflow.md",
+        "docs/267-desktop-v3-github-actions-baseline.md",
+        "docs/279-desktop-v3-delivery-updater-execution-runbook.md"
+      ]
+    },
+    {
+      "command": "pnpm test:desktop-v3-delivery-updater-docs",
+      "script": "test:desktop-v3-delivery-updater-docs",
+      "purpose": "desktop-v3 delivery updater fast documentation verification entry",
+      "requiredDocPaths": [
+        "README.md",
+        "docs/README.md",
+        "docs/277-desktop-v3-delivery-updater-execution-baseline.md",
+        "docs/279-desktop-v3-delivery-updater-execution-runbook.md",
+        "docs/280-desktop-v3-delivery-updater-closeout.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-delivery-updater-docs",
+      "script": "qa:desktop-v3-delivery-updater-docs",
+      "purpose": "desktop-v3 delivery updater documentation readiness entry",
+      "requiredDocPaths": [
+        "README.md",
+        "docs/README.md",
+        "docs/277-desktop-v3-delivery-updater-execution-baseline.md",
+        "docs/278-desktop-v3-delivery-updater-acceptance-matrix.md",
+        "docs/279-desktop-v3-delivery-updater-execution-runbook.md",
+        "docs/280-desktop-v3-delivery-updater-closeout.md"
+      ]
+    },
+    {
+      "command": "pnpm qa:desktop-v3-delivery-updater-github-remote-proof",
+      "script": "qa:desktop-v3-delivery-updater-github-remote-proof",
+      "purpose": "desktop-v3 delivery updater GitHub remote proof entry",
+      "requiredDocPaths": [
+        "README.md",
+        "docs/README.md",
+        "docs/279-desktop-v3-delivery-updater-execution-runbook.md",
+        "docs/280-desktop-v3-delivery-updater-closeout.md"
+      ]
+    }
+  ]
+}

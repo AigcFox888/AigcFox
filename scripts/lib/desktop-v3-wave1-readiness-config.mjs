@@ -1,0 +1,75 @@
+import path from "node:path";
+import process from "node:process";
+import { fileURLToPath } from "node:url";
+
+import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
+
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(currentDir, "..", "..");
+const documentFiles = [
+  "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
+  "docs/README.md",
+  "docs/248-autonomous-execution-baseline.md",
+  "docs/257-desktop-v3-replatform-proposal.md",
+  "docs/258-desktop-v3-technical-baseline.md",
+  "docs/259-desktop-v3-detailed-design.md",
+  "docs/260-desktop-v3-wave1-execution-baseline.md",
+  "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+  "docs/264-desktop-v3-wave1-execution-runbook.md",
+  "docs/267-desktop-v3-github-actions-baseline.md",
+  "docs/269-desktop-v3-tauri-2-governance-baseline.md",
+  "apps/desktop-v3/README.md",
+];
+
+function resolveRunId(env, now) {
+  const explicitRunId = env.AIGCFOX_DESKTOP_V3_WAVE1_RUN_ID?.trim();
+
+  if (explicitRunId) {
+    return explicitRunId;
+  }
+
+  return now.toISOString().replace(/[:.]/g, "-");
+}
+
+export function isDesktopV3Wave1WslHost(env = process.env) {
+  return typeof env.WSL_DISTRO_NAME === "string" && env.WSL_DISTRO_NAME.trim().length > 0;
+}
+
+export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
+  const env = options.env ?? process.env;
+  const now = options.now instanceof Date ? options.now : new Date();
+  const runId = resolveRunId(env, now);
+  const profile =
+    env.AIGCFOX_DESKTOP_V3_WAVE1_PROFILE?.trim() ||
+    (env.GITHUB_ACTIONS === "true" ? "ci" : "default");
+  const outputDir =
+    env.AIGCFOX_DESKTOP_V3_WAVE1_OUTPUT_DIR?.trim() ||
+    path.join(rootDir, "output", "verification", `desktop-v3-wave1-readiness-${runId}`);
+
+  return {
+    documentFiles,
+    hostPlatform: process.platform,
+    isWslHost: isDesktopV3Wave1WslHost(env),
+    latestSummaryPath: resolveLatestVerificationSummaryPath(rootDir, "desktop-v3-wave1-readiness-summary.json"),
+    outputDir,
+    packagedAppSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-packaged-app-smoke-summary.json",
+    ),
+    packagedAppSmokeOutputDir: path.join(outputDir, "packaged-app-smoke"),
+    profile,
+    responsiveSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-responsive-smoke-summary.json",
+    ),
+    responsiveSmokeOutputDir: path.join(outputDir, "responsive-smoke"),
+    rootDir,
+    runId,
+    summaryPath: path.join(outputDir, "summary.json"),
+    tauriDevSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-tauri-dev-smoke-summary.json",
+    ),
+    tauriDevSmokeOutputDir: path.join(outputDir, "tauri-dev-smoke"),
+  };
+}

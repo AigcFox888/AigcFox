@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.985 0.003 95);
+  --foreground: oklch(0.22 0.02 255);
+  --card: oklch(0.995 0.001 95);
+  --card-foreground: oklch(0.22 0.02 255);
+  --popover: oklch(0.995 0.001 95);
+  --popover-foreground: oklch(0.22 0.02 255);
+  --primary: oklch(0.58 0.17 245);
+  --primary-foreground: oklch(0.985 0.002 95);
+  --secondary: oklch(0.95 0.01 240);
+  --secondary-foreground: oklch(0.3 0.03 255);
+  --muted: oklch(0.94 0.006 240);
+  --muted-foreground: oklch(0.46 0.03 255);
+  --accent: oklch(0.92 0.03 240);
+  --accent-foreground: oklch(0.24 0.02 255);
+  --destructive: oklch(0.65 0.21 24);
+  --border: oklch(0.88 0.01 240);
+  --input: oklch(0.88 0.01 240);
+  --ring: oklch(0.58 0.17 245);
+  --radius: 0.75rem;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+.dark {
+  --background: oklch(0.18 0.015 255);
+  --foreground: oklch(0.96 0.004 95);
+  --card: oklch(0.22 0.018 255);
+  --card-foreground: oklch(0.96 0.004 95);
+  --popover: oklch(0.22 0.018 255);
+  --popover-foreground: oklch(0.96 0.004 95);
+  --primary: oklch(0.72 0.16 245);
+  --primary-foreground: oklch(0.18 0.015 255);
+  --secondary: oklch(0.3 0.02 255);
+  --secondary-foreground: oklch(0.96 0.004 95);
+  --muted: oklch(0.28 0.02 255);
+  --muted-foreground: oklch(0.72 0.012 255);
+  --accent: oklch(0.34 0.025 245);
+  --accent-foreground: oklch(0.96 0.004 95);
+  --destructive: oklch(0.65 0.18 24);
+  --border: oklch(0.32 0.02 255);
+  --input: oklch(0.32 0.02 255);
+  --ring: oklch(0.72 0.16 245);
+  --chart-1: 220 70% 65%;
+  --chart-2: 160 60% 60%;
+  --chart-3: 30 80% 65%;
+  --chart-4: 280 65% 70%;
+  --chart-5: 340 75% 65%;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --font-sans: "Noto Sans SC", "Segoe UI Variable", "PingFang SC", "Microsoft YaHei UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Mono", monospace;
+}
+
+* {
+  @apply border-border;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
+
+button {
+  cursor: pointer;
+}

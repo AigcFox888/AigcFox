@@ -1,0 +1,24 @@
+[[permission]]
+identifier = "desktop-preferences-read"
+description = "Allows the main window to read the persisted theme preference."
+commands.allow = ["desktop_get_theme_preference"]
+
+[[permission]]
+identifier = "desktop-preferences-write"
+description = "Allows the main window to update the persisted theme preference."
+commands.allow = ["desktop_set_theme_preference"]
+
+[[permission]]
+identifier = "desktop-diagnostics-read"
+description = "Allows the main window to read the local diagnostics snapshot."
+commands.allow = ["desktop_get_diagnostics_snapshot"]
+
+[[permission]]
+identifier = "desktop-backend-probe-read"
+description = "Allows the main window to request backend liveness and readiness probes."
+commands.allow = ["desktop_get_backend_liveness", "desktop_get_backend_readiness"]
+
+[[permission]]
+identifier = "desktop-renderer-boot-write"
+description = "Allows the main window to report structured renderer boot telemetry."
+commands.allow = ["desktop_report_renderer_boot"]

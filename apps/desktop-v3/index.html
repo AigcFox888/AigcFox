@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN" suppressHydrationWarning>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>AigcFox Desktop V3</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      (() => {
+        const bootProbeEnabled = "__DESKTOP_V3_RENDERER_BOOT_PROBE__" === "1";
+        if (!bootProbeEnabled || !window.fetch) {
+          return;
+        }
+
+        const route = window.location.hash || "#/";
+        const searchParams = new URLSearchParams({
+          route,
+          runtime: "document",
+          stage: "document",
+        });
+
+        void window.fetch(`/__desktop_v3_boot?${searchParams.toString()}`, {
+          cache: "no-store",
+          credentials: "omit",
+          method: "GET",
+        });
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

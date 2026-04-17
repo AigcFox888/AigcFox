@@ -1,0 +1,20 @@
+# AigcFox desktop-v3 Clean PR Closeout
+
+## 结论
+
+当前 `desktop-v3 Wave 1 Skeleton` 的 clean PR 收口记录固定保留如下关键信息：
+
+- clean branch：`feature/desktop-v3-wave1-clean`
+- PR：`#2`
+- workflow：`desktop-v3-ci`
+- workflow：`desktop-v3-package`
+
+## 目的
+
+本文档用于记录当出现 PR 污染 时，如何从 `dev` 重新建立 clean branch，并把 `workflow.md` 与 [267-desktop-v3-github-actions-baseline.md](./267-desktop-v3-github-actions-baseline.md) 的治理要求落实到实际 PR 收口。
+
+## 关键信号
+
+- 发现 PR 污染
+- 从 `dev` 重建 clean branch
+- 旧 PR 标记 superseded 并关闭

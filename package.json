@@ -1,0 +1,42 @@
+{
+  "name": "aigcfox",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev:desktop": "pnpm --filter @aigcfox/desktop-v3 dev",
+    "dev:desktop-v3": "pnpm --filter @aigcfox/desktop-v3 dev",
+    "lint": "pnpm --filter @aigcfox/desktop-v3 lint",
+    "typecheck": "pnpm --filter @aigcfox/desktop-v3 typecheck",
+    "test": "pnpm --filter @aigcfox/desktop-v3 test",
+    "build": "pnpm --filter @aigcfox/desktop-v3 build",
+    "qa:github-actions-lint": "node ./scripts/run-github-actions-lint.mjs",
+    "qa:governance-command-docs": "node ./scripts/verify-governance-command-docs.mjs",
+    "qa:rust-host-readiness": "node ./scripts/verify-rust-host-readiness.mjs",
+    "qa:desktop-v3-responsive-smoke": "node ./scripts/desktop-v3-responsive-smoke.mjs",
+    "qa:desktop-v3-tauri-dev-smoke": "node ./scripts/verify-desktop-v3-tauri-dev-smoke.mjs",
+    "qa:desktop-v3-linux-package": "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles deb",
+    "qa:desktop-v3-packaged-app-smoke": "node ./scripts/verify-desktop-v3-packaged-app-smoke.mjs",
+    "qa:desktop-v3-wave1-readiness": "node ./scripts/verify-desktop-v3-wave1-readiness.mjs",
+    "qa:desktop-v3-delivery-updater-docs": "node ./scripts/verify-desktop-v3-delivery-updater-docs.mjs",
+    "qa:desktop-v3-delivery-updater-github-remote-proof": "node ./scripts/check-desktop-v3-delivery-updater-github-remote-proof.mjs",
+    "test:desktop-v3-delivery-updater-docs": "node ./scripts/run-vitest.mjs run scripts/lib/desktop-v3-delivery-updater-docs-config.test.mjs scripts/lib/desktop-v3-delivery-updater-github-remote-proof-config.test.mjs scripts/lib/desktop-v3-delivery-updater-entry-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-proposal-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-active-docs-coverage.test.mjs scripts/lib/desktop-v3-delivery-updater-closeout-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-governance-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-github-actions-baseline.test.mjs scripts/lib/github-actions-remote-proof-cli.test.mjs scripts/lib/github-actions-remote-proof-runner.test.mjs scripts/lib/desktop-v3-delivery-updater-github-remote-proof.test.mjs scripts/lib/desktop-v3-delivery-updater-runbook-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-execution-baseline-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-acceptance-docs.test.mjs scripts/lib/desktop-v3-delivery-updater-test-entrypoints.test.mjs",
+    "test:desktop-v3-wave1-readiness": "node ./scripts/run-vitest.mjs run scripts/lib/desktop-v3-github-actions-baseline.test.mjs scripts/lib/desktop-v3-active-docs-coverage.test.mjs scripts/lib/desktop-v3-acceptance-docs.test.mjs scripts/lib/desktop-v3-baseline-docs.test.mjs scripts/lib/desktop-v3-wave1-entry-docs.test.mjs scripts/lib/desktop-v3-entry-docs.test.mjs scripts/lib/desktop-v3-closeout-docs.test.mjs scripts/lib/desktop-v3-runbook-docs.test.mjs scripts/lib/desktop-v3-readme-docs.test.mjs scripts/lib/desktop-v3-test-entrypoints.test.mjs scripts/lib/desktop-v3-smoke-diagnostics.test.mjs scripts/lib/desktop-v3-smoke-summary-contract.test.mjs scripts/lib/desktop-v3-smoke-summary-persistence.test.mjs scripts/lib/desktop-v3-tauri-dev-smoke.test.mjs scripts/lib/desktop-v3-tauri-dev-smoke-runner.test.mjs scripts/lib/desktop-v3-wave1-readiness.test.mjs scripts/lib/desktop-v3-packaged-app-smoke.test.mjs scripts/desktop-v3-responsive-smoke.test.mjs scripts/verify-desktop-v3-tauri-dev-smoke.test.mjs scripts/verify-desktop-v3-packaged-app-smoke.test.mjs scripts/verify-desktop-v3-wave1-readiness.test.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "@types/react": "18.3.28",
+    "@types/react-dom": "18.3.7",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "playwright": "^1.58.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.1.0"
+  }
+}

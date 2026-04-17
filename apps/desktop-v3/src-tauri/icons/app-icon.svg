@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="aigcfoxGradient" x1="76" y1="72" x2="432" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB04A"/>
+      <stop offset="1" stop-color="#F25C2A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#11151C"/>
+  <path d="M121 151 194 88l62 88-49 31-86-56Z" fill="url(#aigcfoxGradient)"/>
+  <path d="m391 151-73-63-62 88 49 31 86-56Z" fill="url(#aigcfoxGradient)"/>
+  <path d="M154 214c0-34 28-62 62-62h80c34 0 62 28 62 62v76c0 58-46 104-104 104s-104-46-104-104v-76Z" fill="url(#aigcfoxGradient)"/>
+  <path d="M215 252c11 0 20 9 20 20s-9 20-20 20-20-9-20-20 9-20 20-20Zm82 0c11 0 20 9 20 20s-9 20-20 20-20-9-20-20 9-20 20-20Z" fill="#11151C"/>
+  <path d="M202 329c18 20 34 28 54 28s36-8 54-28" stroke="#11151C" stroke-linecap="round" stroke-width="24"/>
+</svg>

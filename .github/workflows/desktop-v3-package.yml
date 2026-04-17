@@ -1,0 +1,105 @@
+name: desktop-v3-package
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - "feature/**"
+    paths:
+      - ".github/workflows/desktop-v3-package.yml"
+      - ".nvmrc"
+      - "rust-toolchain.toml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "apps/desktop-v3/**"
+      - "scripts/**"
+      - "docs/258-desktop-v3-technical-baseline.md"
+      - "docs/267-desktop-v3-github-actions-baseline.md"
+  workflow_dispatch:
+
+concurrency:
+  group: desktop-v3-package-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: package (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            label: linux
+            build_command: pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles deb,appimage,rpm
+            artifact_path: apps/desktop-v3/src-tauri/target/release/bundle/**
+          - os: windows-latest
+            label: windows
+            build_command: pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign
+            artifact_path: apps/desktop-v3/src-tauri/target/release/bundle/**
+          - os: macos-latest
+            label: macos
+            build_command: pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign
+            artifact_path: apps/desktop-v3/src-tauri/target/release/bundle/**
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable pnpm via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.32.1 --activate
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.94.1
+
+      - name: Restore Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            apps/desktop-v3/src-tauri -> target
+
+      - name: Install Linux host dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            pkg-config \
+            build-essential \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build desktop-v3 package
+        run: ${{ matrix.build_command }}
+
+      - name: Upload package bundle
+        uses: actions/upload-artifact@v6
+        with:
+          # These artifacts are CI delivery outputs only.
+          # End-user updates must be mirrored to Qiniu or a self-hosted HTTPS origin, not served from GitHub.
+          name: desktop-v3-${{ matrix.label }}-bundle-${{ github.sha }}
+          path: ${{ matrix.artifact_path }}
+          if-no-files-found: error

@@ -1,0 +1,17 @@
+node_modules/
+
+dist/
+build/
+coverage/
+output/
+
+apps/desktop-v3/dist/
+apps/desktop-v3/node_modules/
+apps/desktop-v3/src-tauri/target/
+
+target/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
