@@ -55,6 +55,7 @@
 ```bash
 pnpm test:desktop-v3-wave1-readiness
 pnpm qa:desktop-v3-wave1-readiness
+pnpm qa:desktop-v3-backend-client-governance
 pnpm qa:desktop-v3-capability-governance
 pnpm qa:desktop-v3-command-governance
 pnpm qa:desktop-v3-localdb-governance
@@ -92,11 +93,12 @@ cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 - 主内容区：`flex: 1`
 - 不允许横向滚动
 
-当前如果要跑整条 `Wave 1` 自动化验收链，优先使用 `pnpm qa:desktop-v3-wave1-readiness`，它会先执行当前 source-of-truth 文档 gate，再把 `runtime boundary / LocalDatabase governance / command governance / capability governance / platform-config governance / updater governance / lint / typecheck / test / cargo test / build / responsive smoke / tauri dev smoke / linux package / packaged app smoke` 串起来，并把统一结果同时写到 `output/verification/desktop-v3-wave1-readiness-<run-id>/summary.json` 与 `output/verification/latest/desktop-v3-wave1-readiness-summary.json`；
+当前如果要跑整条 `Wave 1` 自动化验收链，优先使用 `pnpm qa:desktop-v3-wave1-readiness`，它会先执行当前 source-of-truth 文档 gate，再把 `runtime boundary / LocalDatabase governance / backend-client governance / command governance / capability governance / platform-config governance / updater governance / lint / typecheck / test / cargo test / build / responsive smoke / tauri dev smoke / linux package / packaged app smoke` 串起来，并把统一结果同时写到 `output/verification/desktop-v3-wave1-readiness-<run-id>/summary.json` 与 `output/verification/latest/desktop-v3-wave1-readiness-summary.json`；
 当前 `main-window` capability、`permissions/main-window.toml`、Rust `invoke_handler` 和 `tauri-command-types.ts` 由 `pnpm qa:desktop-v3-capability-governance` 单独冻结，授权面和 IPC surface 不允许各改各的；
 当前 `commands/*` 边界由 `pnpm qa:desktop-v3-command-governance` 单独冻结，超出当前模块集、命令名、import 面或 helper 薄层边界一律先失败，要求先重写 runtime / command 边界；
 当前 `LocalDatabase` 边界由 `pnpm qa:desktop-v3-localdb-governance` 单独冻结，除了 `new / initialize / get_preference / set_preference / probe / get_sync_cache_stats` 公开面外，还会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase` 仅由 `runtime/mod.rs` 在模块外持有的单一边界；任何扩张一律先失败，要求先重写 adapter / blocking bridge；
+当前 `pnpm qa:desktop-v3-backend-client-governance` 会冻结 `runtime/client` 远端 skeleton 边界：文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都不允许继续补丁式扩张；任何真实业务 API 扩张都必须先重写 remote client 分层；
 当前 shared `tauri.conf.json` 边界由 `pnpm qa:desktop-v3-platform-config-governance` 单独冻结，除了当前共享字段集外，不允许把平台打包细节、updater 配置或平台特有开关继续堆回共享配置；未来平台拆分必须先重写配置分层方案；
 当前 `pnpm qa:desktop-v3-updater-governance` 会冻结 updater 的未实现边界：在结构化重写落地前，`Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 都不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段、GitHub Releases 客户端更新源或 `update-guard` 壳层文件；
 当前顶层 `desktop-v3-wave1-readiness` summary 还会绑定 `responsive / tauri dev / packaged app` 三段 child smoke 的 archive/latest 摘要路径，并在 runner 内二次回读 child `summary.json` 校验一致性；
-当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、capability governance、Rust command governance、LocalDatabase governance、platform-config governance、updater governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。
+当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、backend-client governance、capability governance、Rust command governance、LocalDatabase governance、platform-config governance、updater governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。

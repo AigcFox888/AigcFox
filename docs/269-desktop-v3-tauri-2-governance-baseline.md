@@ -40,6 +40,7 @@ React UI
 
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
 - 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
+- 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client/*` 做静态门禁；当前 Go API 边界只允许停留在 probe-only skeleton，文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都被冻结在 Wave 1 范围
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
@@ -261,9 +262,9 @@ tauri.macos.conf.json
 当前下一轮最值得优先收口的顺序固定如下：
 
 1. capability / permission 最小授权面设计
-2. localdb 阻塞边界重写方案
-3. 平台配置拆分方案
-4. updater plugin 接入前置设计
+2. remote client 分层重写方案
+3. localdb 阻塞边界重写方案
+4. 平台配置拆分方案
 
 在这四项未讲清前，不继续扩大 `desktop-v3` 的宿主能力面。
 

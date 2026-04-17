@@ -160,6 +160,12 @@ src-tauri/
 - 统一把远端错误转换为本地错误
 - 保留 request id 等远端 envelope 元数据，继续向上游 UI 透传
 
+补充规则：
+
+- 当前 `runtime/client` 只允许停留在 probe-only skeleton：`BackendClient` 只承接 `liveness / readiness`
+- 当前用 `pnpm qa:desktop-v3-backend-client-governance` 冻结 `runtime/client` 文件集、`BackendClient` 公开面、probe contract 导出面、`reqwest` 触点和模块外持有面
+- 只要远端能力从 health probe 扩到真实业务 API、列表、写入或复杂编排，就不能继续在当前结构上叠补丁；必须先重写 remote client 分层，再放开门禁
+
 ### `runtime/localdb`
 
 职责：

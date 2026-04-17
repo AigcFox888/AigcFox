@@ -13,6 +13,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/lib/desktop-v3-entry-docs.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-runbook-docs.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-readme-docs.test.mjs");
+    expect(script).toContain("scripts/lib/desktop-v3-backend-client-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-capability-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-command-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-localdb-governance.test.mjs");
@@ -27,6 +28,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/lib/desktop-v3-wave1-readiness.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-packaged-app-smoke.test.mjs");
     expect(script).toContain("scripts/desktop-v3-responsive-smoke.test.mjs");
+    expect(script).toContain("scripts/verify-desktop-v3-backend-client-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-capability-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-command-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-localdb-governance.test.mjs");
@@ -46,6 +48,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
       prefixes: ["desktop-v3-"],
       topLevelNames: [
         "desktop-v3-responsive-smoke.test.mjs",
+        "verify-desktop-v3-backend-client-governance.test.mjs",
         "verify-desktop-v3-capability-governance.test.mjs",
         "verify-desktop-v3-command-governance.test.mjs",
         "verify-desktop-v3-localdb-governance.test.mjs",
