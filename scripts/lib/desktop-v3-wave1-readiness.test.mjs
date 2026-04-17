@@ -37,6 +37,7 @@ describe("desktop-v3 wave1 readiness config", () => {
     expect(config.latestSummaryPath).toContain(
       path.join("output", "verification", "latest", "desktop-v3-wave1-readiness-summary.json"),
     );
+    expect(config.capabilityGovernanceOutputDir).toBe(path.join(config.outputDir, "capability-governance"));
     expect(config.commandGovernanceOutputDir).toBe(path.join(config.outputDir, "command-governance"));
     expect(config.localdbGovernanceOutputDir).toBe(path.join(config.outputDir, "localdb-governance"));
     expect(config.packagedAppSmokeOutputDir).toBe(path.join(config.outputDir, "packaged-app-smoke"));
@@ -72,6 +73,7 @@ describe("desktop-v3 wave1 readiness steps", () => {
     expect(steps.at(1)?.key).toBe("desktop-v3-runtime-boundary");
     expect(steps.at(2)?.key).toBe("desktop-v3-localdb-governance");
     expect(steps.at(3)?.key).toBe("desktop-v3-command-governance");
+    expect(steps.at(4)?.key).toBe("desktop-v3-capability-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-packaged-app-smoke");
     expect(steps.find((step) => step.key === "desktop-v3-runtime-boundary")?.env).toEqual({
@@ -82,6 +84,9 @@ describe("desktop-v3 wave1 readiness steps", () => {
     });
     expect(steps.find((step) => step.key === "desktop-v3-command-governance")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_COMMAND_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/command-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-capability-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_CAPABILITY_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/capability-governance",
     });
     expect(steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_SMOKE_OUTPUT_DIR: "/tmp/wave1-ready/responsive-smoke",
@@ -120,6 +125,7 @@ describe("desktop-v3 wave1 readiness steps", () => {
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-manual");
     expect(steps.at(-1)?.key).toBe("desktop-v3-linux-package");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-capability-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-command-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-localdb-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-boundary");

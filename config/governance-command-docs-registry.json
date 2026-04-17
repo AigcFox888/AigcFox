@@ -33,6 +33,19 @@
       ]
     },
     {
+      "command": "pnpm qa:desktop-v3-capability-governance",
+      "script": "qa:desktop-v3-capability-governance",
+      "purpose": "desktop-v3 capability and permission boundary governance verification entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/258-desktop-v3-technical-baseline.md",
+        "docs/260-desktop-v3-wave1-execution-baseline.md",
+        "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      ]
+    },
+    {
       "command": "pnpm qa:desktop-v3-command-governance",
       "script": "qa:desktop-v3-command-governance",
       "purpose": "desktop-v3 Rust command boundary governance verification entry",

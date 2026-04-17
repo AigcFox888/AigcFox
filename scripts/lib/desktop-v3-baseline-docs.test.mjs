@@ -44,6 +44,8 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("label");
     expect(governanceText).toContain("main-window.json");
     expect(governanceText).toContain("core:default");
+    expect(governanceText).toContain("desktop-renderer-boot-write");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(governanceText).toContain("LocalDatabase");
@@ -52,6 +54,7 @@ describe("desktop-v3 baseline docs", () => {
 
     expect(executionText).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(executionText).toContain("desktop-v3-document-check");
+    expect(executionText).toContain("desktop-v3-capability-governance");
     expect(executionText).toContain("desktop-v3-command-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
     expect(executionText).toContain("desktop-v3-runtime-boundary");

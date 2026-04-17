@@ -12,6 +12,7 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("281-desktop-v3-post-reinstall-recovery-entry.md");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
+    expect(text).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");

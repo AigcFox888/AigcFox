@@ -23,6 +23,7 @@
 
 - `pnpm test:desktop-v3-wave1-readiness`
 - `pnpm qa:desktop-v3-wave1-readiness`
+- `pnpm qa:desktop-v3-capability-governance`
 - `pnpm qa:desktop-v3-command-governance`
 - `pnpm qa:desktop-v3-localdb-governance`
 - `pnpm qa:desktop-v3-runtime-boundary`
@@ -33,6 +34,7 @@
 - `desktop-v3-runtime-boundary`
 - `desktop-v3-localdb-governance`
 - `desktop-v3-command-governance`
+- `desktop-v3-capability-governance`
 - `lint`
 - `typecheck`
 - `test`
@@ -65,6 +67,7 @@
 - `desktop-v3-runtime-boundary` 成功
 - `desktop-v3-localdb-governance` 成功
 - `desktop-v3-command-governance` 成功
+- `desktop-v3-capability-governance` 成功
 - `responsive smoke` 成功
 - `tauri dev smoke` 成功
 - `packaged app smoke` 成功

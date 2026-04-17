@@ -41,6 +41,7 @@ React UI
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
 - 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
+- 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
 - Rust 侧能力先进入 `runtime/*`，`commands/*` 只保留薄层转发
 
@@ -87,7 +88,7 @@ React UI
 - `apps/desktop-v3/src-tauri/capabilities/main-window.json`
 - 显式 `windows: ["main"]`
 - 显式 `core:app:default / core:event:default / core:webview:default / core:window:default`
-- 显式 app command permission：`desktop-preferences-read / desktop-preferences-write / desktop-diagnostics-read / desktop-backend-probe-read`
+- 显式 app command permission：`desktop-preferences-read / desktop-preferences-write / desktop-diagnostics-read / desktop-backend-probe-read / desktop-renderer-boot-write`
 
 这代表：
 

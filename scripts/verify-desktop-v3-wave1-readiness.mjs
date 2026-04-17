@@ -22,7 +22,7 @@ export function buildDesktopV3Wave1ReadinessHelpText() {
     "",
     "Notes:",
     "  The runner starts with a source-of-truth document gate: git diff --check for tracked docs, equivalent format checks for untracked docs, then markdown links + forbidden legacy term scan.",
-    "  The runner then enforces renderer runtime, LocalDatabase governance, and Rust command governance before lint / test / smoke proof steps.",
+    "  The runner then enforces renderer runtime, LocalDatabase governance, Rust command governance, and capability governance before lint / test / smoke proof steps.",
     "  On Ubuntu + WSL, the host tauri proof step uses qa:desktop-v3-tauri-dev-smoke.",
     "  On Ubuntu + WSL, packaged renderer proof uses qa:desktop-v3-packaged-app-smoke after qa:desktop-v3-linux-package.",
     "  The top-level readiness summary keeps archive/latest copies and binds the child smoke archive/latest summary paths for responsive, tauri dev, and packaged app.",

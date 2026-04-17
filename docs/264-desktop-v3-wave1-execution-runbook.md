@@ -39,6 +39,7 @@ pnpm test:desktop-v3-wave1-readiness
 - acceptance docs
 - runbook docs
 - GitHub baseline docs
+- capability governance
 - Rust command governance
 - LocalDatabase governance
 - runtime boundary governance
@@ -59,15 +60,16 @@ pnpm qa:desktop-v3-wave1-readiness
 2. `pnpm qa:desktop-v3-runtime-boundary`
 3. `pnpm qa:desktop-v3-localdb-governance`
 4. `pnpm qa:desktop-v3-command-governance`
-5. `pnpm --filter @aigcfox/desktop-v3 lint`
-6. `pnpm --filter @aigcfox/desktop-v3 typecheck`
-7. `pnpm --filter @aigcfox/desktop-v3 test`
-8. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
-9. `pnpm --filter @aigcfox/desktop-v3 build`
-10. `pnpm qa:desktop-v3-responsive-smoke`
-11. `pnpm qa:desktop-v3-tauri-dev-smoke`
-12. `pnpm qa:desktop-v3-linux-package`
-13. `pnpm qa:desktop-v3-packaged-app-smoke`
+5. `pnpm qa:desktop-v3-capability-governance`
+6. `pnpm --filter @aigcfox/desktop-v3 lint`
+7. `pnpm --filter @aigcfox/desktop-v3 typecheck`
+8. `pnpm --filter @aigcfox/desktop-v3 test`
+9. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
+10. `pnpm --filter @aigcfox/desktop-v3 build`
+11. `pnpm qa:desktop-v3-responsive-smoke`
+12. `pnpm qa:desktop-v3-tauri-dev-smoke`
+13. `pnpm qa:desktop-v3-linux-package`
+14. `pnpm qa:desktop-v3-packaged-app-smoke`
 
 ## 输出
 
@@ -77,6 +79,7 @@ pnpm qa:desktop-v3-wave1-readiness
 ## 说明
 
 - 当前 renderer / invoke 证明以 `packaged app smoke` 为主证据
+- 当前 capability / permission / IPC 对齐回归由 `pnpm qa:desktop-v3-capability-governance` 先行拦截
 - 当前 Rust command 边界回归由 `pnpm qa:desktop-v3-command-governance` 先行拦截
 - 当前 LocalDatabase 公开面回归由 `pnpm qa:desktop-v3-localdb-governance` 先行拦截
 - 当前 renderer runtime 边界回归由 `pnpm qa:desktop-v3-runtime-boundary` 先行拦截

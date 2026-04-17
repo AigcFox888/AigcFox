@@ -55,6 +55,7 @@
 ```bash
 pnpm test:desktop-v3-wave1-readiness
 pnpm qa:desktop-v3-wave1-readiness
+pnpm qa:desktop-v3-capability-governance
 pnpm qa:desktop-v3-command-governance
 pnpm qa:desktop-v3-localdb-governance
 pnpm qa:desktop-v3-runtime-boundary
@@ -89,8 +90,9 @@ cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 - 主内容区：`flex: 1`
 - 不允许横向滚动
 
-当前如果要跑整条 `Wave 1` 自动化验收链，优先使用 `pnpm qa:desktop-v3-wave1-readiness`，它会先执行当前 source-of-truth 文档 gate，再把 `runtime boundary / LocalDatabase governance / command governance / lint / typecheck / test / cargo test / build / responsive smoke / tauri dev smoke / linux package / packaged app smoke` 串起来，并把统一结果同时写到 `output/verification/desktop-v3-wave1-readiness-<run-id>/summary.json` 与 `output/verification/latest/desktop-v3-wave1-readiness-summary.json`；
+当前如果要跑整条 `Wave 1` 自动化验收链，优先使用 `pnpm qa:desktop-v3-wave1-readiness`，它会先执行当前 source-of-truth 文档 gate，再把 `runtime boundary / LocalDatabase governance / command governance / capability governance / lint / typecheck / test / cargo test / build / responsive smoke / tauri dev smoke / linux package / packaged app smoke` 串起来，并把统一结果同时写到 `output/verification/desktop-v3-wave1-readiness-<run-id>/summary.json` 与 `output/verification/latest/desktop-v3-wave1-readiness-summary.json`；
+当前 `main-window` capability、`permissions/main-window.toml`、Rust `invoke_handler` 和 `tauri-command-types.ts` 由 `pnpm qa:desktop-v3-capability-governance` 单独冻结，授权面和 IPC surface 不允许各改各的；
 当前 `commands/*` 边界由 `pnpm qa:desktop-v3-command-governance` 单独冻结，超出当前模块集、命令名、import 面或 helper 薄层边界一律先失败，要求先重写 runtime / command 边界；
 当前 `LocalDatabase` 公开面由 `pnpm qa:desktop-v3-localdb-governance` 单独冻结，超过 `new / initialize / get_preference / set_preference / probe / get_sync_cache_stats` 的职责扩张一律先失败，要求先重写 adapter / blocking bridge；
 当前顶层 `desktop-v3-wave1-readiness` summary 还会绑定 `responsive / tauri dev / packaged app` 三段 child smoke 的 archive/latest 摘要路径，并在 runner 内二次回读 child `summary.json` 校验一致性；
-当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、Rust command governance、LocalDatabase governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。
+当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、capability governance、Rust command governance、LocalDatabase governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。

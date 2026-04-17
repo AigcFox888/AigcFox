@@ -33,7 +33,8 @@
 
 - `capabilities/*` 是窗口与 webview 授权真相
 - capability 绑定以窗口 `label` 为准，不以 `title` 为准
-- 当前主窗口 capability 固定为 `main-window.json`，并显式列出 `core:app:default / core:event:default / core:webview:default / core:window:default` 与受控 app command permission；当前仓库不再继续依赖 `core:default`
+- 当前主窗口 capability 固定为 `main-window.json`，并显式列出 `core:app:default / core:event:default / core:webview:default / core:window:default / desktop-preferences-read / desktop-preferences-write / desktop-diagnostics-read / desktop-backend-probe-read / desktop-renderer-boot-write`；当前仓库不再继续依赖 `core:default`
+- 当前用 `pnpm qa:desktop-v3-capability-governance` 对 capability / permission / invoke_handler / tauri command type map 做静态门禁
 - 任何新 plugin、新窗口、新宿主 JS API 在进入实现前，必须先补 capability / permission 设计
 - 有 I/O 的 command 默认按 `async` 设计；SQLite 扩张前禁止继续在当前同步 localdb 路径上堆逻辑
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
