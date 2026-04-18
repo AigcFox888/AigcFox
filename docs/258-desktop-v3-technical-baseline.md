@@ -123,7 +123,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 - 生产更新源必须使用七牛对象存储（Kodo）或自有 HTTPS 下载源
 - 不以 GitHub 作为中国用户的生产更新源
 - GitHub Actions 只负责产出构件，不直接作为客户端更新源
-- 当前首次交付固定为完整安装包：维护者从 GitHub Actions 下载 `Windows + macOS` bundle，再上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，随后面向中国用户分发首次下载地址或离线包
+- 当前首次交付固定为完整安装包：维护者从 GitHub Actions 下载 `Windows + macOS` bundle，并以 artifact 内的 `release-manifest.json` 与 `SHA256SUMS.txt` 作为首装包文件清单与校验真相，再上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，随后面向中国用户分发首次下载地址或离线包
 - 后续在线更新策略已冻结为：已安装用户不再重复下载安装包，而是走客户端在线更新
 - 强制更新策略已冻结为：不打断当前正在使用的会话；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新
 - 更新能力后续进入实现时，必须采用受控、可审计、可签名的方式
