@@ -125,6 +125,9 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true",
       "- os: windows-latest",
       "- os: macos-latest",
+      "Install WiX Toolset (windows)",
+      "choco upgrade wixtoolset --version=3.14.1 -y --no-progress",
+      "\"WIX=$wixRoot\"",
       "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
       "actions/upload-artifact@v6",
     ]);
@@ -159,6 +162,8 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "docs/267-desktop-v3-github-actions-baseline.md",
       "docs/269-desktop-v3-tauri-2-governance-baseline.md",
       "workflow_dispatch",
+      "WiX Toolset 3.14.1",
+      "Chocolatey",
       "不自动发布到 GitHub Releases",
       "不自动作为客户端更新源",
     ]);
