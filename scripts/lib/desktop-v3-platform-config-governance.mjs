@@ -30,7 +30,7 @@ export const desktopV3AllowedTauriTopLevelKeys = Object.freeze([
 export const desktopV3AllowedTauriBuildConfig = Object.freeze({
   beforeBuildCommand: "pnpm build",
   beforeDevCommand: "pnpm dev",
-  devUrl: "http://127.0.0.1:1420/",
+  devUrl: "http://127.0.0.1:31420/",
   frontendDist: "../dist",
 });
 export const desktopV3AllowedTauriAppConfigKeys = Object.freeze([

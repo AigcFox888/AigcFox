@@ -9,7 +9,8 @@
 | 发布平台边界 | `Windows + macOS` 是当前唯一正式发布目标 | 终端用户构件只允许由 GitHub Actions 产出 `windows-latest + macos-latest`；`ubuntu-24.04` 只保留 CI 验证宿主，脚本 `qa:desktop-v3-linux-package` 已明确排除在当前 acceptance scope 外 | workflow / baseline |
 | 更新源边界 | GitHub 不是中国用户正式更新源 | 正式更新走七牛或自有 HTTPS | 文档 |
 | 技术边界 | `Tauri 2 updater plugin` | 渠道固定为 `dev / staging / stable` | 文档 |
-| 文档 gate | `pnpm test:desktop-v3-delivery-updater-docs` / `pnpm qa:desktop-v3-delivery-updater-docs` | `docs/281`、`docs/README.md`、`248`、`267/269/274/275/276/277/278/279/280` 与 `AGENTS.md` 需要真实验证 | 脚本 |
+| 文档 gate | `pnpm test:desktop-v3-delivery-updater-docs` / `pnpm qa:desktop-v3-delivery-updater-docs` | `README.md`、`apps/desktop-v3/README.md`、`docs/281`、`docs/README.md`、`248`、`267/269/274/275/276/277/278/279/280` 与 `AGENTS.md` 需要真实验证 | 脚本 |
+| 远端 workflow proof | `desktop-v3-ci` / `desktop-v3-package` / `desktop-v3-delivery-updater-docs` | latest summary 的 `checks[]` 必须同时覆盖三条 active workflow，并且最新成功 run 必须命中当前 `origin/<branch>` head | summary / workflow |
 | Workflow 边界 | `.github/workflows/desktop-v3-delivery-updater-docs.yml` | 当前 delivery/updater 文档链只依赖专用 workflow 与 [docs/280-desktop-v3-delivery-updater-closeout.md](./280-desktop-v3-delivery-updater-closeout.md) | workflow / closeout |
 | Closeout 解释边界 | `docs/280` 只记录基线 closeout 入口与读取口径 | `docs/280` 不替代当前 head 的远端 proof 结果；当前分支是否通过仍要重新执行脚本并回读 latest summary | summary / closeout |
 

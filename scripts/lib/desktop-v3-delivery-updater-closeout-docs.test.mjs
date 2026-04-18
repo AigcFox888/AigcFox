@@ -13,8 +13,13 @@ describe("desktop-v3 delivery/updater closeout docs", () => {
     expect(text).toContain("pnpm test:desktop-v3-delivery-updater-docs");
     expect(text).toContain("pnpm qa:desktop-v3-delivery-updater-docs");
     expect(text).toContain("pnpm qa:desktop-v3-delivery-updater-github-remote-proof");
+    expect(text).toContain("pnpm qa:github-actions-lint");
+    expect(text).toContain("pnpm qa:governance-command-docs");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-docs-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json");
+    expect(text).toContain("output/verification/latest/governance-command-docs-summary.json");
+    expect(text).toContain(".github/workflows/desktop-v3-ci.yml");
+    expect(text).toContain(".github/workflows/desktop-v3-package.yml");
     expect(text).toContain(".github/workflows/desktop-v3-delivery-updater-docs.yml");
     expect(text).toContain("`274 -> 280`");
     expect(text).toContain("feature/desktop-v3-github-actions-baseline");
@@ -25,5 +30,6 @@ describe("desktop-v3 delivery/updater closeout docs", () => {
     expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
     expect(text).toContain("`latestSuccessfulRunId`");
+    expect(text).toContain("`checks[].id = desktop-v3-delivery-updater-docs-remote-proof / desktop-v3-ci-remote-proof / desktop-v3-package-remote-proof`");
   });
 });

@@ -8,7 +8,9 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, "..", "..");
 
 export const desktopV3DeliveryUpdaterDocumentFiles = [
+  "README.md",
   "AGENTS.md",
+  "apps/desktop-v3/README.md",
   "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
   "docs/README.md",
   "docs/248-autonomous-execution-baseline.md",

@@ -43,6 +43,7 @@ describe("desktop-v3 delivery/updater governance docs", () => {
     expect(executionBaseline).toContain("`pnpm test:desktop-v3-delivery-updater-docs`");
     expect(executionBaseline).toContain("`pnpm qa:desktop-v3-delivery-updater-docs`");
     expect(executionBaseline).toContain("GitHub workflow proof");
+    expect(executionBaseline).toContain("`checks[]` 必须同时覆盖 `desktop-v3-delivery-updater-docs`、`desktop-v3-ci` 与 `desktop-v3-package`");
     expect(executionBaseline).toContain("updater 代码实现");
     expect(executionBaseline).toContain("业务 API 扩展");
     expect(executionBaseline).toContain("280-desktop-v3-delivery-updater-closeout.md");
@@ -52,6 +53,8 @@ describe("desktop-v3 delivery/updater governance docs", () => {
     expect(acceptanceMatrix).toContain("`dev / staging / stable`");
     expect(acceptanceMatrix).toContain("`pnpm test:desktop-v3-delivery-updater-docs`");
     expect(acceptanceMatrix).toContain("`pnpm qa:desktop-v3-delivery-updater-docs`");
+    expect(acceptanceMatrix).toContain("desktop-v3-ci");
+    expect(acceptanceMatrix).toContain("desktop-v3-package");
     expect(acceptanceMatrix).toContain(".github/workflows/desktop-v3-delivery-updater-docs.yml");
     expect(acceptanceMatrix).toContain("docs/280-desktop-v3-delivery-updater-closeout.md");
   });

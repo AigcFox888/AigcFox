@@ -15,6 +15,9 @@ describe("desktop-v3 delivery/updater acceptance docs", () => {
     expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
     expect(text).toContain("`latestSuccessfulRunId`");
+    expect(text).toContain("desktop-v3-ci");
+    expect(text).toContain("desktop-v3-package");
+    expect(text).toContain("desktop-v3-delivery-updater-docs");
     expect(text).toContain("`origin/<branch>`");
     expect(text).toContain("remote-tracking ref");
     expect(text).toContain("summary / closeout");

@@ -10,6 +10,9 @@ describe("desktop-v3 README docs", () => {
     const text = await readWorkspaceFile(config.rootDir, readmePath);
 
     expect(text).toContain("281-desktop-v3-post-reinstall-recovery-entry.md");
+    expect(text).toContain("../../docs/README.md");
+    expect(text).toContain("../../docs/248-autonomous-execution-baseline.md");
+    expect(text).toContain("../../AGENTS.md");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:rust-host-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
@@ -57,5 +60,8 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("docs/281-desktop-v3-post-reinstall-recovery-entry.md");
     expect(text).toContain("仓库目录矩阵");
     expect(text).toContain("重装后快速恢复入口");
+    expect(text).toContain("desktop-v3-ci");
+    expect(text).toContain("desktop-v3-package");
+    expect(text).toContain("desktop-v3-delivery-updater-docs");
   });
 });

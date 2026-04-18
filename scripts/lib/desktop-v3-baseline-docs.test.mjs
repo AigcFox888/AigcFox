@@ -116,7 +116,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
     expect(governanceText).toContain("runtime/mod.rs");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-boundary");
-    expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源");
+    expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源");
 
     expect(executionText).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(executionText).toContain("desktop-v3-document-check");

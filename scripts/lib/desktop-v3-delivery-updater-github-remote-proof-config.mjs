@@ -31,6 +31,28 @@ export function buildDesktopV3DeliveryUpdaterGithubRemoteProofDefinitions(config
       requireLatestRunSuccess: true,
       workflowName: "desktop-v3-delivery-updater-docs",
     },
+    {
+      expectedBranch: config.targetBranch,
+      expectedHeadSha: config.remoteTrackingHeadSha,
+      expectedRef: config.remoteTrackingRef,
+      expectedWorkflowPath: ".github/workflows/desktop-v3-ci.yml",
+      expectedWorkflowState: "active",
+      id: "desktop-v3-ci-remote-proof",
+      name: "desktop-v3 ci remote proof",
+      requireLatestRunSuccess: true,
+      workflowName: "desktop-v3-ci",
+    },
+    {
+      expectedBranch: config.targetBranch,
+      expectedHeadSha: config.remoteTrackingHeadSha,
+      expectedRef: config.remoteTrackingRef,
+      expectedWorkflowPath: ".github/workflows/desktop-v3-package.yml",
+      expectedWorkflowState: "active",
+      id: "desktop-v3-package-remote-proof",
+      name: "desktop-v3 package remote proof",
+      requireLatestRunSuccess: true,
+      workflowName: "desktop-v3-package",
+    },
   ];
 }
 

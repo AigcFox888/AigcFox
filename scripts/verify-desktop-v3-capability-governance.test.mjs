@@ -55,7 +55,7 @@ describe("verify-desktop-v3-capability-governance", () => {
       invokeHandlerCommands: ["desktop_get_theme_preference"],
       payloadCommands: ["desktop_get_theme_preference"],
       permissionEntries: [{ commands: ["desktop_get_theme_preference"], identifier: "desktop-preferences-read" }],
-      remoteUrls: ["http://127.0.0.1:1420/*"],
+      remoteUrls: ["http://127.0.0.1:31420/*"],
       resultCommands: ["desktop_get_theme_preference"],
       scannedFileCount: 4,
       scannedFiles: [

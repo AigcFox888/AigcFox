@@ -30,6 +30,7 @@
 - latest summary 必须记录 `remoteTrackingHeadSha`
 - latest summary 必须记录 `latestSuccessfulHeadSha`
 - latest summary 必须记录 `latestSuccessfulRunId`
+- latest summary 的 `checks[]` 必须同时覆盖 `desktop-v3-delivery-updater-docs`、`desktop-v3-ci` 与 `desktop-v3-package`
 - latest run 必须成功覆盖当前 `origin/<branch>` remote-tracking ref，不能只回读更早的成功 run
 - GitHub workflow proof 以 latest summary 回读结果为最终结论
 

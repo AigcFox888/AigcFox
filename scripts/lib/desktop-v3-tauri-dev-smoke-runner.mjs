@@ -2,9 +2,14 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import { spawn } from "node:child_process";
 
-import { closeWritableStream, terminateChildProcess } from "./desktop-process.mjs";
+import {
+  closeWritableStream,
+  terminateChildProcess,
+  terminateDesktopV3MockDevServerConflict,
+} from "./desktop-process.mjs";
 import {
   detectDesktopV3DevMarkers,
+  detectDesktopV3DevStartupFailure,
   resolveDesktopV3TauriDevSmokeEnv,
   detectDesktopV3WslgWindowRegistration,
 } from "./desktop-v3-tauri-dev-smoke.mjs";
@@ -80,13 +85,28 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
   const sleepImpl = options.sleepImpl ?? sleep;
   const writeJsonFileImpl = options.writeJsonFileImpl ?? writeJsonFile;
   const terminateChildProcessImpl = options.terminateChildProcessImpl ?? terminateChildProcess;
+  const terminateMockDevServerConflictImpl =
+    options.terminateMockDevServerConflictImpl ?? terminateDesktopV3MockDevServerConflict;
   const closeWritableStreamImpl = options.closeWritableStreamImpl ?? closeWritableStream;
   const detectMarkersImpl = options.detectMarkersImpl ?? detectDesktopV3DevMarkers;
+  const detectStartupFailureImpl =
+    options.detectStartupFailureImpl ?? detectDesktopV3DevStartupFailure;
   const detectWindowRegistrationImpl =
     options.detectWindowRegistrationImpl ?? detectDesktopV3WslgWindowRegistration;
   let childExit = null;
 
   await mkdirImpl(config.outputDir, { recursive: true });
+
+  const terminatedMockDevServerConflict = await terminateMockDevServerConflictImpl(config.rootDir, {
+    port: config.devServerPort,
+    sleepImpl,
+  });
+
+  if (terminatedMockDevServerConflict) {
+    summary.warnings.push(
+      `Terminated conflicting desktop-v3 mock dev server process group ${terminatedMockDevServerConflict.pgid} before tauri host smoke.`,
+    );
+  }
 
   const westonStat = await statIfExistsImpl(config.westonLogPath);
   if (!westonStat) {
@@ -130,10 +150,6 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
     const startedAt = Date.now();
 
     while (Date.now() - startedAt < config.timeoutMs) {
-      if (childExit && childExit.code !== 0) {
-        throw new Error(`desktop-v3 tauri dev exited early with code ${childExit.code ?? "unknown"}.`);
-      }
-
       const markers = detectMarkersImpl(outputBuffer);
       const westonDelta = await readWestonDelta(config, westonInitialSize, options);
 
@@ -152,7 +168,21 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
       summary.observed.mainWindowNavigations = markers.mainWindowNavigations;
       summary.observed.pageLoads = markers.pageLoads;
       summary.observed.rendererBoots = markers.rendererBoots;
-      summary.warnings = markers.windowWarnings;
+      summary.warnings = Array.from(
+        new Set([
+          ...summary.warnings,
+          ...markers.windowWarnings,
+        ]),
+      );
+      const startupFailure = detectStartupFailureImpl(outputBuffer);
+
+      if (startupFailure) {
+        throw new Error(startupFailure);
+      }
+
+      if (childExit && childExit.code !== 0) {
+        throw new Error(`desktop-v3 tauri dev exited early with code ${childExit.code ?? "unknown"}.`);
+      }
 
       if (
         summary.markers.viteReady &&
@@ -169,6 +199,12 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
       }
 
       await sleepImpl(config.pollIntervalMs);
+    }
+
+    const startupFailure = detectStartupFailureImpl(outputBuffer);
+
+    if (startupFailure) {
+      throw new Error(startupFailure);
     }
 
     throw new Error(

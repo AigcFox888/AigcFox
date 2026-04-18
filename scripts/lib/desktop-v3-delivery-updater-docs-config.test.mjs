@@ -20,7 +20,9 @@ describe("desktop-v3 delivery/updater docs config", () => {
     );
     expect(config.documentFiles).toEqual(
       expect.arrayContaining([
+        "README.md",
         "AGENTS.md",
+        "apps/desktop-v3/README.md",
         "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
         "docs/README.md",
         "docs/248-autonomous-execution-baseline.md",

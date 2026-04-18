@@ -8,8 +8,7 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev:desktop": "pnpm --filter @aigcfox/desktop-v3 dev",
-    "dev:desktop-v3": "pnpm --filter @aigcfox/desktop-v3 dev",
+    "dev:desktop-v3": "VITE_DESKTOP_V3_RUNTIME_MODE=mock pnpm --filter @aigcfox/desktop-v3 dev",
     "lint": "pnpm --filter @aigcfox/desktop-v3 lint",
     "typecheck": "pnpm --filter @aigcfox/desktop-v3 typecheck",
     "test": "pnpm --filter @aigcfox/desktop-v3 test",

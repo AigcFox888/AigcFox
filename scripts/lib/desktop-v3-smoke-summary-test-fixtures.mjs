@@ -51,7 +51,7 @@ export function buildDesktopV3ResponsiveSmokeSummary(config = {}) {
     preview: {
       logPath: `${resolvedConfig.outputDir}/desktop-v3-preview.log`,
       startedByScript: true,
-      url: "http://127.0.0.1:1421",
+      url: "http://127.0.0.1:31421",
     },
     requestFailures: [],
     routes: desktopV3ResponsiveSmokeViewports.flatMap((viewport) =>
@@ -116,19 +116,19 @@ export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
       devRequests: [
         {
           method: "GET",
-          url: "http://127.0.0.1:1420/",
+          url: "http://127.0.0.1:31420/",
         },
       ],
       mainWindowNavigations: [
         {
           allowed: true,
-          url: "http://127.0.0.1:1420/#/",
+          url: "http://127.0.0.1:31420/#/",
         },
       ],
       pageLoads: [
         {
           event: "finished",
-          url: "http://127.0.0.1:1420/#/",
+          url: "http://127.0.0.1:31420/#/",
         },
       ],
       rendererBoots: [

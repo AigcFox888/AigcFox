@@ -17,7 +17,7 @@
 
 - `Tauri 2 + React + Rust local runtime` 客户端骨架
 - `desktop-v3` 文档真相层与验证链
-- GitHub Actions 出包中转与自有更新源治理基线
+- GitHub Actions 出包中转与七牛 / 自有更新源治理基线
 
 当前仓库不负责：
 
@@ -52,11 +52,14 @@
 - 交付文档快速入口：`pnpm test:desktop-v3-delivery-updater-docs`
 - 交付文档完整入口：`pnpm qa:desktop-v3-delivery-updater-docs`
 - 远端 GitHub proof：`pnpm qa:desktop-v3-delivery-updater-github-remote-proof`
+- Workflow Lint：`pnpm qa:github-actions-lint`
+- 命令文档治理：`pnpm qa:governance-command-docs`
 - 最新摘要固定入口：
-  - `output/verification/rust-host-readiness-summary.json`
+  - `output/verification/latest/rust-host-readiness-summary.json`
   - `output/verification/latest/desktop-v3-wave1-readiness-summary.json`
   - `output/verification/latest/desktop-v3-delivery-updater-docs-summary.json`
   - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
+  - `output/verification/latest/governance-command-docs-summary.json`
 
 ## 重装后重读顺序
 

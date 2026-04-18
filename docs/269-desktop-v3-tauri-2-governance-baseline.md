@@ -21,7 +21,7 @@
 - `src-tauri/capabilities/*` 是宿主授权面真相，不把安全边界散落在页面代码里
 - 窗口与 webview 的权限绑定以 `label` 为准，不以 `title`、路由或页面名为准
 - `tauri.conf.json` 只放跨平台稳定项；一旦进入平台打包细化或更新实现，必须拆平台覆盖配置
-- 自动更新后续必须走 `Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源`，不允许直接把 GitHub 当用户更新源
+- 自动更新后续必须走 `Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源`，不允许直接把 GitHub 当用户更新源
 
 ## Tauri 2 结构边界
 
@@ -450,7 +450,7 @@ tauri.macos.conf.json
 
 - 后续必须使用 `Tauri 2 updater plugin`
 - 必须要求签名校验
-- 更新源必须是自有 HTTPS 源
+- 更新源必须是七牛对象存储或自有 HTTPS 源
 - GitHub Actions 只负责产出构件，不直接作为中国用户更新入口
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 做静态门禁；在 updater 结构化重写落地前，不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段、GitHub Releases 客户端更新源或 `update-guard` 壳层文件
 

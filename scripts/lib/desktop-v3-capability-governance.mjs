@@ -17,8 +17,8 @@ export const desktopV3TauriCommandTypesFile = "apps/desktop-v3/src/lib/runtime/t
 export const desktopV3AllowedCapabilityIdentifiers = Object.freeze(["main-window"]);
 export const desktopV3AllowedCapabilityWindows = Object.freeze(["main"]);
 export const desktopV3AllowedCapabilityRemoteUrls = Object.freeze([
-  "http://127.0.0.1:1420/*",
-  "http://localhost:1420/*",
+  "http://127.0.0.1:31420/*",
+  "http://localhost:31420/*",
 ]);
 export const desktopV3AllowedCorePermissions = Object.freeze([
   "core:app:default",

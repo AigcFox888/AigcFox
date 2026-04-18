@@ -10,8 +10,13 @@
 - `pnpm test:desktop-v3-delivery-updater-docs`
 - `pnpm qa:desktop-v3-delivery-updater-docs`
 - `pnpm qa:desktop-v3-delivery-updater-github-remote-proof`
+- `pnpm qa:github-actions-lint`
+- `pnpm qa:governance-command-docs`
 - `output/verification/latest/desktop-v3-delivery-updater-docs-summary.json`
 - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
+- `output/verification/latest/governance-command-docs-summary.json`
+- `.github/workflows/desktop-v3-ci.yml`
+- `.github/workflows/desktop-v3-package.yml`
 - `.github/workflows/desktop-v3-delivery-updater-docs.yml`
 
 ## 固定说明
@@ -25,6 +30,7 @@
 - `remoteTrackingHeadSha`
 - `latestSuccessfulHeadSha`
 - `latestSuccessfulRunId`
+- `checks[].id = desktop-v3-delivery-updater-docs-remote-proof / desktop-v3-ci-remote-proof / desktop-v3-package-remote-proof`
 
 ## 当前发布 / 宿主边界
 

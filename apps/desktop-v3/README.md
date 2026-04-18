@@ -8,17 +8,20 @@
 ## 阅读顺序
 
 1. [281-desktop-v3-post-reinstall-recovery-entry.md](../../docs/281-desktop-v3-post-reinstall-recovery-entry.md)
-2. [257-desktop-v3-replatform-proposal.md](../../docs/257-desktop-v3-replatform-proposal.md)
-3. [258-desktop-v3-technical-baseline.md](../../docs/258-desktop-v3-technical-baseline.md)
-4. [259-desktop-v3-detailed-design.md](../../docs/259-desktop-v3-detailed-design.md)
-5. [269-desktop-v3-tauri-2-governance-baseline.md](../../docs/269-desktop-v3-tauri-2-governance-baseline.md)
-6. [260-desktop-v3-wave1-execution-baseline.md](../../docs/260-desktop-v3-wave1-execution-baseline.md)
-7. [263-desktop-v3-wave1-acceptance-matrix.md](../../docs/263-desktop-v3-wave1-acceptance-matrix.md)
-8. [264-desktop-v3-wave1-execution-runbook.md](../../docs/264-desktop-v3-wave1-execution-runbook.md)
-9. [267-desktop-v3-github-actions-baseline.md](../../docs/267-desktop-v3-github-actions-baseline.md)
-10. [268-desktop-v3-clean-pr-closeout.md](../../docs/268-desktop-v3-clean-pr-closeout.md)
-11. [ui-client/system.md](../../docs/ui-client/system.md)
-12. [ui-client/layout.md](../../docs/ui-client/layout.md)
+2. [README.md](../../docs/README.md)
+3. [248-autonomous-execution-baseline.md](../../docs/248-autonomous-execution-baseline.md)
+4. [AGENTS.md](../../AGENTS.md)
+5. [257-desktop-v3-replatform-proposal.md](../../docs/257-desktop-v3-replatform-proposal.md)
+6. [258-desktop-v3-technical-baseline.md](../../docs/258-desktop-v3-technical-baseline.md)
+7. [259-desktop-v3-detailed-design.md](../../docs/259-desktop-v3-detailed-design.md)
+8. [269-desktop-v3-tauri-2-governance-baseline.md](../../docs/269-desktop-v3-tauri-2-governance-baseline.md)
+9. [260-desktop-v3-wave1-execution-baseline.md](../../docs/260-desktop-v3-wave1-execution-baseline.md)
+10. [263-desktop-v3-wave1-acceptance-matrix.md](../../docs/263-desktop-v3-wave1-acceptance-matrix.md)
+11. [264-desktop-v3-wave1-execution-runbook.md](../../docs/264-desktop-v3-wave1-execution-runbook.md)
+12. [267-desktop-v3-github-actions-baseline.md](../../docs/267-desktop-v3-github-actions-baseline.md)
+13. [268-desktop-v3-clean-pr-closeout.md](../../docs/268-desktop-v3-clean-pr-closeout.md)
+14. [ui-client/system.md](../../docs/ui-client/system.md)
+15. [ui-client/layout.md](../../docs/ui-client/layout.md)
 
 ## 当前范围
 
@@ -89,7 +92,7 @@ cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 
 - 默认开发环境按 `Windows + WSL2` 记录，默认执行面固定为 `WSL`
 - 当前不再把 `Windows + PowerShell` 作为默认开发主链
-- 如果当前机器刚重装、刚切回 `WSL` 宿主、Rust toolchain / linker 有漂移，先运行 `pnpm qa:rust-host-readiness`；它会对 `apps/desktop-v3/src-tauri/Cargo.toml` 做真实 `cargo build --manifest-path ... --quiet` 探针，并把结果写到 `output/verification/rust-host-readiness-summary.json`
+- 如果当前机器刚重装、刚切回 `WSL` 宿主、Rust toolchain / linker 有漂移，先运行 `pnpm qa:rust-host-readiness`；它会对 `apps/desktop-v3/src-tauri/Cargo.toml` 做真实 `cargo build --manifest-path ... --quiet` 探针，并把结果写到 `output/verification/rust-host-readiness-<run-id>/summary.json` 与 `output/verification/latest/rust-host-readiness-summary.json`
 - 如果必须经过 Windows 宿主，只允许做单次桥接型操作，不在 Windows 侧重复启动同一仓库的依赖安装、dev server、watcher、构建或测试
 - `Windows + macOS` 正式构件仍由 `GitHub Actions` 统一产出；`ubuntu-24.04` 只保留 CI 验证宿主，不再作为当前交付目标
 - `qa:desktop-v3-linux-package` 已退出当前 active scope；不要再把 Linux 终端用户安装包收口塞回本地 `Wave 1` 链

@@ -14,7 +14,7 @@ describe("desktop-v3 entry docs", () => {
     expect(text).toContain("pnpm qa:rust-host-readiness");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
-    expect(text).toContain("output/verification/rust-host-readiness-summary.json");
+    expect(text).toContain("output/verification/latest/rust-host-readiness-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
   });
 

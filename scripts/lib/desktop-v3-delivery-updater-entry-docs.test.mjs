@@ -39,4 +39,23 @@ describe("desktop-v3 delivery/updater entry docs", () => {
     expect(text).toContain("docs/280-desktop-v3-delivery-updater-closeout.md");
     expect(text).toContain("后续仍只允许做文档维护、治理修订和 proof 回归，不允许直接跳进实现");
   });
+
+  it("keeps root and desktop README entry docs aligned with the delivery/updater host and workflow boundary", async () => {
+    const config = resolveDesktopV3DeliveryUpdaterDocsConfig();
+    const [rootReadme, desktopReadme] = await Promise.all([
+      readWorkspaceFile(config.rootDir, "README.md"),
+      readWorkspaceFile(config.rootDir, "apps/desktop-v3/README.md"),
+    ]);
+
+    expect(rootReadme).toContain("docs/281-desktop-v3-post-reinstall-recovery-entry.md");
+    expect(rootReadme).toContain("pnpm qa:desktop-v3-delivery-updater-github-remote-proof");
+    expect(rootReadme).toContain("desktop-v3-ci");
+    expect(rootReadme).toContain("desktop-v3-package");
+    expect(rootReadme).toContain("desktop-v3-delivery-updater-docs");
+
+    expect(desktopReadme).toContain("../../docs/README.md");
+    expect(desktopReadme).toContain("../../docs/248-autonomous-execution-baseline.md");
+    expect(desktopReadme).toContain("../../AGENTS.md");
+    expect(desktopReadme).toContain("output/verification/latest/rust-host-readiness-summary.json");
+  });
 });

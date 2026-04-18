@@ -3,7 +3,9 @@
 ## 阅读顺序
 
 - `docs/281-desktop-v3-post-reinstall-recovery-entry.md`
+- `docs/README.md`
 - `docs/248-autonomous-execution-baseline.md`
+- `AGENTS.md`
 - `docs/267-desktop-v3-github-actions-baseline.md`
 - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
 - `docs/274-desktop-v3-delivery-updater-proposal.md`
@@ -36,6 +38,7 @@ pnpm qa:governance-command-docs
 - `output/verification/desktop-v3-delivery-updater-docs-<run-id>/summary.json`
 - `output/verification/latest/desktop-v3-delivery-updater-docs-summary.json`
 - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
+- `output/verification/latest/governance-command-docs-summary.json`
 
 ## 远端 proof 判定规则
 
@@ -48,6 +51,9 @@ pnpm qa:governance-command-docs
 - latest run 必须成功覆盖当前 `origin/<branch>` remote-tracking ref
 - `brokenLinks=[]`
 - `forbiddenTerms=[]`
+- `checks[].id = desktop-v3-delivery-updater-docs-remote-proof / desktop-v3-ci-remote-proof / desktop-v3-package-remote-proof`
+- `.github/workflows/desktop-v3-ci.yml`
+- `.github/workflows/desktop-v3-package.yml`
 - `.github/workflows/desktop-v3-delivery-updater-docs.yml`
 - `274 -> 280`
 - fast-test entrypoint wiring

@@ -43,6 +43,14 @@
 - 当前 `push` 触发面固定覆盖：
   - `docs/258-desktop-v3-technical-baseline.md`
   - `docs/267-desktop-v3-github-actions-baseline.md`
+  - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
+  - `docs/274-desktop-v3-delivery-updater-proposal.md`
+  - `docs/275-desktop-v3-delivery-updater-technical-baseline.md`
+  - `docs/276-desktop-v3-delivery-updater-detailed-design.md`
+  - `docs/277-desktop-v3-delivery-updater-execution-baseline.md`
+  - `docs/278-desktop-v3-delivery-updater-acceptance-matrix.md`
+  - `docs/279-desktop-v3-delivery-updater-execution-runbook.md`
+  - `docs/280-desktop-v3-delivery-updater-closeout.md`
 - `desktop-v3-ci.yml` 固定在 `ubuntu-24.04` 做治理、测试与 smoke proof
 - `desktop-v3-package.yml` 只产出 `Windows + macOS` bundle
 - `qa:desktop-v3-linux-package` 已退出当前 CI / QA 主链；不要把 Linux bundle matrix、artifact 上传或本地 Linux 包收口重新塞回 active scope
@@ -52,12 +60,15 @@
 ## desktop-v3-delivery-updater-docs.yml
 
 - 覆盖 `274 -> 280`
+- 入口链同时覆盖 `README.md`、`apps/desktop-v3/README.md`、`AGENTS.md`、`docs/281`、`docs/README.md` 与 `docs/248`
+- workflow path surface 还固定覆盖 `apps/desktop-v3/**`，保证 active scope 代码与 delivery/updater 文档 gate 同步触发
 - `pnpm test:desktop-v3-delivery-updater-docs`
 - `pnpm qa:desktop-v3-delivery-updater-docs`
 - `pnpm qa:github-actions-lint`
 - `pnpm qa:governance-command-docs`
 - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
 - latest summary 至少必须记录 `remoteTrackingRef`、`remoteTrackingHeadSha`、`latestSuccessfulHeadSha` 与 `latestSuccessfulRunId`
+- latest summary 的 `checks[]` 必须同时覆盖 `desktop-v3-delivery-updater-docs`、`desktop-v3-ci` 与 `desktop-v3-package`
 - GitHub workflow proof 的真值来自名称、冻结路径、`active` 状态，以及 latest run 必须成功覆盖当前 `origin/<branch>` remote-tracking ref
 - 远端 proof 统一以 `origin/<branch>` 的 remote-tracking ref 和 latest summary 为准
 - 当前 delivery/updater 文档链也必须覆盖 fast-test entrypoint wiring

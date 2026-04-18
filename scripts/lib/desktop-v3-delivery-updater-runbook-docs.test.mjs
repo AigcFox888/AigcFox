@@ -9,7 +9,9 @@ describe("desktop-v3 delivery/updater runbook docs", () => {
     const runbookPath = "docs/279-desktop-v3-delivery-updater-execution-runbook.md";
     const text = await readWorkspaceFile(config.rootDir, runbookPath);
 
+    expect(text).toContain("docs/README.md");
     expect(text).toContain("docs/248-autonomous-execution-baseline.md");
+    expect(text).toContain("AGENTS.md");
     expect(text).toContain("docs/267-desktop-v3-github-actions-baseline.md");
     expect(text).toContain("docs/269-desktop-v3-tauri-2-governance-baseline.md");
     expect(text).toContain("docs/274-desktop-v3-delivery-updater-proposal.md");
@@ -41,12 +43,16 @@ describe("desktop-v3 delivery/updater runbook docs", () => {
     expect(text).toContain("output/verification/desktop-v3-delivery-updater-docs-<run-id>/summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-docs-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json");
+    expect(text).toContain("output/verification/latest/governance-command-docs-summary.json");
     expect(text).toContain("`remoteTrackingRef`");
     expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
     expect(text).toContain("`latestSuccessfulRunId`");
     expect(text).toContain("`brokenLinks=[]`");
     expect(text).toContain("`forbiddenTerms=[]`");
+    expect(text).toContain("`checks[].id = desktop-v3-delivery-updater-docs-remote-proof / desktop-v3-ci-remote-proof / desktop-v3-package-remote-proof`");
+    expect(text).toContain(".github/workflows/desktop-v3-ci.yml");
+    expect(text).toContain(".github/workflows/desktop-v3-package.yml");
     expect(text).toContain(".github/workflows/desktop-v3-delivery-updater-docs.yml");
     expect(text).toContain("`274 -> 280`");
     expect(text).toContain("latest summary 为准");

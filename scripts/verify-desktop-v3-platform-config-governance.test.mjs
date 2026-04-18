@@ -55,7 +55,7 @@ describe("verify-desktop-v3-platform-config-governance", () => {
       buildConfig: {
         beforeBuildCommand: "pnpm build",
         beforeDevCommand: "pnpm dev",
-        devUrl: "http://127.0.0.1:1420/",
+        devUrl: "http://127.0.0.1:31420/",
         frontendDist: "../dist",
       },
       buildKeys: ["beforeBuildCommand", "beforeDevCommand", "devUrl", "frontendDist"],

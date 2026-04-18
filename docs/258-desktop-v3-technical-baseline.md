@@ -50,7 +50,7 @@
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL、尺寸、初始路由和导航 telemetry 由 Rust `window/main_window.rs + window/main_window_target.rs + window/initial_route.rs + window/telemetry.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
-- 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源`
+- 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源`
 
 详细规则见 [269-desktop-v3-tauri-2-governance-baseline.md](./269-desktop-v3-tauri-2-governance-baseline.md)。
 

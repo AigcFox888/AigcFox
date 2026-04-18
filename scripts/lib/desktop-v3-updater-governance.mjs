@@ -117,7 +117,7 @@ const desktopV3UpdaterGovernanceForbiddenContentRules = Object.freeze([
   },
   {
     detail:
-      "desktop-v3 当前不允许把 GitHub Releases URL 硬编码成客户端更新源。正式更新入口只能在结构化重写后落到自有 HTTPS 源。",
+      "desktop-v3 当前不允许把 GitHub Releases URL 硬编码成客户端更新源。正式更新入口只能在结构化重写后落到七牛对象存储或自有 HTTPS 源。",
     kind: "github-releases-update-source",
     pattern: /https:\/\/github\.com\/[^\s"'`]+\/[^\s"'`]+\/releases(?:\/download)?/u,
   },

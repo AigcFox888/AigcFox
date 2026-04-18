@@ -2,7 +2,7 @@ use std::error::Error;
 
 use tauri::{Url, WebviewUrl};
 
-const MAIN_WINDOW_DEV_URL: &str = "http://127.0.0.1:1420/";
+const MAIN_WINDOW_DEV_URL: &str = "http://127.0.0.1:31420/";
 const MAIN_WINDOW_PROD_ORIGIN: &str = "tauri://localhost";
 const MAIN_WINDOW_PROD_PATH: &str = "index.html";
 const MAIN_WINDOW_TARGET_MODE_ENV: &str = "AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE";
@@ -193,10 +193,10 @@ mod tests {
                         NavigationBoundary {
                             scheme: "http".to_string(),
                             host: "127.0.0.1".to_string(),
-                            port: Some(1420),
+                            port: Some(31420),
                         }
                     );
-                    assert_eq!(url, "http://127.0.0.1:1420/");
+                    assert_eq!(url, "http://127.0.0.1:31420/");
                 }
                 MainWindowTarget::Production { .. } => {
                     panic!("debug builds should resolve a development target");
@@ -227,21 +227,21 @@ mod tests {
             navigation_boundary: NavigationBoundary {
                 scheme: "http".to_string(),
                 host: "127.0.0.1".to_string(),
-                port: Some(1420),
+                port: Some(31420),
             },
-            url: "http://127.0.0.1:1420/".to_string(),
+            url: "http://127.0.0.1:31420/".to_string(),
             webview_url: WebviewUrl::External(
-                "http://127.0.0.1:1420/"
+                "http://127.0.0.1:31420/"
                     .parse()
                     .expect("dev url should parse"),
             ),
         };
 
         assert!(target.allows_navigation(
-            &Url::parse("http://127.0.0.1:1420/diagnostics").expect("candidate should parse"),
+            &Url::parse("http://127.0.0.1:31420/diagnostics").expect("candidate should parse"),
         ));
         assert!(!target.allows_navigation(
-            &Url::parse("http://localhost:1420/diagnostics").expect("candidate should parse"),
+            &Url::parse("http://localhost:31420/diagnostics").expect("candidate should parse"),
         ));
         assert!(!target.allows_navigation(
             &Url::parse("https://tauri.app/").expect("candidate should parse"),

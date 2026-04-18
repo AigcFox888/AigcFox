@@ -47,8 +47,11 @@ pnpm qa:github-actions-lint
 pnpm qa:governance-command-docs
 ```
 
+`pnpm dev:desktop-v3` 在当前 `WSL` 默认口径下固定以 `mock runtime` 启动浏览器壳层；需要真实宿主链路时，走 `pnpm --filter @aigcfox/desktop-v3 tauri dev`。
+
 ## 说明
 
 - 当前默认不进入业务层实现。
 - 当前文档真相层以 `docs/`、`apps/desktop-v3/README.md` 与 `AGENTS.md` 为准。
 - GitHub Actions 只负责 CI 与出包中转；中国用户正式更新源必须走七牛对象存储或自有 HTTPS 服务器。
+- 当前 delivery/updater 远端 proof 必须同时覆盖 `desktop-v3-ci`、`desktop-v3-package` 与 `desktop-v3-delivery-updater-docs` 三条 active workflow。

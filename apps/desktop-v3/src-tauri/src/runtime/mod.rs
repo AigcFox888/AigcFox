@@ -125,13 +125,16 @@ impl DesktopRuntime {
             Ok(probe) => {
                 eprintln!(
                     "desktop-v3.startup-backend-probe.liveness.ok service={} status={} request_id={}",
-                    probe.service,
-                    probe.status,
-                    probe.request_id.as_deref().unwrap_or("-")
+                    normalize_log_value(&probe.service),
+                    normalize_log_value(&probe.status),
+                    normalize_log_value(probe.request_id.as_deref().unwrap_or("-"))
                 );
             }
             Err(error) => {
-                eprintln!("desktop-v3.startup-backend-probe.liveness.err {error}");
+                eprintln!(
+                    "desktop-v3.startup-backend-probe.liveness.err {}",
+                    normalize_log_value(&error.to_string())
+                );
             }
         }
 
@@ -139,13 +142,16 @@ impl DesktopRuntime {
             Ok(probe) => {
                 eprintln!(
                     "desktop-v3.startup-backend-probe.readiness.ok service={} status={} request_id={}",
-                    probe.service,
-                    probe.status,
-                    probe.request_id.as_deref().unwrap_or("-")
+                    normalize_log_value(&probe.service),
+                    normalize_log_value(&probe.status),
+                    normalize_log_value(probe.request_id.as_deref().unwrap_or("-"))
                 );
             }
             Err(error) => {
-                eprintln!("desktop-v3.startup-backend-probe.readiness.err {error}");
+                eprintln!(
+                    "desktop-v3.startup-backend-probe.readiness.err {}",
+                    normalize_log_value(&error.to_string())
+                );
             }
         }
 
@@ -160,9 +166,9 @@ impl DesktopRuntime {
     ) -> Result<(), RuntimeError> {
         eprintln!(
             "desktop-v3.renderer.boot stage={} route={} runtime={}",
-            normalize_boot_log_value(&stage),
-            normalize_boot_log_value(&route),
-            normalize_boot_log_value(&runtime),
+            normalize_log_value(&stage),
+            normalize_log_value(&route),
+            normalize_log_value(&runtime),
         );
         Ok(())
     }
@@ -185,7 +191,7 @@ fn resolve_local_database_path(app: &AppHandle) -> Result<PathBuf, RuntimeError>
     Ok(directory)
 }
 
-fn normalize_boot_log_value(value: &str) -> String {
+fn normalize_log_value(value: &str) -> String {
     let trimmed = value.trim();
 
     if trimmed.is_empty() {
@@ -193,4 +199,19 @@ fn normalize_boot_log_value(value: &str) -> String {
     }
 
     trimmed.split_whitespace().collect::<Vec<_>>().join("_")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::normalize_log_value;
+
+    #[test]
+    fn normalizes_log_values_into_single_tokens() {
+        assert_eq!(normalize_log_value("  backend \n warming\tup "), "backend_warming_up");
+    }
+
+    #[test]
+    fn empty_log_values_fall_back_to_placeholder() {
+        assert_eq!(normalize_log_value("   "), "-");
+    }
 }

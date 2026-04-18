@@ -29,7 +29,11 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
     );
 
     expect(summary.status).toBe("failed");
-    expect(summary.failedChecks).toEqual(["desktop-v3-delivery-updater-docs-remote-proof"]);
+    expect(summary.failedChecks).toEqual([
+      "desktop-v3-delivery-updater-docs-remote-proof",
+      "desktop-v3-ci-remote-proof",
+      "desktop-v3-package-remote-proof",
+    ]);
     expect(summary.checks[0]?.failureReason).toBe("workflow_missing");
   });
 
@@ -43,6 +47,18 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
             id: 9,
             name: "desktop-v3-delivery-updater-docs",
             path: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
+            state: "active",
+          },
+          {
+            id: 10,
+            name: "desktop-v3-ci",
+            path: ".github/workflows/desktop-v3-ci.yml",
+            state: "active",
+          },
+          {
+            id: 11,
+            name: "desktop-v3-package",
+            path: ".github/workflows/desktop-v3-package.yml",
             state: "active",
           },
         ],
@@ -61,6 +77,40 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
               html_url: "https://github.com/example/delivery-updater-docs",
               name: "desktop-v3-delivery-updater-docs",
               run_number: 3,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-ci",
+          [
+            {
+              id: 24439032825,
+              conclusion: "success",
+              created_at: "2026-04-15T01:55:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-ci",
+              name: "desktop-v3-ci",
+              run_number: 7,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-package",
+          [
+            {
+              id: 24439032824,
+              conclusion: "success",
+              created_at: "2026-04-15T01:50:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-package",
+              name: "desktop-v3-package",
+              run_number: 9,
               status: "completed",
             },
           ],
@@ -88,6 +138,18 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
             id: 9,
             name: "desktop-v3-delivery-updater-docs",
             path: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
+            state: "active",
+          },
+          {
+            id: 10,
+            name: "desktop-v3-ci",
+            path: ".github/workflows/desktop-v3-ci.yml",
+            state: "active",
+          },
+          {
+            id: 11,
+            name: "desktop-v3-package",
+            path: ".github/workflows/desktop-v3-package.yml",
             state: "active",
           },
         ],
@@ -122,6 +184,40 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
             },
           ],
         ],
+        [
+          "desktop-v3-ci",
+          [
+            {
+              id: 24439032825,
+              conclusion: "success",
+              created_at: "2026-04-15T01:55:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-ci",
+              name: "desktop-v3-ci",
+              run_number: 7,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-package",
+          [
+            {
+              id: 24439032824,
+              conclusion: "success",
+              created_at: "2026-04-15T01:50:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-package",
+              name: "desktop-v3-package",
+              run_number: 9,
+              status: "completed",
+            },
+          ],
+        ],
       ]),
     );
 
@@ -142,6 +238,18 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
             path: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
             state: "active",
           },
+          {
+            id: 10,
+            name: "desktop-v3-ci",
+            path: ".github/workflows/desktop-v3-ci.yml",
+            state: "active",
+          },
+          {
+            id: 11,
+            name: "desktop-v3-package",
+            path: ".github/workflows/desktop-v3-package.yml",
+            state: "active",
+          },
         ],
       },
       buildWorkflowRunsByName([
@@ -158,6 +266,40 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
               html_url: "https://github.com/example/delivery-updater-docs-failed",
               name: "desktop-v3-delivery-updater-docs",
               run_number: 4,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-ci",
+          [
+            {
+              id: 24439032825,
+              conclusion: "success",
+              created_at: "2026-04-15T01:55:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-ci",
+              name: "desktop-v3-ci",
+              run_number: 7,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-package",
+          [
+            {
+              id: 24439032824,
+              conclusion: "success",
+              created_at: "2026-04-15T01:50:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-package",
+              name: "desktop-v3-package",
+              run_number: 9,
               status: "completed",
             },
           ],
@@ -218,6 +360,18 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
             path: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
             state: "disabled_manually",
           },
+          {
+            id: 10,
+            name: "desktop-v3-ci",
+            path: ".github/workflows/desktop-v3-ci.yml",
+            state: "active",
+          },
+          {
+            id: 11,
+            name: "desktop-v3-package",
+            path: ".github/workflows/desktop-v3-package.yml",
+            state: "active",
+          },
         ],
       },
       buildWorkflowRunsByName([
@@ -234,6 +388,40 @@ describe("desktop-v3 delivery/updater GitHub remote proof summary", () => {
               html_url: "https://github.com/example/delivery-updater-docs",
               name: "desktop-v3-delivery-updater-docs",
               run_number: 3,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-ci",
+          [
+            {
+              id: 24439032825,
+              conclusion: "success",
+              created_at: "2026-04-15T01:55:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-ci",
+              name: "desktop-v3-ci",
+              run_number: 7,
+              status: "completed",
+            },
+          ],
+        ],
+        [
+          "desktop-v3-package",
+          [
+            {
+              id: 24439032824,
+              conclusion: "success",
+              created_at: "2026-04-15T01:50:00Z",
+              event: "push",
+              head_branch: "feature/desktop-v3-delivery-updater",
+              head_sha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+              html_url: "https://github.com/example/desktop-v3-package",
+              name: "desktop-v3-package",
+              run_number: 9,
               status: "completed",
             },
           ],

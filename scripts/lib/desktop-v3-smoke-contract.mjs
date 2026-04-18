@@ -71,7 +71,7 @@ function normalizeBaseUrl(value) {
   const trimmed =
     typeof value === "string" && value.trim().length > 0
       ? value.trim()
-      : "http://127.0.0.1:1421";
+      : "http://127.0.0.1:31421";
 
   return trimmed.replace(/\/+$/u, "");
 }

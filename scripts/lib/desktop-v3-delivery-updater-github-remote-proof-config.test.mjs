@@ -38,14 +38,35 @@ describe("desktop-v3 delivery/updater GitHub remote proof config", () => {
     );
   });
 
-  it("builds a single frozen workflow definition with explicit path and active-state expectations", () => {
+  it("builds frozen workflow definitions for docs, ci, and package proof", () => {
     const definitions = buildDesktopV3DeliveryUpdaterGithubRemoteProofDefinitions({
       remoteTrackingHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
       remoteTrackingRef: "origin/feature/delivery-updater-docs",
       targetBranch: "feature/delivery-updater-docs",
     });
 
-    expect(definitions).toEqual([
+    expect(definitions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          expectedBranch: "feature/delivery-updater-docs",
+          expectedHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+          expectedRef: "origin/feature/delivery-updater-docs",
+          expectedWorkflowPath: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
+          expectedWorkflowState: "active",
+          requireLatestRunSuccess: true,
+          workflowName: "desktop-v3-delivery-updater-docs",
+        }),
+        expect.objectContaining({
+          expectedWorkflowPath: ".github/workflows/desktop-v3-ci.yml",
+          workflowName: "desktop-v3-ci",
+        }),
+        expect.objectContaining({
+          expectedWorkflowPath: ".github/workflows/desktop-v3-package.yml",
+          workflowName: "desktop-v3-package",
+        }),
+      ]),
+    );
+    expect(definitions[0]).toEqual(
       expect.objectContaining({
         expectedBranch: "feature/delivery-updater-docs",
         expectedHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
@@ -55,6 +76,6 @@ describe("desktop-v3 delivery/updater GitHub remote proof config", () => {
         requireLatestRunSuccess: true,
         workflowName: "desktop-v3-delivery-updater-docs",
       }),
-    ]);
+    );
   });
 });

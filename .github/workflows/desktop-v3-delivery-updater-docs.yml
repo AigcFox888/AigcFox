@@ -12,7 +12,10 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "apps/desktop-v3/**"
       - "scripts/**"
+      - "README.md"
+      - "apps/desktop-v3/README.md"
       - "AGENTS.md"
       - "docs/README.md"
       - "docs/248-autonomous-execution-baseline.md"
@@ -36,7 +39,10 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "apps/desktop-v3/**"
       - "scripts/**"
+      - "README.md"
+      - "apps/desktop-v3/README.md"
       - "AGENTS.md"
       - "docs/README.md"
       - "docs/248-autonomous-execution-baseline.md"
@@ -104,4 +110,4 @@ jobs:
           path: |
             output/verification/desktop-v3-delivery-updater-docs-*/**
             output/verification/latest/desktop-v3-delivery-updater-docs-summary.json
-          if-no-files-found: warn
+          if-no-files-found: error

@@ -15,6 +15,8 @@ describe("desktop-v3 delivery/updater execution baseline docs", () => {
     expect(text).toContain("remote-tracking ref");
     expect(text).toContain("`remoteTrackingRef`");
     expect(text).toContain("`remoteTrackingHeadSha`");
+    expect(text).toContain("desktop-v3-ci");
+    expect(text).toContain("desktop-v3-package");
     expect(text).toContain("当前远端 proof 判定以 latest summary 为准");
   });
 });

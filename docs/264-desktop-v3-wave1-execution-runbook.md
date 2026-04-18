@@ -34,7 +34,7 @@
 pnpm qa:rust-host-readiness
 ```
 
-该入口会直接对 `apps/desktop-v3/src-tauri/Cargo.toml` 执行 `cargo build --manifest-path ... --quiet` 探针，并把结果写到 `output/verification/rust-host-readiness-summary.json`。
+该入口会直接对 `apps/desktop-v3/src-tauri/Cargo.toml` 执行 `cargo build --manifest-path ... --quiet` 探针，并把结果写到 `output/verification/rust-host-readiness-<run-id>/summary.json` 与 `output/verification/latest/rust-host-readiness-summary.json`。
 
 ```bash
 pnpm test:desktop-v3-wave1-readiness
