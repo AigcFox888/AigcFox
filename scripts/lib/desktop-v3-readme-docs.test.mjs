@@ -59,6 +59,8 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
     expect(text).toContain("Windows + macOS");
     expect(text).toContain("GitHub Actions 下载 artifact");
+    expect(text).toContain("release-manifest.json");
+    expect(text).toContain("SHA256SUMS.txt");
     expect(text).toContain("七牛对象存储（Kodo）");
     expect(text).toContain("完整安装包");
     expect(text).toContain("后续在线更新策略已冻结");
@@ -80,6 +82,8 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("desktop-v3-package");
     expect(text).toContain("Windows + WSL2");
     expect(text).toContain("维护者下载 Actions artifact");
+    expect(text).toContain("release-manifest.json");
+    expect(text).toContain("SHA256SUMS.txt");
     expect(text).toContain("七牛对象存储（Kodo）");
     expect(text).toContain("完整安装包");
     expect(text).toContain("后续在线更新策略已冻结");

@@ -121,10 +121,11 @@ pnpm qa:desktop-v3-wave1-readiness
 
 1. 等默认分支 `main` 上的 `desktop-v3-package.yml` 完成并确认 `windows + macos` jobs 都通过。
 2. 从 GitHub Actions 下载 `desktop-v3-windows-bundle-<sha>` 与 `desktop-v3-macos-bundle-<sha>` artifacts。
-3. 由维护者把首次安装完整包上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，再向中国区用户分发国内可达首次下载地址或离线包。
-4. 不直接把 GitHub Actions artifact URL 或 GitHub Releases URL 发给终端用户。
-5. 当前 `Wave 1` 只收口首次安装包交付；已安装客户端的后续在线更新实现尚未进入代码。
-6. 后续在线更新策略已冻结为：已安装用户不再重复下载安装包；运行中的客户端不强制打断；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新。
+3. 在每个 artifact 内先核对 `release-manifest.json` 与 `SHA256SUMS.txt`，只按清单中标记的首装包文件做分发，不把其他 bundle 副产物混入用户下载入口。
+4. 由维护者把首次安装完整包上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，再向中国区用户分发国内可达首次下载地址或离线包。
+5. 不直接把 GitHub Actions artifact URL 或 GitHub Releases URL 发给终端用户。
+6. 当前 `Wave 1` 只收口首次安装包交付；已安装客户端的后续在线更新实现尚未进入代码。
+7. 后续在线更新策略已冻结为：已安装用户不再重复下载安装包；运行中的客户端不强制打断；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新。
 
 ## 说明
 
