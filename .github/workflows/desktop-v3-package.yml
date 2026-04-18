@@ -130,6 +130,32 @@ jobs:
           $wixBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           "WIX=$wixRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+          $tauriWixCache = Join-Path $env:LOCALAPPDATA 'tauri\WixTools314'
+          $requiredWixFiles = @(
+            'candle.exe',
+            'candle.exe.config',
+            'darice.cub',
+            'light.exe',
+            'light.exe.config',
+            'wconsole.dll',
+            'winterop.dll',
+            'wix.dll',
+            'WixUIExtension.dll',
+            'WixUtilExtension.dll'
+          )
+
+          New-Item -ItemType Directory -Force -Path $tauriWixCache | Out-Null
+
+          foreach ($fileName in $requiredWixFiles) {
+            $sourcePath = Join-Path $wixBin $fileName
+
+            if (-not (Test-Path $sourcePath)) {
+              throw "Required WiX file was not found in the installed toolset: $sourcePath"
+            }
+
+            Copy-Item -LiteralPath $sourcePath -Destination (Join-Path $tauriWixCache $fileName) -Force
+          }
+
       - name: Build desktop-v3 package
         run: ${{ matrix.build_command }}
 

@@ -68,7 +68,8 @@
   - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
 - `desktop-v3-ci.yml` 固定在 `ubuntu-24.04` 做治理、测试与 smoke proof
 - `desktop-v3-package.yml` 只产出 `Windows + macOS` 首次安装 bundle
-- `desktop-v3-package.yml` 的 Windows job 固定先通过 Chocolatey 预装并导出 `WiX Toolset 3.14.1`，并对安装步骤做重试；同时把 Windows bundle 目标固定收敛到 `msi`，不要再把 MSI 打包成功与否绑定到 `tauri build` 内部对 `wix314-binaries.zip` 或 NSIS 压缩包的单次在线下载
+- `desktop-v3-package.yml` 的 Windows job 固定先通过 Chocolatey 预装并导出 `WiX Toolset 3.14.1`，并对安装步骤做重试；同时必须把必需的 WiX 二进制预热到 `%LOCALAPPDATA%\tauri\WixTools314`，因为 Tauri bundler 会先检查这个缓存目录，缺文件时仍会回退到 `wix314-binaries.zip` 的在线下载
+- `desktop-v3-package.yml` 把 Windows bundle 目标固定收敛到 `msi`，不要再把 MSI 打包成功与否绑定到 `tauri build` 内部对 NSIS 压缩包的单次在线下载
 - `desktop-v3-package.yml` 只负责为维护者产出可下载 artifact；artifact 内只保留首次安装包与对应校验清单，不再把整份 bundle 目录原样兜底上传
 - `desktop-v3-package.yml` 固定生成 `release-manifest.json` 与 `SHA256SUMS.txt`，作为 `Windows + macOS` 首次安装 bundle 的文件清单与 SHA256 真相
 - `desktop-v3-package.yml` 只负责为维护者产出可下载 artifact；维护者必须从 GitHub Actions 下载 `Windows + macOS` 首次安装 bundle，并按 `release-manifest.json` 与 `SHA256SUMS.txt` 核对后，再上传到七牛对象存储（Kodo）或自有 HTTPS 下载源后分发给中国区用户

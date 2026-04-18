@@ -54,6 +54,7 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("README docs");
     expect(text).toContain("output/verification/latest/rust-host-readiness-summary.json");
     expect(text).toContain("fast-test entrypoint wiring");
+    expect(text).toContain("WixTools314");
     expect(text).toContain("desktop-v3-package.yml");
     expect(text).toContain("Windows + macOS");
     expect(text).toContain("desktop-v3-windows-bundle-<sha>");
