@@ -4,8 +4,8 @@
   "description": "Minimal IPC capability for the desktop-v3 main window.",
   "remote": {
     "urls": [
-      "http://127.0.0.1:1420/*",
-      "http://localhost:1420/*"
+      "http://127.0.0.1:31420/*",
+      "http://localhost:31420/*"
     ]
   },
   "windows": ["main"],

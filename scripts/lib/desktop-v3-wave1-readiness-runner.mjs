@@ -5,7 +5,6 @@ import { checkMarkdownLinks, scanForbiddenDocumentTerms } from "./desktop-docs-c
 import { runDocumentDiffCheck } from "./document-diff-check.mjs";
 import { spawnCargo } from "./cargo-command.mjs";
 import {
-  assertDesktopV3PackagedAppSmokeSummaryCopies,
   assertDesktopV3ResponsiveSmokeSummaryCopies,
   assertDesktopV3TauriDevSmokeSummaryCopies,
 } from "./desktop-v3-smoke-summary-persistence.mjs";
@@ -18,15 +17,11 @@ import { persistVerificationSummary } from "./verification-summary-output.mjs";
 function createSummary(config, steps) {
   const artifacts = decorateVerificationArtifactRefs(
     {
-      latestPackagedAppSmokeSummary: steps.find((step) => step.key === "desktop-v3-packaged-app-smoke")?.artifacts
-        ?.latestSummaryPath ?? null,
       latestReadinessSummary: config.latestSummaryPath,
       latestResponsiveSmokeSummary: steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.artifacts
         ?.latestSummaryPath ?? null,
       latestTauriDevSmokeSummary: steps.find((step) => step.key === "desktop-v3-tauri-dev-smoke")?.artifacts
         ?.latestSummaryPath ?? null,
-      packagedAppSmokeSummary: steps.find((step) => step.key === "desktop-v3-packaged-app-smoke")?.artifacts
-        ?.summaryPath ?? null,
       readinessSummary: config.summaryPath,
       responsiveSmokeSummary: steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.artifacts
         ?.summaryPath ?? null,
@@ -35,11 +30,9 @@ function createSummary(config, steps) {
     },
     config.rootDir,
     [
-      "latestPackagedAppSmokeSummary",
       "latestReadinessSummary",
       "latestResponsiveSmokeSummary",
       "latestTauriDevSmokeSummary",
-      "packagedAppSmokeSummary",
       "readinessSummary",
       "responsiveSmokeSummary",
       "tauriDevSmokeSummary",
@@ -104,8 +97,6 @@ async function assertDesktopV3Wave1ChildSmokeSummaryCopies(step, options = {}) {
     options.assertResponsiveSummaryCopiesImpl ?? assertDesktopV3ResponsiveSmokeSummaryCopies;
   const assertTauriDevSummaryCopiesImpl =
     options.assertTauriDevSummaryCopiesImpl ?? assertDesktopV3TauriDevSmokeSummaryCopies;
-  const assertPackagedSummaryCopiesImpl =
-    options.assertPackagedSummaryCopiesImpl ?? assertDesktopV3PackagedAppSmokeSummaryCopies;
 
   if (step.key === "desktop-v3-responsive-smoke") {
     await assertResponsiveSummaryCopiesImpl(childSummary, artifacts, options);
@@ -114,11 +105,6 @@ async function assertDesktopV3Wave1ChildSmokeSummaryCopies(step, options = {}) {
 
   if (step.key === "desktop-v3-tauri-dev-smoke") {
     await assertTauriDevSummaryCopiesImpl(childSummary, artifacts, options);
-    return;
-  }
-
-  if (step.key === "desktop-v3-packaged-app-smoke") {
-    await assertPackagedSummaryCopiesImpl(childSummary, artifacts, options);
   }
 }
 

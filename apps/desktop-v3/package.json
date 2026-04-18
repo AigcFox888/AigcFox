@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 1420",
+    "dev": "vite --host 127.0.0.1 --port 31420",
     "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1 --port 1421",
+    "preview": "vite preview --host 127.0.0.1 --port 31421",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"*.{ts,js,mjs}\"",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "node ./scripts/run-vitest.mjs",

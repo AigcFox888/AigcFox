@@ -1,16 +1,16 @@
-import type { TauriInvoke } from "@/lib/runtime/tauri-invoke";
-import { loadTauriInvoke } from "@/lib/runtime/tauri-bridge";
+import type { DesktopRuntime, RendererBootStage } from "@/lib/runtime/desktop-runtime";
+import { getDesktopRuntime } from "@/lib/runtime/runtime-registry";
 import { resolveDesktopRuntimeMode } from "@/lib/runtime/runtime-mode";
 
 interface ReportDesktopV3RendererReadyOptions {
   beaconPath?: string;
+  desktopRuntime?: Pick<DesktopRuntime, "reportRendererBoot">;
   enabled?: boolean;
   fetchImpl?: typeof fetch;
-  invokeImpl?: TauriInvoke;
   route?: string;
   runtimeMode?: string;
   schedule?: (callback: () => void) => void;
-  stage?: "app" | "document";
+  stage?: RendererBootStage;
 }
 
 export function buildDesktopV3RendererBootBeaconUrl(
@@ -37,15 +37,15 @@ function shouldReportDesktopV3RendererReady(enabled = import.meta.env.DEV) {
 }
 
 async function reportDesktopV3RendererReadyWithTauri(
-  invokeImpl: TauriInvoke | undefined,
+  desktopRuntime: Pick<DesktopRuntime, "reportRendererBoot"> | undefined,
   payload: {
     route: string;
     runtime: string;
-    stage: "app" | "document";
+    stage: RendererBootStage;
   },
 ) {
-  const invoke = invokeImpl ?? (await loadTauriInvoke());
-  await invoke("desktop_report_renderer_boot", payload);
+  const runtime = desktopRuntime ?? getDesktopRuntime();
+  await runtime.reportRendererBoot(payload.route, payload.runtime, payload.stage);
 }
 
 export function reportDesktopV3RendererReady(
@@ -79,7 +79,7 @@ export function reportDesktopV3RendererReady(
     void (async () => {
       if (runtimeMode === "tauri") {
         try {
-          await reportDesktopV3RendererReadyWithTauri(options.invokeImpl, {
+          await reportDesktopV3RendererReadyWithTauri(options.desktopRuntime, {
             route,
             runtime: runtimeMode,
             stage,

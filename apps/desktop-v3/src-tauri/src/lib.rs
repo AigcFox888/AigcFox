@@ -9,7 +9,7 @@ use tauri::Manager;
 use crate::runtime::DesktopRuntime;
 
 fn should_run_startup_backend_probe() -> bool {
-    env::env_flag("AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE")
+    env::env_flag(env::STARTUP_BACKEND_PROBE_ENV)
 }
 
 pub fn run() {

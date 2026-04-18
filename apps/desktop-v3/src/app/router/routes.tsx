@@ -1,55 +1,54 @@
+import type { ReactElement } from "react";
 import { Navigate, createHashRouter } from "react-router-dom";
 
 import { AppShell } from "@/app/layout/app-shell";
-import { resolveDesktopV3InitialRoute } from "@/app/router/initial-route";
-import type { AppRouteHandle } from "@/app/router/route-handle";
+import {
+  desktopV3RouteDefinitions,
+  desktopV3RoutePathById,
+  resolveDesktopV3InitialRoute,
+  type DesktopV3RouteId,
+} from "@/app/router/route-registry";
 import { DashboardPage } from "@/pages/dashboard-page";
 import { DiagnosticsPage } from "@/pages/diagnostics-page";
 import { PreferencesPage } from "@/pages/preferences-page";
 
-const dashboardHandle: AppRouteHandle = {
-  title: "桌面骨架总览",
-  subtitle: "只保留 Wave 1 skeleton 的布局、命令边界与运行态入口。",
-  shortLabel: "总览",
-};
+function getRouteElement(routeId: DesktopV3RouteId) {
+  const routeElementById: Record<DesktopV3RouteId, ReactElement> = {
+    dashboard: <DashboardPage />,
+    diagnostics: <DiagnosticsPage />,
+    preferences: <PreferencesPage />,
+  };
 
-const diagnosticsHandle: AppRouteHandle = {
-  title: "运行诊断",
-  subtitle: "观察本地 runtime、SQLite baseline 与远端健康探针的最小链路。",
-  shortLabel: "诊断",
-};
+  return routeElementById[routeId];
+}
 
-const preferencesHandle: AppRouteHandle = {
-  title: "本地偏好",
-  subtitle: "当前只开放受控主题偏好，不把敏感配置留在 renderer。",
-  shortLabel: "偏好",
-};
-
+const dashboardRoute = desktopV3RouteDefinitions.find(
+  (route) => route.href === desktopV3RoutePathById.dashboard,
+)!;
 const initialRoute = resolveDesktopV3InitialRoute();
 const initialRouteElement =
-  initialRoute === "/" ? <DashboardPage /> : <Navigate replace to={initialRoute} />;
+  initialRoute === dashboardRoute.href
+    ? getRouteElement(dashboardRoute.id)
+    : <Navigate replace to={initialRoute} />;
 
 export const appRouter = createHashRouter([
   {
     path: "/",
     element: <AppShell />,
-    handle: dashboardHandle,
+    handle: dashboardRoute.handle,
     children: [
       {
         index: true,
         element: initialRouteElement,
-        handle: dashboardHandle,
+        handle: dashboardRoute.handle,
       },
-      {
-        path: "diagnostics",
-        element: <DiagnosticsPage />,
-        handle: diagnosticsHandle,
-      },
-      {
-        path: "preferences",
-        element: <PreferencesPage />,
-        handle: preferencesHandle,
-      },
+      ...desktopV3RouteDefinitions
+        .filter((route) => route.href !== dashboardRoute.href)
+        .map((route) => ({
+          path: route.href.slice(1),
+          element: getRouteElement(route.id),
+          handle: route.handle,
+        })),
     ],
   },
 ]);

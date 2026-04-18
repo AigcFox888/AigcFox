@@ -1,18 +1,14 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
-import { desktopV3DeliveryUpdaterDocumentFiles } from "./desktop-v3-delivery-updater-docs-config.mjs";
 import { desktopV3ActiveDocCoverageTargets } from "./desktop-v3-active-docs-coverage.mjs";
 
 export const desktopV3CommandSurfaceFiles = Array.from(
   new Set([
     "README.md",
     "apps/desktop-v3/README.md",
-    "docs/workflow.md",
     ...desktopV3ActiveDocCoverageTargets,
-    ...desktopV3DeliveryUpdaterDocumentFiles,
     ".github/workflows/desktop-v3-ci.yml",
-    ".github/workflows/desktop-v3-delivery-updater-docs.yml",
     ".github/workflows/desktop-v3-package.yml",
   ]),
 ).sort((left, right) => left.localeCompare(right));
@@ -23,7 +19,6 @@ export const desktopV3AllowedSupportingCommands = [
   "pnpm --filter @aigcfox/desktop-v3 lint",
   "pnpm --filter @aigcfox/desktop-v3 tauri build",
   "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
-  "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles deb,appimage,rpm",
   "pnpm --filter @aigcfox/desktop-v3 tauri dev",
   "pnpm --filter @aigcfox/desktop-v3 test",
   "pnpm --filter @aigcfox/desktop-v3 typecheck",

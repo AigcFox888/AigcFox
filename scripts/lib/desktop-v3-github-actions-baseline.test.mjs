@@ -1,4 +1,4 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { resolveDesktopV3Wave1ReadinessConfig } from "./desktop-v3-wave1-readiness-config.mjs";
 import {
@@ -70,13 +70,22 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "pnpm exec playwright install --with-deps chromium",
       "pnpm test:desktop-v3-wave1-readiness",
       "pnpm qa:desktop-v3-wave1-readiness",
+      "docs/268-desktop-v3-clean-pr-closeout.md",
+      "docs/ui-client/system.md",
+      "docs/ui-client/charts.md",
+      "pnpm qa:github-actions-lint",
+      "pnpm qa:governance-command-docs",
       "README docs",
       "active-doc explicit coverage",
+      "page governance",
+      "support governance",
+      "feature boundary governance",
       "fast-test entrypoint wiring",
+      "runtime boundary governance",
     ]);
   });
 
-  it("uploads desktop-v3 verification archive latest summary and linux deb artifacts", async () => {
+  it("uploads desktop-v3 verification archive and latest summary artifacts", async () => {
     const config = resolveDesktopV3Wave1ReadinessConfig();
     const workflowPath = ".github/workflows/desktop-v3-ci.yml";
     const workflowText = await readWorkspaceFile(config.rootDir, workflowPath);
@@ -84,8 +93,9 @@ describe("desktop-v3 GitHub Actions baseline", () => {
     expectWorkflowArtifactPaths(workflowText, workflowPath, [
       "output/verification/desktop-v3-wave1-readiness-*/**",
       "output/verification/latest/desktop-v3-wave1-readiness-summary.json",
-      "apps/desktop-v3/src-tauri/target/release/bundle/deb/**/*.deb",
     ]);
+    expect(workflowText).not.toContain("desktop-v3-linux-deb");
+    expect(workflowText).not.toContain("bundle/deb");
   });
 
   it("runs desktop fast tests before desktop readiness verification", async () => {
@@ -113,13 +123,16 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       'workflow_dispatch:',
       '- "feature/**"',
       "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true",
-      "- os: ubuntu-24.04",
       "- os: windows-latest",
       "- os: macos-latest",
-      "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles deb,appimage,rpm",
+      "Install WiX Toolset (windows)",
+      "choco upgrade wixtoolset --version=3.14.1 -y --no-progress",
+      "\"WIX=$wixRoot\"",
       "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
       "actions/upload-artifact@v6",
     ]);
+    expect(workflowText).not.toContain("- os: ubuntu-24.04");
+    expect(workflowText).not.toContain("deb,appimage,rpm");
 
     expectWorkflowPathSurface(
       workflowText,
@@ -134,6 +147,7 @@ describe("desktop-v3 GitHub Actions baseline", () => {
         "scripts/**",
         "docs/258-desktop-v3-technical-baseline.md",
         "docs/267-desktop-v3-github-actions-baseline.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md",
       ],
       [],
       { pullRequestPaths: [] },
@@ -146,6 +160,10 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "当前 `push` 触发面固定覆盖",
       "docs/258-desktop-v3-technical-baseline.md",
       "docs/267-desktop-v3-github-actions-baseline.md",
+      "docs/269-desktop-v3-tauri-2-governance-baseline.md",
+      "workflow_dispatch",
+      "WiX Toolset 3.14.1",
+      "Chocolatey",
       "不自动发布到 GitHub Releases",
       "不自动作为客户端更新源",
     ]);

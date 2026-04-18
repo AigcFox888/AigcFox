@@ -74,12 +74,12 @@ export default defineConfig({
   },
   server: {
     host: "127.0.0.1",
-    port: 1420,
+    port: 31420,
     strictPort: true,
   },
   preview: {
     host: "127.0.0.1",
-    port: 1421,
+    port: 31421,
     strictPort: true,
   },
 });

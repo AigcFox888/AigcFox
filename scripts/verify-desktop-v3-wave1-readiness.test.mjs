@@ -30,6 +30,19 @@ describe("verify-desktop-v3-wave1-readiness", () => {
     const helpText = buildDesktopV3Wave1ReadinessHelpText();
 
     expect(helpText).toContain("source-of-truth document gate");
+    expect(helpText).toContain("app shell governance");
+    expect(helpText).toContain("page governance");
+    expect(helpText).toContain("support governance");
+    expect(helpText).toContain("LocalDatabase governance");
+    expect(helpText).toContain("backend-client governance");
+    expect(helpText).toContain("feature governance");
+    expect(helpText).toContain("runtime skeleton governance");
+    expect(helpText).toContain("runtime adapter governance");
+    expect(helpText).toContain("runtime contract governance");
+    expect(helpText).toContain("Rust command governance");
+    expect(helpText).toContain("capability governance");
+    expect(helpText).toContain("platform-config governance");
+    expect(helpText).toContain("updater governance");
     expect(helpText).toContain("child smoke archive/latest summary paths");
   });
 

@@ -2,130 +2,92 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { spawn } from "node:child_process";
 
 import { resolveCargoCommand, resolveVsDevCmdPath, spawnCargo } from "./lib/cargo-command.mjs";
+import { writeJsonFile } from "./lib/script-io.mjs";
+import { persistVerificationSummary } from "./lib/verification-summary-output.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(currentDir, "..");
-const readCliValue = (flagName) => {
+export const rootDir = path.resolve(currentDir, "..");
+export const desktopV3ManifestPath = path.join("apps", "desktop-v3", "src-tauri", "Cargo.toml");
+
+export function readCliValue(argv, flagName) {
   const prefix = `--${flagName}=`;
-  const argument = process.argv.find((value) => value.startsWith(prefix));
+  const argument = (Array.isArray(argv) ? argv : []).find((value) => value.startsWith(prefix));
   const rawValue = argument?.slice(prefix.length)?.trim();
   return rawValue && rawValue.length > 0 ? rawValue : null;
-};
-const readPathOverride = (flagName, envName, defaultPath) =>
-  readCliValue(flagName) || process.env[envName]?.trim() || defaultPath;
-const verificationDir = readPathOverride(
-  "verification-dir",
-  "AIGCFOX_GOVERNANCE_VERIFICATION_DIR",
-  path.join(rootDir, "output", "verification")
-);
-const summaryPath = path.join(verificationDir, "rust-host-readiness-summary.json");
+}
 
-const runCommand = async (command, args) =>
-  new Promise((resolve) => {
-    const child = spawn(command, args, {
-      cwd: rootDir,
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-    });
-    let stdout = "";
-    let stderr = "";
+function readPathOverride(argv, env, flagName, envName, defaultPath) {
+  return readCliValue(argv, flagName) || env[envName]?.trim() || defaultPath;
+}
 
-    child.stdout?.on("data", (chunk) => {
-      stdout += chunk.toString();
-    });
+function resolveRunId(argv, env, now) {
+  return (
+    readCliValue(argv, "run-id") ||
+    env.AIGCFOX_RUST_HOST_READINESS_RUN_ID?.trim() ||
+    now.toISOString().replace(/[:.]/g, "-")
+  );
+}
 
-    child.stderr?.on("data", (chunk) => {
-      stderr += chunk.toString();
-    });
+export function resolveRustHostReadinessConfig(options = {}) {
+  const argv = options.argv ?? process.argv.slice(2);
+  const env = options.env ?? process.env;
+  const now = options.now instanceof Date ? options.now : new Date();
+  const verificationDir = readPathOverride(
+    argv,
+    env,
+    "verification-dir",
+    "AIGCFOX_GOVERNANCE_VERIFICATION_DIR",
+    path.join(rootDir, "output", "verification"),
+  );
+  const runId = resolveRunId(argv, env, now);
+  const outputDir = readPathOverride(
+    argv,
+    env,
+    "output-dir",
+    "AIGCFOX_RUST_HOST_READINESS_OUTPUT_DIR",
+    path.join(verificationDir, `rust-host-readiness-${runId}`),
+  );
 
-    child.once("error", (error) => {
-      resolve({
-        ok: false,
-        code: null,
-        stdout,
-        stderr,
-        error: error instanceof Error ? error.message : String(error),
-      });
-    });
+  return {
+    latestSummaryPath: readPathOverride(
+      argv,
+      env,
+      "latest-summary-path",
+      "AIGCFOX_RUST_HOST_READINESS_LATEST_SUMMARY_PATH",
+      path.join(verificationDir, "latest", "rust-host-readiness-summary.json"),
+    ),
+    manifestPath: options.manifestPath ?? desktopV3ManifestPath,
+    outputDir,
+    runId,
+    rootDir: options.rootDir ?? rootDir,
+    summaryPath: path.join(outputDir, "summary.json"),
+    verificationDir,
+  };
+}
 
-    child.once("close", (code) => {
-      resolve({
-        ok: code === 0,
-        code,
-        stdout,
-        stderr,
-        error: null,
-      });
-    });
-  });
-
-const runCargoCommand = async (args) =>
-  new Promise((resolve) => {
-    const child = spawnCargo(args, {
-      cwd: rootDir,
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-    });
-    let stdout = "";
-    let stderr = "";
-
-    child.stdout?.on("data", (chunk) => {
-      stdout += chunk.toString();
-    });
-
-    child.stderr?.on("data", (chunk) => {
-      stderr += chunk.toString();
-    });
-
-    child.once("error", (error) => {
-      resolve({
-        ok: false,
-        code: null,
-        stdout,
-        stderr,
-        error: error instanceof Error ? error.message : String(error),
-      });
-    });
-
-    child.once("close", (code) => {
-      resolve({
-        ok: code === 0,
-        code,
-        stdout,
-        stderr,
-        error: null,
-      });
-    });
-  });
-
-const resolveFailureDetail = (result, fallbackMessage) => {
+export function resolveFailureDetail(result, fallbackMessage) {
   return result.error ?? (result.stderr.trim() || fallbackMessage);
-};
+}
 
-const verifyRustHostReadiness = async () => {
-  await fs.mkdir(verificationDir, { recursive: true });
+export function buildRustHostReadinessSummary(options) {
+  const cargoVersion = options.cargoVersion;
+  const linkerProbe = options.linkerProbe;
+  const latestSummaryPath = options.latestSummaryPath;
+  const manifestPath = options.manifestPath ?? desktopV3ManifestPath;
+  const outputDir = options.outputDir;
+  const platform = options.platform ?? process.platform;
+  const runId = options.runId ?? null;
+  const summaryPath = options.summaryPath;
+  const verificationDir = options.verificationDir;
+  const vsDevCmdPath = platform === "win32" ? (options.vsDevCmdPath ?? "") : "";
 
-  const cargoVersion = await runCargoCommand(["--version"]);
-  const vsDevCmdPath = process.platform === "win32" ? resolveVsDevCmdPath() : "";
-  const linkerProbe =
-    cargoVersion.ok
-      ? await runCargoCommand(["build", "-p", "local-agent", "--quiet"])
-      : {
-          ok: false,
-          code: null,
-          stdout: "",
-          stderr: "",
-          error: "cargo unavailable",
-        };
-
-  const summary = {
-    checkedAt: new Date().toISOString(),
+  return {
+    checkedAt: options.checkedAt ?? new Date().toISOString(),
     passed: cargoVersion.ok && linkerProbe.ok,
     cargo: {
-      command: resolveCargoCommand(),
+      command: options.cargoCommand ?? resolveCargoCommand(),
       ok: cargoVersion.ok,
       detail: cargoVersion.ok
         ? cargoVersion.stdout.trim()
@@ -134,49 +96,159 @@ const verifyRustHostReadiness = async () => {
     linker: {
       ok: linkerProbe.ok,
       via:
-        process.platform === "win32"
+        platform === "win32"
           ? (vsDevCmdPath ? "vsdevcmd" : "path")
           : "system",
       detail: linkerProbe.ok
         ? (
-            process.platform === "win32"
+            platform === "win32"
               ? (
                   vsDevCmdPath
                     ? `Rust build probe succeeded via VsDevCmd: ${vsDevCmdPath}`
                     : "Rust build probe succeeded with current PATH linker configuration."
                 )
-              : "Rust build probe succeeded on non-Windows host."
+              : `Rust build probe succeeded for ${manifestPath} on non-Windows host.`
           )
         : resolveFailureDetail(
             linkerProbe,
-            process.platform === "win32"
+            platform === "win32"
               ? (
                   vsDevCmdPath
                     ? `Rust build probe failed even though VsDevCmd was found at ${vsDevCmdPath}.`
-                    : "Rust build probe failed. Install Visual Studio Build Tools with Desktop development with C++."
+                    : `Rust build probe failed for ${manifestPath}. Install Visual Studio Build Tools with Desktop development with C++.`
                 )
-              : "system linker check failed"
+              : `system linker check failed for ${manifestPath}`,
           ),
-      probeCommand: `cargo build -p local-agent --quiet`,
+      probeCommand: `cargo build --manifest-path ${manifestPath} --quiet`,
     },
+    latestSummaryPath,
+    outputDir,
+    runId,
+    summaryPath,
+    verificationDir,
   };
+}
 
-  await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2), "utf8");
+function spawnCargoCommand(args, options = {}) {
+  return new Promise((resolve) => {
+    const child = spawnCargo(args, {
+      cwd: options.cwd ?? rootDir,
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true,
+    });
+    let stdout = "";
+    let stderr = "";
+
+    child.stdout?.on("data", (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr?.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.once("error", (error) => {
+      resolve({
+        code: null,
+        error: error instanceof Error ? error.message : String(error),
+        ok: false,
+        stderr,
+        stdout,
+      });
+    });
+
+    child.once("close", (code) => {
+      resolve({
+        code,
+        error: null,
+        ok: code === 0,
+        stderr,
+        stdout,
+      });
+    });
+  });
+}
+
+export async function runRustHostReadinessCheck(options = {}) {
+  const config = options.config ?? resolveRustHostReadinessConfig(options);
+  const consoleErrorImpl = options.consoleErrorImpl ?? console.error;
+  const consoleLogImpl = options.consoleLogImpl ?? console.log;
+  const mkdirImpl = options.mkdirImpl ?? fs.mkdir;
+  const persistVerificationSummaryImpl =
+    options.persistVerificationSummaryImpl ?? persistVerificationSummary;
+  const runCargoCommandImpl = options.runCargoCommandImpl ?? spawnCargoCommand;
+  const writeJsonFileImpl = options.writeJsonFileImpl ?? writeJsonFile;
+  const platform = options.platform ?? process.platform;
+  const vsDevCmdPath = platform === "win32" ? (options.vsDevCmdPath ?? resolveVsDevCmdPath()) : "";
+
+  await mkdirImpl(config.outputDir, { recursive: true });
+
+  const cargoVersion = await runCargoCommandImpl(["--version"], { cwd: config.rootDir });
+  const linkerProbe =
+    cargoVersion.ok
+      ? await runCargoCommandImpl(
+          ["build", "--manifest-path", config.manifestPath, "--quiet"],
+          { cwd: config.rootDir },
+        )
+      : {
+          code: null,
+          error: "cargo unavailable",
+          ok: false,
+          stderr: "",
+          stdout: "",
+        };
+
+  const summary = buildRustHostReadinessSummary({
+    cargoCommand: options.cargoCommand ?? resolveCargoCommand(),
+    cargoVersion,
+    checkedAt: options.checkedAt,
+    linkerProbe,
+    latestSummaryPath: config.latestSummaryPath,
+    manifestPath: config.manifestPath,
+    outputDir: config.outputDir,
+    platform,
+    runId: config.runId,
+    summaryPath: config.summaryPath,
+    verificationDir: config.verificationDir,
+    vsDevCmdPath,
+  });
+
+  await persistVerificationSummaryImpl(
+    summary,
+    {
+      archiveSummaryPath: config.summaryPath,
+      latestSummaryPath: config.latestSummaryPath,
+    },
+    {
+      writeJsonFileImpl,
+    },
+  );
 
   if (!summary.passed) {
-    console.error(
+    consoleErrorImpl(
       [
         "Rust host readiness check failed.",
         `Cargo: ${summary.cargo.ok ? "ok" : "missing"}.`,
         `Linker: ${summary.linker.ok ? "ok" : "missing"}.`,
-        `Summary: ${summaryPath}`,
+        `Summary: ${config.summaryPath}.`,
+        `Latest: ${config.latestSummaryPath}`,
       ].join(" "),
     );
-    process.exitCode = 1;
-    return;
+    return summary;
   }
 
-  console.log(`Rust host readiness check passed. Summary: ${summaryPath}`);
-};
+  consoleLogImpl(
+    `Rust host readiness check passed. Summary: ${config.summaryPath} | Latest: ${config.latestSummaryPath}`,
+  );
+  return summary;
+}
 
-await verifyRustHostReadiness();
+export async function main(argv = process.argv.slice(2)) {
+  const summary = await runRustHostReadinessCheck({ argv });
+  process.exitCode = summary.passed ? 0 : 1;
+  return summary;
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  await main();
+}

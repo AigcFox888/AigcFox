@@ -4,7 +4,6 @@
 
 - `desktop-v3-ci.yml`
 - `desktop-v3-package.yml`
-- `desktop-v3-delivery-updater-docs.yml`
 
 ## Clean PR 规则
 
@@ -20,32 +19,60 @@
 - `pnpm exec playwright install --with-deps chromium`
 - `pnpm test:desktop-v3-wave1-readiness`
 - `pnpm qa:desktop-v3-wave1-readiness`
+- 当前 `push / pull_request` 文档触发面固定覆盖：
+  - `docs/README.md`
+  - `docs/248-autonomous-execution-baseline.md`
+  - `docs/257-desktop-v3-replatform-proposal.md`
+  - `docs/258-desktop-v3-technical-baseline.md`
+  - `docs/259-desktop-v3-detailed-design.md`
+  - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
+  - `docs/260-desktop-v3-wave1-execution-baseline.md`
+  - `docs/263-desktop-v3-wave1-acceptance-matrix.md`
+  - `docs/264-desktop-v3-wave1-execution-runbook.md`
+  - `docs/267-desktop-v3-github-actions-baseline.md`
+  - `docs/268-desktop-v3-clean-pr-closeout.md`
+  - `docs/ui-client/system.md`
+  - `docs/ui-client/layout.md`
+  - `docs/ui-client/components.md`
+  - `docs/ui-client/interaction.md`
+  - `docs/ui-client/charts.md`
+  - `apps/desktop-v3/README.md`
 
 当前文档与测试口径固定覆盖：
 
 - README docs
 - active-doc explicit coverage
+- app shell governance
+- page governance
+- host governance
+- support governance
+- feature boundary governance
+- runtime boundary governance
 - fast-test entrypoint wiring
+
+当前 `pnpm qa:desktop-v3-app-shell-governance` 也属于 CI 固定覆盖面；`src/app` 的 renderer app shell、provider、router、bootstrap，以及 `route-registry.ts` 内收拢的路径真相、handle、导航 href 绑定与初始路由集合一旦漂移，就必须在进入 GitHub Actions 前先失败。
+当前 `pnpm qa:desktop-v3-page-governance` 也属于 CI 固定覆盖面；`src/pages` 的 renderer page composition、shared state components、sidebar nav item 与 shell hooks 一旦漂移，或者 dashboard quick link / keyboard shortcut 导航脱离 `route-registry.ts` 绑定，就必须在进入 GitHub Actions 前先失败。
+当前 `pnpm qa:desktop-v3-host-governance` 也属于 CI 固定覆盖面；宿主 env / log surface 一旦漂移，或者 renderer `route-registry.ts` 与 Rust `window/initial_route.rs` 的允许初始路由集合不再一致，就必须在进入 GitHub Actions 前先失败。
+当前 `pnpm qa:desktop-v3-support-governance` 也属于 CI 固定覆盖面；`src/lib/errors`、`src/lib/query`、`notify.ts`、`typography.ts`、`utils.ts` 的 renderer shared support 一旦漂移，就必须在进入 GitHub Actions 前先失败。
 
 ## desktop-v3-package.yml
 
 - `feature/**`
+- `workflow_dispatch`
 - `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
 - 当前 `push` 触发面固定覆盖：
   - `docs/258-desktop-v3-technical-baseline.md`
   - `docs/267-desktop-v3-github-actions-baseline.md`
-- 三端 bundle 由 GitHub Actions 产出
+  - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
+- `desktop-v3-ci.yml` 固定在 `ubuntu-24.04` 做治理、测试与 smoke proof
+- `desktop-v3-package.yml` 只产出 `Windows + macOS` bundle
+- `desktop-v3-package.yml` 的 Windows job 固定先通过 Chocolatey 预装并导出 `WiX Toolset 3.14.1`，并对安装步骤做重试；不要再把 MSI 打包成功与否绑定到 `tauri build` 内部对 `wix314-binaries.zip` 的单次在线下载
+- `qa:desktop-v3-linux-package` 已退出当前 CI / QA 主链；不要把 Linux bundle matrix、artifact 上传或本地 Linux 包收口重新塞回 active scope
 - 不自动发布到 GitHub Releases
 - 不自动作为客户端更新源
 
-## desktop-v3-delivery-updater-docs.yml
+## 本地配套校验
 
-- 覆盖 `274 -> 280`
-- `pnpm test:desktop-v3-delivery-updater-docs`
-- `pnpm qa:desktop-v3-delivery-updater-docs`
 - `pnpm qa:github-actions-lint`
 - `pnpm qa:governance-command-docs`
-- `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
-- GitHub workflow proof 的真值来自名称、冻结路径、`active` 状态与目标分支成功 run
-- 远端 proof 统一以 `origin/<branch>` 的 remote-tracking ref 和 latest summary 为准
-- 当前 delivery/updater 文档链也必须覆盖 fast-test entrypoint wiring
+- 两条命令都必须在推送前通过，保证 workflow 语法、路径面和命令文档真相层没有漂移

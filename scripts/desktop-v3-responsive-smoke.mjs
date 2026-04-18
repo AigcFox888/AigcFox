@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { assertDesktopV3ResponsiveSmokeSummaryCopies } from "./lib/desktop-v3-smoke-summary-persistence.mjs";
 import { runWave1ReadinessCli } from "./lib/wave1-readiness-cli.mjs";
 import {
+  buildDesktopV3ResponsiveSmokeRouteHelpLine,
   resolveDesktopV3ResponsiveSmokeConfig,
 } from "./lib/desktop-v3-smoke-contract.mjs";
 import { runDesktopV3ResponsiveSmoke } from "./lib/desktop-v3-responsive-smoke-runner.mjs";
@@ -20,7 +21,7 @@ export function buildDesktopV3ResponsiveSmokeHelpText() {
     "  AIGCFOX_DESKTOP_V3_SMOKE_BASE_URL=<preview-base-url>",
     "",
     "Covered routes:",
-    "  /#/  /#/preferences  /#/diagnostics",
+    `  ${buildDesktopV3ResponsiveSmokeRouteHelpLine()}`,
   ].join("\n");
 }
 

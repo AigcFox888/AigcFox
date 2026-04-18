@@ -2,9 +2,36 @@ use std::error::Error;
 
 use tauri::{Url, WebviewUrl};
 
-const MAIN_WINDOW_DEV_URL: &str = "http://127.0.0.1:1420/";
+const MAIN_WINDOW_DEV_URL: &str = "http://127.0.0.1:31420/";
+const MAIN_WINDOW_PROD_ORIGIN: &str = "tauri://localhost";
 const MAIN_WINDOW_PROD_PATH: &str = "index.html";
-const MAIN_WINDOW_TARGET_MODE_ENV: &str = "AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE";
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub(crate) struct NavigationBoundary {
+    scheme: String,
+    host: String,
+    port: Option<u16>,
+}
+
+impl NavigationBoundary {
+    fn from_url(url: &Url) -> Result<Self, Box<dyn Error>> {
+        let host = url
+            .host_str()
+            .ok_or_else(|| format!("window target url must include a host: {url}"))?;
+
+        Ok(Self {
+            scheme: url.scheme().to_string(),
+            host: host.to_string(),
+            port: url.port_or_known_default(),
+        })
+    }
+
+    fn matches(&self, candidate: &Url) -> bool {
+        candidate.scheme() == self.scheme
+            && candidate.host_str() == Some(self.host.as_str())
+            && candidate.port_or_known_default() == self.port
+    }
+}
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 enum MainWindowTargetMode {
@@ -15,11 +42,12 @@ enum MainWindowTargetMode {
 #[derive(Debug, Clone)]
 pub enum MainWindowTarget {
     Dev {
-        origin: String,
+        navigation_boundary: NavigationBoundary,
         url: String,
         webview_url: WebviewUrl,
     },
     Production {
+        navigation_boundary: NavigationBoundary,
         path: String,
         webview_url: WebviewUrl,
     },
@@ -28,8 +56,16 @@ pub enum MainWindowTarget {
 impl MainWindowTarget {
     pub fn allows_navigation(&self, candidate: &Url) -> bool {
         match self {
-            Self::Dev { origin, .. } => candidate.origin().ascii_serialization() == *origin,
-            Self::Production { .. } => true,
+            Self::Dev {
+                navigation_boundary,
+                ..
+            }
+            | Self::Production {
+                navigation_boundary,
+                ..
+            } => {
+                navigation_boundary.matches(candidate)
+            }
         }
     }
 
@@ -48,24 +84,25 @@ impl MainWindowTarget {
 }
 
 pub fn resolve_main_window_target() -> Result<MainWindowTarget, Box<dyn Error>> {
-    match resolve_main_window_target_mode(
-        std::env::var(MAIN_WINDOW_TARGET_MODE_ENV).ok().as_deref(),
-    )? {
+    let target_mode = crate::env::optional_env(crate::env::MAIN_WINDOW_TARGET_MODE_ENV);
+
+    match resolve_main_window_target_mode(target_mode.as_deref())? {
         MainWindowTargetMode::Dev => {
-            let raw_url = std::env::var("AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL")
-                .ok()
-                .filter(|value| !value.trim().is_empty())
+            let raw_url = crate::env::optional_env(crate::env::DEV_WINDOW_URL_ENV)
                 .unwrap_or_else(|| MAIN_WINDOW_DEV_URL.to_string());
             let parsed_url: Url = raw_url.parse()?;
-            let origin = parsed_url.origin().ascii_serialization();
+            let navigation_boundary = NavigationBoundary::from_url(&parsed_url)?;
 
             Ok(MainWindowTarget::Dev {
-                origin,
+                navigation_boundary,
                 url: raw_url,
                 webview_url: WebviewUrl::External(parsed_url),
             })
         }
         MainWindowTargetMode::App => Ok(MainWindowTarget::Production {
+            navigation_boundary: NavigationBoundary::from_url(&Url::parse(&format!(
+                "{MAIN_WINDOW_PROD_ORIGIN}/"
+            ))?)?,
             path: MAIN_WINDOW_PROD_PATH.to_string(),
             webview_url: WebviewUrl::App(MAIN_WINDOW_PROD_PATH.into()),
         }),
@@ -91,7 +128,8 @@ fn resolve_main_window_target_mode(
             }
         }
         Some(other) => Err(format!(
-            "{MAIN_WINDOW_TARGET_MODE_ENV} must be one of: auto, app, dev (received {other})"
+            "{} must be one of: auto, app, dev (received {other})",
+            crate::env::MAIN_WINDOW_TARGET_MODE_ENV
         )
         .into()),
     }
@@ -100,7 +138,9 @@ fn resolve_main_window_target_mode(
 #[cfg(test)]
 mod tests {
     use super::{
-        MAIN_WINDOW_TARGET_MODE_ENV, MainWindowTarget, MainWindowTargetMode,
+        MAIN_WINDOW_PROD_ORIGIN, MainWindowTarget,
+        NavigationBoundary,
+        MainWindowTargetMode,
         resolve_main_window_target, resolve_main_window_target_mode,
     };
     use tauri::{Url, WebviewUrl};
@@ -131,7 +171,10 @@ mod tests {
         assert!(
             error
                 .to_string()
-                .contains(&format!("{MAIN_WINDOW_TARGET_MODE_ENV} must be one of")),
+                .contains(&format!(
+                    "{} must be one of",
+                    crate::env::MAIN_WINDOW_TARGET_MODE_ENV
+                )),
         );
     }
 
@@ -141,15 +184,40 @@ mod tests {
 
         if cfg!(debug_assertions) {
             match target {
-                MainWindowTarget::Dev { origin, url, .. } => {
-                    assert_eq!(origin, "http://127.0.0.1:1420");
-                    assert_eq!(url, "http://127.0.0.1:1420/");
+                MainWindowTarget::Dev {
+                    navigation_boundary,
+                    url,
+                    ..
+                } => {
+                    assert_eq!(
+                        navigation_boundary,
+                        NavigationBoundary {
+                            scheme: "http".to_string(),
+                            host: "127.0.0.1".to_string(),
+                            port: Some(31420),
+                        }
+                    );
+                    assert_eq!(url, "http://127.0.0.1:31420/");
                 }
                 MainWindowTarget::Production { .. } => {
                     panic!("debug builds should resolve a development target");
                 }
             }
-        } else if let MainWindowTarget::Production { path, .. } = target {
+        } else if let MainWindowTarget::Production {
+            navigation_boundary,
+            path,
+            ..
+        } = target
+        {
+            assert_eq!(
+                navigation_boundary,
+                NavigationBoundary {
+                    scheme: "tauri".to_string(),
+                    host: "localhost".to_string(),
+                    port: None,
+                }
+            );
+            assert_eq!(MAIN_WINDOW_PROD_ORIGIN, "tauri://localhost");
             assert_eq!(path, "index.html");
         }
     }
@@ -157,23 +225,50 @@ mod tests {
     #[test]
     fn development_target_only_allows_same_origin_navigation() {
         let target = MainWindowTarget::Dev {
-            origin: "http://127.0.0.1:1420".to_string(),
-            url: "http://127.0.0.1:1420/".to_string(),
+            navigation_boundary: NavigationBoundary {
+                scheme: "http".to_string(),
+                host: "127.0.0.1".to_string(),
+                port: Some(31420),
+            },
+            url: "http://127.0.0.1:31420/".to_string(),
             webview_url: WebviewUrl::External(
-                "http://127.0.0.1:1420/"
+                "http://127.0.0.1:31420/"
                     .parse()
                     .expect("dev url should parse"),
             ),
         };
 
         assert!(target.allows_navigation(
-            &Url::parse("http://127.0.0.1:1420/diagnostics").expect("candidate should parse"),
+            &Url::parse("http://127.0.0.1:31420/diagnostics").expect("candidate should parse"),
         ));
         assert!(!target.allows_navigation(
-            &Url::parse("http://localhost:1420/diagnostics").expect("candidate should parse"),
+            &Url::parse("http://localhost:31420/diagnostics").expect("candidate should parse"),
         ));
         assert!(!target.allows_navigation(
             &Url::parse("https://tauri.app/").expect("candidate should parse"),
+        ));
+    }
+
+    #[test]
+    fn production_target_only_allows_packaged_app_origin_navigation() {
+        let target = MainWindowTarget::Production {
+            navigation_boundary: NavigationBoundary {
+                scheme: "tauri".to_string(),
+                host: "localhost".to_string(),
+                port: None,
+            },
+            path: "index.html".to_string(),
+            webview_url: WebviewUrl::App("index.html".into()),
+        };
+
+        assert!(target.allows_navigation(
+            &Url::parse("tauri://localhost#/preferences").expect("candidate should parse"),
+        ));
+        assert!(target.allows_navigation(
+            &Url::parse("tauri://localhost/assets/index.js").expect("candidate should parse"),
+        ));
+        assert!(!target.allows_navigation(
+            &Url::parse("https://downloads.aigcfox.com/").expect("candidate should parse"),
         ));
     }
 }
