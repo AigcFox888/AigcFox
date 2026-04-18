@@ -161,6 +161,7 @@ apps/desktop-v3/
 - 统一页面反馈需要的错误结构
 - 把统一错误对象格式化为错误态可见的 support details，例如 `code / requestId / runtime message`
 - 当前 `pnpm qa:desktop-v3-support-governance` 会同时冻结 `app-error.ts`、`error-support-details.ts`、`normalize-command-error.ts` 的文件集、顶层声明面，以及 `AppErrorShape / ErrorSupportDetail / CommandErrorPayload` 的属性合同；任何新的错误 helper、字段或横向扩散都必须先重写 renderer error support boundary
+- 当前 `pnpm qa:desktop-v3-error-contract-governance` 会同时冻结 `src-tauri/src/error.rs`、`app-error.ts`、`normalize-command-error.ts`、`tauri-command-runtime.ts` 的跨层错误真相链；Wave 1 的 Tauri command error 只允许保留 `code / message / requestId`，`details` 只保留 TypeScript 兼容位，不是当前 Rust command 承诺面
 - `AppError` 当前只允许由 `normalize-command-error.ts` 与 `mock-command-runtime.ts` 直接持有；`buildErrorSupportDetails` 只允许由 `ErrorState`、`DiagnosticsPage`、`PreferencesPage` 直接持有；只要错误支撑链跨出当前 ownership，就先重写 support layer，再同步更新门禁与文档
 
 ### `lib/query`
@@ -319,6 +320,7 @@ src-tauri/
 - capability 文件是安全边界真相，不把权限治理留给“代码约定”
 - 新窗口权限绑定依赖 `label`
 - 不把 smoke 环境变量演变成业务开关
+- 当前用 `pnpm qa:desktop-v3-host-governance` 冻结 `window/* + lib.rs + commands/mod.rs + runtime/mod.rs + renderer-ready.ts + initial-route.ts + runtime-mode.ts` 的宿主 env / log truth chain；当前 app/runtime/window 侧只允许读取 `AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE`，并只允许输出 `desktop-v3.main-window.* / desktop-v3.command.invoke / desktop-v3.renderer.boot / desktop-v3.startup-backend-probe.*`
 - `tauri.conf.json` 只放共享配置；平台差异未来进入 `tauri.<platform>.conf.json`
 - updater 进入实现前，先补签名、公钥、HTTPS 发布源与产物流向设计
 
@@ -375,6 +377,7 @@ Go error response -> Rust runtime error -> Tauri command error -> TypeScript err
 - Go 负责权威错误码
 - Rust 负责本地归一和安全裁剪
 - TypeScript 只处理统一错误对象
+- Wave 1 Rust command error public surface 固定为 `code / message / requestId`；`details` 只允许停留在 TypeScript 兼容 payload 中，不允许被文档误写成当前 Rust 已承诺字段
 - 页面错误态默认展示结构化 support details，不在页面里散落手写错误码拼接逻辑
 
 ## 预留边界

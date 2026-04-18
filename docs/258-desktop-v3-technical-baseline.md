@@ -41,6 +41,7 @@
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client` 文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面做静态门禁；远端 Go API 边界当前只允许停留在 health/readiness skeleton，不允许继续在现结构上补丁式扩业务接口
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security`、`runtime/state`、`runtime/diagnostics` 做静态门禁；`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都冻结在当前 Wave 1 骨架，任何真实 secure-store 写入、会话态扩张或诊断编排扩张都必须先结构化重写
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust `ThemeMode / ThemePreference / DiagnosticsSnapshot / BackendProbe` 与 TypeScript `DesktopRuntime / DesktopCommandPayloadMap / DesktopCommandResultMap` 的跨边界真相链必须保持同一组冻结契约，任何字段、命令或类型扩张都必须先重写 contract boundary
+- 当前用 `pnpm qa:desktop-v3-error-contract-governance` 对 `src-tauri/src/error.rs` 与 `src/lib/errors/app-error.ts / normalize-command-error.ts / src/lib/runtime/tauri-command-runtime.ts` 做静态门禁；Wave 1 的 Rust `CommandError` 只允许保留 `code / message / request_id`，TypeScript 只允许归一成 `code / message / requestId`，`details` 只保留兼容位；`RuntimeError` variant 集、`RuntimeError -> CommandError` 映射和跨层持有边界都不允许继续补丁式漂移
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter 层做静态门禁；`MockCommandRuntime`、`TauriCommandRuntime`、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke` 和 mock fixtures 的文件集、导出面、Tauri bridge 触点与 source-level ownership 都冻结在当前 Wave 1 骨架，不允许继续在现结构上补丁式加 helper、分叉实例化入口或散落 bridge 逻辑
 - 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` 壳层做静态门禁；`App.tsx`、`bootstrap/renderer-ready.ts`、`app/layout/*`、`app/providers/*`、`app/router/*` 的文件集、顶层声明面、初始路由集、导航 href，以及 `main.tsx -> App -> AppProviders -> ThemeProvider -> router/layout` 的 source-level ownership 都冻结在当前 Wave 1 骨架，不允许继续补丁式扩散 app shell boundary
 - 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；`DashboardPage / DiagnosticsPage / PreferencesPage` 的顶层声明面、quick link / query key / theme option 常量、`NavItem` 与 shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 source-level ownership 都冻结在当前 Wave 1 骨架，不允许继续补丁式扩 page composition、shared state 或 shell hook boundary
@@ -48,7 +49,7 @@
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的持有边界都冻结在当前 Wave 1 骨架，不允许页面、provider 或新 feature 继续在现结构上补丁式扩散 runtime 访问
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
-- `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
+- `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL、尺寸、初始路由和导航 telemetry 由 Rust `window/main_window.rs + window/main_window_target.rs + window/initial_route.rs + window/telemetry.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
 - 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 自有 HTTPS 更新源`
 
 详细规则见 [269-desktop-v3-tauri-2-governance-baseline.md](./269-desktop-v3-tauri-2-governance-baseline.md)。
@@ -107,6 +108,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 - TypeScript `src/app` 壳层当前由 `pnpm qa:desktop-v3-app-shell-governance` 共同冻结，`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href 与 source-level ownership 不允许继续补丁式漂移
 - TypeScript `src/pages / src/components/navigation/nav-item.tsx / src/components/states / src/hooks` presentation 层当前由 `pnpm qa:desktop-v3-page-governance` 共同冻结，页面组合、状态组件 props、`LayoutMode / ShellLayoutState` 与 shell hook ownership 不允许继续补丁式漂移
 - TypeScript `src/lib/errors / src/lib/query / src/lib/notify.ts / src/lib/typography.ts / src/lib/utils.ts` shared support 层当前由 `pnpm qa:desktop-v3-support-governance` 共同冻结，错误归一、query 单例、toast 支撑、type token 与 `cn` helper 不允许继续补丁式漂移
+- Rust `src-tauri/src/error.rs` 与 TypeScript `src/lib/errors/app-error.ts / normalize-command-error.ts / src/lib/runtime/tauri-command-runtime.ts` 当前由 `pnpm qa:desktop-v3-error-contract-governance` 共同冻结，当前 command error 真相链只承认 `code / message / requestId`，不允许补丁式横向扩更多错误字段或跨层消费者
 - TypeScript `src/features/diagnostics` 与 `src/features/preferences` 当前由 `pnpm qa:desktop-v3-feature-governance` 共同冻结，页面与 provider 只允许通过 `diagnostics-api / diagnostics-formatters / preferences-api / preferences-store / preferences-types` 进入 renderer feature boundary，不允许再把 runtime access 或主题状态持有横向扩散到更多壳层文件
 - Wave 1 不把上述诊断快照等同于真实密钥写入能力
 
@@ -115,7 +117,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 虽然当前 Wave 1 不实现完整交付更新，但技术基线已经冻结：
 
 - 开发主链：`Windows + WSL2（默认固定 WSL 单执行面） -> GitHub -> GitHub Actions`
-- 三端打包交给 CI
+- `Windows + macOS` 打包交给 CI
 - 生产更新源必须使用自有 HTTPS 下载源
 - 不以 GitHub 作为中国用户的生产更新源
 - 当前更新源优先落到七牛对象存储或自有 HTTPS 服务器，GitHub Actions 只负责产出构件

@@ -147,7 +147,6 @@ function isDesktopV3Wave1ChildSmokeStep(stepKey) {
   return [
     "desktop-v3-responsive-smoke",
     "desktop-v3-tauri-dev-smoke",
-    "desktop-v3-packaged-app-smoke",
   ].includes(stepKey);
 }
 
@@ -288,11 +287,9 @@ export function assertDesktopV3Wave1ReadinessSummaryContract(summary, options = 
   assertNonEmptyString(summary.profile, `${label}.profile`);
 
   for (const key of [
-    "latestPackagedAppSmokeSummary",
     "latestReadinessSummary",
     "latestResponsiveSmokeSummary",
     "latestTauriDevSmokeSummary",
-    "packagedAppSmokeSummary",
     "readinessSummary",
     "responsiveSmokeSummary",
     "tauriDevSmokeSummary",

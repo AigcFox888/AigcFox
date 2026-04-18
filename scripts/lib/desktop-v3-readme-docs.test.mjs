@@ -11,12 +11,15 @@ describe("desktop-v3 README docs", () => {
 
     expect(text).toContain("281-desktop-v3-post-reinstall-recovery-entry.md");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
+    expect(text).toContain("pnpm qa:rust-host-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-page-governance");
     expect(text).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(text).toContain("pnpm qa:desktop-v3-feature-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-host-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-platform-config-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
@@ -26,16 +29,25 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("src/lib/runtime");
     expect(text).toContain("src/pages");
     expect(text).toContain("src/lib/errors");
+    expect(text).toContain("src-tauri/src/error.rs");
     expect(text).toContain("useShellLayout");
     expect(text).toContain("queryClient");
     expect(text).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(text).toContain("runtime/models.rs + src/lib/runtime/contracts.ts + src/lib/runtime/desktop-runtime.ts + src/lib/runtime/tauri-command-types.ts");
+    expect(text).toContain("code / message / requestId");
     expect(text).toContain("src/features/diagnostics");
     expect(text).toContain("src/features/preferences");
+    expect(text).toContain("window/main_window_target.rs");
+    expect(text).toContain("desktop-v3.main-window.*");
+    expect(text).toContain("AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE");
+    expect(text).toContain("rust-host-readiness-summary.json");
     expect(text).toContain("runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs");
     expect(text).toContain("tauri.conf.json");
     expect(text).toContain("runtime/mod.rs");
+    expect(text).toContain("desktop-v3-host-governance-summary.json");
+    expect(text).toContain("desktop-v3-error-contract-governance-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
+    expect(text).toContain("Windows + macOS");
   });
 
   it("keeps root README aligned with the post-reinstall recovery entry", async () => {

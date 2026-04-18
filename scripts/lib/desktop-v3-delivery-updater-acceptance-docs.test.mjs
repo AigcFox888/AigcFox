@@ -11,6 +11,8 @@ describe("desktop-v3 delivery/updater acceptance docs", () => {
 
     expect(text).toContain("远端真值来源");
     expect(text).toContain("latest summary 真值成立");
+    expect(text).toContain("`remoteTrackingRef`");
+    expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
     expect(text).toContain("`latestSuccessfulRunId`");
     expect(text).toContain("`origin/<branch>`");

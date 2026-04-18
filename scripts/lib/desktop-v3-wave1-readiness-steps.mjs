@@ -47,22 +47,6 @@ function buildManualStep(key, command, reason, options = {}) {
   };
 }
 
-function buildDesktopV3PackageStep(config) {
-  if (config.hostPlatform === "linux") {
-    return buildPnpmStep("desktop-v3-linux-package", ["qa:desktop-v3-linux-package"], {
-      label: "desktop-v3-linux-package",
-    });
-  }
-
-  return buildPnpmStep(
-    "desktop-v3-tauri-build",
-    ["--filter", "@aigcfox/desktop-v3", "tauri", "build", "--ci", "--no-sign"],
-    {
-      label: "desktop-v3-tauri-build",
-    },
-  );
-}
-
 export function buildDesktopV3Wave1ReadinessSteps(config) {
   const steps = [
     buildDocumentStep("desktop-v3-document-check"),
@@ -154,6 +138,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-runtime-contract-governance",
     }),
+    buildPnpmStep("desktop-v3-error-contract-governance", ["qa:desktop-v3-error-contract-governance"], {
+      artifacts: {
+        latestSummaryPath: config.errorContractGovernanceLatestSummaryPath,
+        outputDir: config.errorContractGovernanceOutputDir,
+        summaryPath: path.join(config.errorContractGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_ERROR_CONTRACT_GOVERNANCE_OUTPUT_DIR: config.errorContractGovernanceOutputDir,
+      },
+      label: "desktop-v3-error-contract-governance",
+    }),
     buildPnpmStep("desktop-v3-runtime-adapter-governance", ["qa:desktop-v3-runtime-adapter-governance"], {
       artifacts: {
         latestSummaryPath: config.runtimeAdapterGovernanceLatestSummaryPath,
@@ -209,6 +204,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-platform-config-governance",
     }),
+    buildPnpmStep("desktop-v3-host-governance", ["qa:desktop-v3-host-governance"], {
+      artifacts: {
+        latestSummaryPath: config.hostGovernanceLatestSummaryPath,
+        outputDir: config.hostGovernanceOutputDir,
+        summaryPath: path.join(config.hostGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_HOST_GOVERNANCE_OUTPUT_DIR: config.hostGovernanceOutputDir,
+      },
+      label: "desktop-v3-host-governance",
+    }),
     buildPnpmStep("desktop-v3-updater-governance", ["qa:desktop-v3-updater-governance"], {
       artifacts: {
         latestSummaryPath: config.updaterGovernanceLatestSummaryPath,
@@ -243,6 +249,7 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
 
   if (config.profile === "ci") {
     // GitHub Actions cannot provide a WSLg host window, so CI runs the non-window subset.
+    return steps;
   } else if (config.isWslHost) {
     steps.push(
       buildPnpmStep("desktop-v3-tauri-dev-smoke", ["qa:desktop-v3-tauri-dev-smoke"], {
@@ -256,22 +263,6 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
         },
       }),
     );
-    steps.push(
-      buildDesktopV3PackageStep(config),
-    );
-    steps.push(
-      buildPnpmStep("desktop-v3-packaged-app-smoke", ["qa:desktop-v3-packaged-app-smoke"], {
-        artifacts: {
-          latestSummaryPath: config.packagedAppSmokeLatestSummaryPath,
-          outputDir: config.packagedAppSmokeOutputDir,
-          summaryPath: path.join(config.packagedAppSmokeOutputDir, "summary.json"),
-        },
-        env: {
-          AIGCFOX_DESKTOP_V3_PACKAGED_APP_SMOKE_OUTPUT_DIR: config.packagedAppSmokeOutputDir,
-        },
-        label: "desktop-v3-packaged-app-smoke",
-      }),
-    );
     return steps;
   } else {
     steps.push(
@@ -281,9 +272,6 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
         "当前宿主不是 Ubuntu + WSL，无法使用 WSLg 自动宿主 smoke；必须手动完成真实窗口启动验证。",
       ),
     );
+    return steps;
   }
-
-  steps.push(buildDesktopV3PackageStep(config));
-
-  return steps;
 }

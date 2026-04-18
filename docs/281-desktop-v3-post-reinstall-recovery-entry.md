@@ -46,12 +46,14 @@
 
 ## 当前验证链
 
+- 宿主 / Rust 预检：`pnpm qa:rust-host-readiness`
 - 骨架快速入口：`pnpm test:desktop-v3-wave1-readiness`
 - 骨架完整入口：`pnpm qa:desktop-v3-wave1-readiness`
 - 交付文档快速入口：`pnpm test:desktop-v3-delivery-updater-docs`
 - 交付文档完整入口：`pnpm qa:desktop-v3-delivery-updater-docs`
 - 远端 GitHub proof：`pnpm qa:desktop-v3-delivery-updater-github-remote-proof`
 - 最新摘要固定入口：
+  - `output/verification/rust-host-readiness-summary.json`
   - `output/verification/latest/desktop-v3-wave1-readiness-summary.json`
   - `output/verification/latest/desktop-v3-delivery-updater-docs-summary.json`
   - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`

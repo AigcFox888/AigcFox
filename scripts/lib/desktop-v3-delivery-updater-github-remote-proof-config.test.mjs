@@ -13,10 +13,14 @@ describe("desktop-v3 delivery/updater GitHub remote proof config", () => {
       currentBranch: "feature/delivery-updater-docs",
       env: {},
       now: new Date("2026-04-16T10:20:30.456Z"),
+      remoteTrackingHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+      remoteTrackingRef: "origin/feature/delivery-updater-docs",
     });
 
     expect(config.currentBranch).toBe("feature/delivery-updater-docs");
     expect(config.targetBranch).toBe("feature/delivery-updater-docs");
+    expect(config.remoteTrackingRef).toBe("origin/feature/delivery-updater-docs");
+    expect(config.remoteTrackingHeadSha).toBe("75ca51382a1ad006a17b44bd2021714f1a3b94c2");
     expect(config.outputDir).toContain(
       path.join(
         "output",
@@ -36,14 +40,19 @@ describe("desktop-v3 delivery/updater GitHub remote proof config", () => {
 
   it("builds a single frozen workflow definition with explicit path and active-state expectations", () => {
     const definitions = buildDesktopV3DeliveryUpdaterGithubRemoteProofDefinitions({
+      remoteTrackingHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+      remoteTrackingRef: "origin/feature/delivery-updater-docs",
       targetBranch: "feature/delivery-updater-docs",
     });
 
     expect(definitions).toEqual([
       expect.objectContaining({
         expectedBranch: "feature/delivery-updater-docs",
+        expectedHeadSha: "75ca51382a1ad006a17b44bd2021714f1a3b94c2",
+        expectedRef: "origin/feature/delivery-updater-docs",
         expectedWorkflowPath: ".github/workflows/desktop-v3-delivery-updater-docs.yml",
         expectedWorkflowState: "active",
+        requireLatestRunSuccess: true,
         workflowName: "desktop-v3-delivery-updater-docs",
       }),
     ]);

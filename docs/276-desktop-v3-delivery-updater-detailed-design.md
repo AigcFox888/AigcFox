@@ -35,7 +35,7 @@ graph TD
 
 职责：
 
-- 在 GitHub Actions 内生成 Linux / Windows / macOS 构件
+- 在 GitHub Actions 内生成 `Windows + macOS` 构件
 - 生成 updater 所需签名和更新产物
 - 产出 staging 级 artifacts
 
@@ -129,20 +129,16 @@ graph TD
 ```text
 desktop-v3/
   staging/
-    linux-x86_64/
+    windows-<arch>/
       0.1.0/
-    windows-x86_64/
-      0.1.0/
-    darwin-aarch64/
+    darwin-<arch>/
       0.1.0/
     latest.json
     policy.json
   stable/
-    linux-x86_64/
+    windows-<arch>/
       0.1.0/
-    windows-x86_64/
-      0.1.0/
-    darwin-aarch64/
+    darwin-<arch>/
       0.1.0/
     latest.json
     policy.json

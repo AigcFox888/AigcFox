@@ -41,6 +41,8 @@ describe("desktop-v3 delivery/updater runbook docs", () => {
     expect(text).toContain("output/verification/desktop-v3-delivery-updater-docs-<run-id>/summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-docs-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json");
+    expect(text).toContain("`remoteTrackingRef`");
+    expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
     expect(text).toContain("`latestSuccessfulRunId`");
     expect(text).toContain("`brokenLinks=[]`");

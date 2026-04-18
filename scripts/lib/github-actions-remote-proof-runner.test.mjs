@@ -20,6 +20,7 @@ describe("github-actions remote proof runner", () => {
       workflows: [{ id: 1, name: "desktop-v3-ci", path: ".github/workflows/desktop-v3-ci.yml", state: "active" }],
     }));
     const fetchGithubWorkflowRunsByDefinitionImpl = vi.fn(async () => new Map([["desktop-v3-ci", []]]));
+    const fetchGithubLatestRunJobsByDefinitionImpl = vi.fn(async () => new Map());
     const buildSummary = vi.fn(async () => summary);
     const persistVerificationSummaryImpl = vi.fn(async () => {});
 
@@ -28,6 +29,7 @@ describe("github-actions remote proof runner", () => {
       buildSummary,
       config,
       definitions,
+      fetchGithubLatestRunJobsByDefinitionImpl,
       fetchGithubWorkflowRunsByDefinitionImpl,
       persistVerificationSummaryImpl,
       requestGithubApiJsonImpl,
@@ -59,12 +61,25 @@ describe("github-actions remote proof runner", () => {
         ["desktop-v3-ci", { id: 1, name: "desktop-v3-ci", path: ".github/workflows/desktop-v3-ci.yml", state: "active" }],
       ]),
     });
+    expect(fetchGithubLatestRunJobsByDefinitionImpl).toHaveBeenCalledWith({
+      authorizationHeader: "Basic test",
+      baseUrl: "https://api.github.com/repos/AigcFox888/AigcFox",
+      definitions,
+      fetchImpl: undefined,
+      maxPages: undefined,
+      perPage: undefined,
+      requestGithubApiJsonImpl,
+      workflowRunsByName: new Map([["desktop-v3-ci", []]]),
+    });
     expect(buildSummary).toHaveBeenCalledWith(
       config,
       {
         workflows: [{ id: 1, name: "desktop-v3-ci", path: ".github/workflows/desktop-v3-ci.yml", state: "active" }],
       },
       new Map([["desktop-v3-ci", []]]),
+      {
+        workflowJobsByRunId: new Map(),
+      },
     );
     expect(persistVerificationSummaryImpl).toHaveBeenCalledWith(summary, {
       archiveSummaryPath: config.summaryPath,
@@ -76,6 +91,7 @@ describe("github-actions remote proof runner", () => {
     const config = buildConfig();
     const requestGithubApiJsonImpl = vi.fn(async () => ({ workflows: [] }));
     const fetchGithubWorkflowRunsByDefinitionImpl = vi.fn(async () => new Map());
+    const fetchGithubLatestRunJobsByDefinitionImpl = vi.fn(async () => new Map());
     const buildSummary = vi.fn(async () => ({ latestSummaryPath: config.latestSummaryPath, status: "passed", summaryPath: config.summaryPath }));
     const persistVerificationSummaryImpl = vi.fn(async () => {});
     const resolveGithubCredentialFromGitImpl = vi.fn();
@@ -87,6 +103,7 @@ describe("github-actions remote proof runner", () => {
       buildSummary,
       config,
       definitions: [],
+      fetchGithubLatestRunJobsByDefinitionImpl,
       fetchGithubWorkflowRunsByDefinitionImpl,
       persistVerificationSummaryImpl,
       requestGithubApiJsonImpl,

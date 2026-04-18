@@ -16,6 +16,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/lib/desktop-v3-app-shell-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-page-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-support-governance.test.mjs");
+    expect(script).toContain("scripts/lib/desktop-v3-error-contract-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-backend-client-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-capability-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-command-governance.test.mjs");
@@ -33,11 +34,11 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/lib/desktop-v3-tauri-dev-smoke.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-tauri-dev-smoke-runner.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-wave1-readiness.test.mjs");
-    expect(script).toContain("scripts/lib/desktop-v3-packaged-app-smoke.test.mjs");
     expect(script).toContain("scripts/desktop-v3-responsive-smoke.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-app-shell-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-page-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-support-governance.test.mjs");
+    expect(script).toContain("scripts/verify-desktop-v3-error-contract-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-backend-client-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-capability-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-command-governance.test.mjs");
@@ -50,7 +51,6 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/verify-desktop-v3-updater-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-runtime-boundary.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-tauri-dev-smoke.test.mjs");
-    expect(script).toContain("scripts/verify-desktop-v3-packaged-app-smoke.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-wave1-readiness.test.mjs");
   });
 
@@ -65,6 +65,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
         "verify-desktop-v3-app-shell-governance.test.mjs",
         "verify-desktop-v3-page-governance.test.mjs",
         "verify-desktop-v3-support-governance.test.mjs",
+        "verify-desktop-v3-error-contract-governance.test.mjs",
         "verify-desktop-v3-backend-client-governance.test.mjs",
         "verify-desktop-v3-capability-governance.test.mjs",
         "verify-desktop-v3-command-governance.test.mjs",
@@ -77,7 +78,6 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
         "verify-desktop-v3-updater-governance.test.mjs",
         "verify-desktop-v3-runtime-boundary.test.mjs",
         "verify-desktop-v3-tauri-dev-smoke.test.mjs",
-        "verify-desktop-v3-packaged-app-smoke.test.mjs",
         "verify-desktop-v3-wave1-readiness.test.mjs",
       ],
     }).filter((file) => !script.includes(file));

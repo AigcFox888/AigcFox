@@ -27,6 +27,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(baselineText).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(baselineText).toContain("MockCommandRuntime");
     expect(baselineText).toContain("TauriCommandRuntime");
@@ -55,8 +56,10 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("tauri-bridge.ts");
     expect(designText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(designText).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(designText).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(designText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(designText).toContain("pnpm qa:desktop-v3-feature-governance");
+    expect(designText).toContain("pnpm qa:desktop-v3-host-governance");
     expect(designText).toContain("runtime/models");
     expect(designText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap");
     expect(designText).toContain("features/diagnostics");
@@ -65,6 +68,10 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("useShellLayout");
     expect(designText).toContain("notify.ts");
     expect(designText).toContain("queryClient");
+    expect(designText).toContain("src-tauri/src/error.rs");
+    expect(designText).toContain("code / message / requestId");
+    expect(designText).toContain("AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE");
+    expect(designText).toContain("desktop-v3.renderer.boot");
 
     expect(governanceText).toContain("src-tauri/capabilities/*");
     expect(governanceText).toContain("label");
@@ -74,10 +81,12 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-feature-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-host-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-platform-config-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
@@ -99,6 +108,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("useShellLayout");
     expect(governanceText).toContain("queryClient");
     expect(governanceText).toContain("notify");
+    expect(governanceText).toContain("Command Error Truth Chain");
+    expect(governanceText).toContain("AIGCFOX_BACKEND_BASE_URL");
+    expect(governanceText).toContain("desktop-v3.main-window.navigation");
     expect(governanceText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
@@ -112,7 +124,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-command-governance");
     expect(executionText).toContain("desktop-v3-page-governance");
     expect(executionText).toContain("desktop-v3-support-governance");
+    expect(executionText).toContain("desktop-v3-error-contract-governance");
     expect(executionText).toContain("desktop-v3-feature-governance");
+    expect(executionText).toContain("desktop-v3-host-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
     expect(executionText).toContain("desktop-v3-platform-config-governance");
     expect(executionText).toContain("desktop-v3-runtime-adapter-governance");
@@ -122,8 +136,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(executionText).toContain("runtime/models.rs");
     expect(executionText).toContain("desktop-v3-runtime-boundary");
+    expect(executionText).toContain("desktop-v3.main-window.*");
     expect(executionText).toContain("responsive smoke");
     expect(executionText).toContain("tauri dev smoke");
-    expect(executionText).toContain("packaged app smoke");
+    expect(executionText).toContain("Windows + macOS");
   });
 });

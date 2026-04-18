@@ -90,6 +90,12 @@ jobs:
       - name: Run delivery/updater docs verification
         run: pnpm qa:desktop-v3-delivery-updater-docs
 
+      - name: Run GitHub Actions lint
+        run: pnpm qa:github-actions-lint
+
+      - name: Run governance command docs verification
+        run: pnpm qa:governance-command-docs
+
       - name: Upload delivery/updater docs artifacts
         if: always()
         uses: actions/upload-artifact@v6

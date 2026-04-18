@@ -14,7 +14,7 @@
 
 | 领域 | 冻结选型 | 当前不选 | 说明 |
 | --- | --- | --- | --- |
-| 构建权威源 | `GitHub Actions matrix packaging` | 本地手工三端长期发包 | 三端包由 CI 统一产出，减少宿主差异。 |
+| 构建权威源 | `GitHub Actions matrix packaging` | 本地手工 Windows / macOS 长期发包 | `Windows + macOS` 包由 CI 统一产出，减少宿主差异。 |
 | 生产更新客户端 | `Tauri 2 updater plugin` | 自写 updater | 跟随 `desktop-v3` 当前宿主主线，避免双轨更新实现。 |
 | 正式更新源 | `七牛对象存储或自有 HTTPS 服务器` | `GitHub Releases` 面向用户直出 | 中国用户网络条件下，GitHub 不能作为正式分发源。 |
 | 更新清单 | `Tauri updater manifest + 独立 update policy JSON` | 只靠单一自定义大 JSON | 把“客户端下载清单”和“强更策略”分层治理。 |

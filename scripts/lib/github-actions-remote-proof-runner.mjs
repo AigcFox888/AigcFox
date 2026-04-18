@@ -3,7 +3,10 @@ import {
   requestGithubApiJson,
   resolveGithubCredentialFromGit,
 } from "./github-repo-api.mjs";
-import { fetchGithubWorkflowRunsByDefinition } from "./github-actions-remote-proof.mjs";
+import {
+  fetchGithubLatestRunJobsByDefinition,
+  fetchGithubWorkflowRunsByDefinition,
+} from "./github-actions-remote-proof.mjs";
 import { persistVerificationSummary } from "./verification-summary-output.mjs";
 
 export async function runGithubWorkflowRemoteProof(options) {
@@ -16,6 +19,8 @@ export async function runGithubWorkflowRemoteProof(options) {
   const requestGithubApiJsonImpl = options.requestGithubApiJsonImpl ?? requestGithubApiJson;
   const fetchGithubWorkflowRunsByDefinitionImpl =
     options.fetchGithubWorkflowRunsByDefinitionImpl ?? fetchGithubWorkflowRunsByDefinition;
+  const fetchGithubLatestRunJobsByDefinitionImpl =
+    options.fetchGithubLatestRunJobsByDefinitionImpl ?? fetchGithubLatestRunJobsByDefinition;
   const persistVerificationSummaryImpl = options.persistVerificationSummaryImpl ?? persistVerificationSummary;
   const credentials =
     options.authorizationHeader || options.credentials
@@ -43,7 +48,19 @@ export async function runGithubWorkflowRemoteProof(options) {
     requestGithubApiJsonImpl,
     workflowsByName,
   });
-  const summary = await options.buildSummary(config, workflowsPayload, workflowRunsByName);
+  const workflowJobsByRunId = await fetchGithubLatestRunJobsByDefinitionImpl({
+    authorizationHeader,
+    baseUrl,
+    definitions,
+    fetchImpl: options.fetchImpl,
+    maxPages: options.maxPages,
+    perPage: options.perPage,
+    requestGithubApiJsonImpl,
+    workflowRunsByName,
+  });
+  const summary = await options.buildSummary(config, workflowsPayload, workflowRunsByName, {
+    workflowJobsByRunId,
+  });
 
   await persistVerificationSummaryImpl(summary, {
     archiveSummaryPath: config.summaryPath,

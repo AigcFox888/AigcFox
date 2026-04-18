@@ -43,6 +43,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client/*` 做静态门禁；当前 Go API 边界只允许停留在 probe-only skeleton，文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都被冻结在 Wave 1 范围
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
+- 当前用 `pnpm qa:desktop-v3-error-contract-governance` 对 `src-tauri/src/error.rs`、`src/lib/errors/app-error.ts`、`src/lib/errors/normalize-command-error.ts`、`src/lib/runtime/tauri-command-runtime.ts` 做静态门禁；当前 command error truth chain 只允许承认 `code / message / requestId`，`details` 只保留兼容位，不允许 Rust / Tauri / renderer 各自补丁式长错误字段或消费者
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
 - 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、路由拓扑、导航 href 和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
 - 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 route/sidebar/page-state/app-shell ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 page helper、状态组件变体或 shell hook
@@ -50,6 +51,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
+- 当前用 `pnpm qa:desktop-v3-host-governance` 对 `src-tauri/src/lib.rs`、`commands/mod.rs`、`runtime/mod.rs`、`window/initial_route.rs`、`window/main_window_target.rs`、`window/telemetry.rs`、`src/app/bootstrap/renderer-ready.ts`、`src/app/router/initial-route.ts`、`src/lib/runtime/runtime-mode.ts` 做静态门禁；宿主 env / log signal truth chain 必须保持同一条冻结真相，不允许 app/runtime/window 各自补丁式长新的 host switch 或日志标记
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
 - Rust 侧能力先进入 `runtime/*`，`commands/*` 只保留薄层转发
 
@@ -282,6 +284,26 @@ React UI
 
 只要要扩当前 support boundary，就先结构化重写 renderer shared support layer，再同步更新门禁与文档。
 
+## Command Error Truth Chain
+
+当前 Rust `src-tauri/src/error.rs` 到 renderer `app-error.ts / normalize-command-error.ts / tauri-command-runtime.ts` 也不是可以随手补字段的缓冲区，而是 Wave 1 受控 command error boundary。
+
+当前 `pnpm qa:desktop-v3-error-contract-governance` 一起冻结：
+
+- `src-tauri/src/error.rs`
+- `src/lib/errors/app-error.ts`
+- `src/lib/errors/normalize-command-error.ts`
+- `src/lib/runtime/tauri-command-runtime.ts`
+
+规则：
+
+- Wave 1 的 Rust `CommandError` 只允许公开 `code / message / request_id`
+- `RuntimeError` 只允许保留当前 variant 集；本地归一只允许收敛到 `invalid_request / not_ready / internal_error`，backend error 只透传 `code / message / request_id`
+- TypeScript 只允许把 command error 统一成 `code / message / requestId`；`details` 只保留兼容位，不代表当前 Rust command 已承诺该字段
+- `TauriCommandRuntime` 必须继续 `throw normalizeCommandError(error)`，不允许页面、feature 或更多 runtime helper 各自散落第二套 command error 归一链
+
+只要要扩当前 error boundary，就先结构化重写 Rust / Tauri / TypeScript 错误契约，再同步更新门禁与文档。
+
 ## Renderer Feature Boundary Rules
 
 当前 renderer 侧的 `src/features` 也不是随便堆 page helper 的目录，而是 Wave 1 受控 feature boundary。
@@ -369,7 +391,7 @@ React UI
 
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 把 `src-tauri/tauri.conf.json` 文件集固定死在共享单文件，并把 top-level / build / app / bundle 字段面冻结在当前 Wave 1 骨架所需集合
 - 当前 `tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json` 只保留为未来拆分方案中的目标文件名，不允许提前落文件、提前接 workflow，也不允许把对应平台细项先塞回共享配置凑合过
-- 当前主窗口的 URL、尺寸和导航边界继续由 Rust `window.rs` 创建，不把窗口细节重新塞回 `tauri.conf.json`
+- 当前主窗口的 URL、尺寸和导航边界继续由 Rust `window/main_window.rs + window/main_window_target.rs + window/initial_route.rs + window/telemetry.rs` 创建，不把窗口细节重新塞回 `tauri.conf.json`
 
 以下内容一旦进入实现，必须拆分到平台覆盖配置：
 
@@ -417,6 +439,8 @@ tauri.macos.conf.json
 - smoke 变量只服务真实验证
 - 不能把 smoke 变量演变成业务开关
 - 不能把生产配置硬编码回 smoke 脚本
+- 当前 app/runtime/window 侧允许读取的宿主变量只包括 `AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE`；任何新增变量先通过 `pnpm qa:desktop-v3-host-governance` 失败闭口，再回到结构化重写
+- 当前允许输出的宿主日志信号只包括 `desktop-v3.main-window.navigation`、`desktop-v3.main-window.page-load`、`desktop-v3.main-window.url`、`desktop-v3.command.invoke`、`desktop-v3.renderer.boot`、`desktop-v3.startup-backend-probe.scheduled / begin / end / liveness.ok / liveness.err / readiness.ok / readiness.err`；任何新增 host log signal 都视为治理回退
 
 ## Updater 进入条件
 
@@ -442,7 +466,7 @@ tauri.macos.conf.json
 
 - `apps/desktop-v3/src-tauri/tauri.conf.json`
 - `apps/desktop-v3/src-tauri/capabilities/main-window.json`
-- `apps/desktop-v3/src-tauri/src/window.rs`
+- `apps/desktop-v3/src-tauri/src/window/*`
 - `apps/desktop-v3/src-tauri/src/lib.rs`
 - `apps/desktop-v3/src-tauri/src/commands/*`
 - `apps/desktop-v3/src-tauri/src/runtime/*`

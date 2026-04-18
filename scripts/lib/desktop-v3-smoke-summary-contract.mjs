@@ -293,54 +293,6 @@ export function assertDesktopV3TauriDevSmokeSummaryContract(summary, options = {
   }
 }
 
-export function assertDesktopV3PackagedAppSmokeSummaryContract(summary, options = {}) {
-  const label = options.label ?? "desktop-v3 packaged app smoke summary";
-
-  assertObject(summary, label);
-  assertStringMap(summary.appliedEnvOverrides, `${label}.appliedEnvOverrides`);
-  assertNonEmptyString(summary.appId, `${label}.appId`);
-  assertNonEmptyString(summary.binaryPath, `${label}.binaryPath`);
-  assertNonEmptyString(summary.checkedAt, `${label}.checkedAt`);
-  assertNullableString(summary.error, `${label}.error`);
-  assertNonEmptyString(summary.initialRoute, `${label}.initialRoute`);
-  assertNonEmptyString(summary.latestSummaryPath, `${label}.latestSummaryPath`);
-  assertNonEmptyString(summary.logPath, `${label}.logPath`);
-  assertHostMarkers(summary.markers, `${label}.markers`);
-  assertObservedHostSignals(summary.observed, `${label}.observed`);
-  assertNonEmptyString(summary.outputDir, `${label}.outputDir`);
-  assertNonNegativeInteger(summary.postReadyDelayMs, `${label}.postReadyDelayMs`);
-  assertStringArray(summary.requiredCommandInvocations, `${label}.requiredCommandInvocations`);
-  assertFinalStatus(summary.status, `${label}.status`);
-  assertNonEmptyString(summary.summaryPath, `${label}.summaryPath`);
-  assertNonNegativeInteger(summary.timeoutMs, `${label}.timeoutMs`);
-  assertArray(summary.warnings, `${label}.warnings`);
-  summary.warnings.forEach((entry, index) => {
-    assertNonEmptyString(entry, `${label}.warnings[${index}]`);
-  });
-  assertNonEmptyString(summary.westonLogPath, `${label}.westonLogPath`);
-  assertExpectedString(summary.latestSummaryPath, options.expectedLatestSummaryPath, `${label}.latestSummaryPath`);
-  assertExpectedString(summary.outputDir, options.expectedOutputDir, `${label}.outputDir`);
-  assertExpectedString(summary.summaryPath, options.expectedSummaryPath, `${label}.summaryPath`);
-
-  if (summary.status === "passed") {
-    assert(
-      summary.markers.mainWindowPageLoadFinished === true,
-      `${label}.markers.mainWindowPageLoadFinished must be true for a passed run.`,
-    );
-    assert(
-      summary.markers.rendererBootSeen === true,
-      `${label}.markers.rendererBootSeen must be true for a passed run.`,
-    );
-
-    summary.requiredCommandInvocations.forEach((commandName) => {
-      assert(
-        summary.observed.commandInvocations.includes(commandName),
-        `${label}.observed.commandInvocations is missing ${commandName}.`,
-      );
-    });
-  }
-}
-
 export function assertDesktopV3RealBackendDiagnosticsSmokeSummaryContract(summary, options = {}) {
   const label = options.label ?? "desktop-v3 diagnostics bridge smoke summary";
 

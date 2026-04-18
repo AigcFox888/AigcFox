@@ -21,7 +21,9 @@ describe("desktop-v3 delivery/updater closeout docs", () => {
     expect(text).toContain("latest remote head、run id 与 GitHub Actions URL 不在本文档内硬编码");
     expect(text).toContain("`origin/<branch>`");
     expect(text).toContain("优先重新执行远端 proof 脚本并读取 latest summary");
+    expect(text).toContain("`remoteTrackingRef`");
+    expect(text).toContain("`remoteTrackingHeadSha`");
     expect(text).toContain("`latestSuccessfulHeadSha`");
-    expect(text).toContain("`latestSuccessfulRunIds`");
+    expect(text).toContain("`latestSuccessfulRunId`");
   });
 });

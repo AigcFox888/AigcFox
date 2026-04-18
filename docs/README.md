@@ -11,7 +11,10 @@
 - 当前 desktop active documentation line：`desktop-v3 Delivery / Updater Baseline`
 - 当前 `desktop-v3 Wave 1` 已完成本地与远端 clean closeout 证据
 - 当前 `desktop-v3 Delivery / Updater Baseline` 已完成本地与远端 proof 收口，收口记录见 [280-desktop-v3-delivery-updater-closeout.md](./280-desktop-v3-delivery-updater-closeout.md)
+- 当前正式发布链只保留 `Windows + macOS`；`ubuntu-24.04` 只保留 CI 验证宿主
 - 当前默认宿主恢复主链：`Windows + WSL2`
+- 当前默认执行面固定为 `WSL`；本地链只做 proof 验证，不做 Linux 终端用户安装包收口
+- 当前明确排除 `qa:desktop-v3-linux-package`
 - 当前只开发骨架，不进入业务层实现，不开发历史业务，也不把历史方案融到新主线
 
 ## 重装 / 系统恢复优先入口
@@ -92,5 +95,5 @@
 - 如果要先做交付 / 更新文档线的快速契约测试，执行 `pnpm test:desktop-v3-delivery-updater-docs`
 - 如果要验证交付 / 更新文档线，执行 `pnpm qa:desktop-v3-delivery-updater-docs`，摘要入口是 `output/verification/latest/desktop-v3-delivery-updater-docs-summary.json`
 - 如果要核对交付 / 更新文档线的远端 GitHub proof，执行 `pnpm qa:desktop-v3-delivery-updater-github-remote-proof`，摘要入口是 `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
-- 如果要看当前交付 / 更新文档线的收口记录，转到 [280-desktop-v3-delivery-updater-closeout.md](./280-desktop-v3-delivery-updater-closeout.md)
+- 如果要看当前交付 / 更新文档线的收口记录与固定读取口径，转到 [280-desktop-v3-delivery-updater-closeout.md](./280-desktop-v3-delivery-updater-closeout.md)；当前 head 的远端 proof 结论仍以 latest summary 为准
 - 如果要看 `desktop-v3` 客户端本地入口，转到 [../apps/desktop-v3/README.md](../apps/desktop-v3/README.md)

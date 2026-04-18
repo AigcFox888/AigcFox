@@ -43,7 +43,9 @@
 - 当前 `push` 触发面固定覆盖：
   - `docs/258-desktop-v3-technical-baseline.md`
   - `docs/267-desktop-v3-github-actions-baseline.md`
-- 三端 bundle 由 GitHub Actions 产出
+- `desktop-v3-ci.yml` 固定在 `ubuntu-24.04` 做治理、测试与 smoke proof
+- `desktop-v3-package.yml` 只产出 `Windows + macOS` bundle
+- `qa:desktop-v3-linux-package` 已退出当前 CI / QA 主链；不要把 Linux bundle matrix、artifact 上传或本地 Linux 包收口重新塞回 active scope
 - 不自动发布到 GitHub Releases
 - 不自动作为客户端更新源
 
@@ -55,6 +57,7 @@
 - `pnpm qa:github-actions-lint`
 - `pnpm qa:governance-command-docs`
 - `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`
-- GitHub workflow proof 的真值来自名称、冻结路径、`active` 状态与目标分支成功 run
+- latest summary 至少必须记录 `remoteTrackingRef`、`remoteTrackingHeadSha`、`latestSuccessfulHeadSha` 与 `latestSuccessfulRunId`
+- GitHub workflow proof 的真值来自名称、冻结路径、`active` 状态，以及 latest run 必须成功覆盖当前 `origin/<branch>` remote-tracking ref
 - 远端 proof 统一以 `origin/<branch>` 的 remote-tracking ref 和 latest summary 为准
 - 当前 delivery/updater 文档链也必须覆盖 fast-test entrypoint wiring

@@ -71,6 +71,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
       "desktop-v3-support-governance-summary.json",
     ),
     supportGovernanceOutputDir: path.join(outputDir, "support-governance"),
+    errorContractGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-error-contract-governance-summary.json",
+    ),
+    errorContractGovernanceOutputDir: path.join(outputDir, "error-contract-governance"),
     pageGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-page-governance-summary.json",
@@ -96,6 +101,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
       "desktop-v3-feature-governance-summary.json",
     ),
     featureGovernanceOutputDir: path.join(outputDir, "feature-governance"),
+    hostGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-host-governance-summary.json",
+    ),
+    hostGovernanceOutputDir: path.join(outputDir, "host-governance"),
     platformConfigGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-platform-config-governance-summary.json",
@@ -117,11 +127,6 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
     ),
     localdbGovernanceOutputDir: path.join(outputDir, "localdb-governance"),
     outputDir,
-    packagedAppSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
-      rootDir,
-      "desktop-v3-packaged-app-smoke-summary.json",
-    ),
-    packagedAppSmokeOutputDir: path.join(outputDir, "packaged-app-smoke"),
     profile,
     responsiveSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,

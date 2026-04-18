@@ -75,7 +75,7 @@ desktop-v3:
 
 desktop-v3 package:
 push 到 GitHub
--> desktop-v3-package 做三端出包
+-> desktop-v3-package 做 Windows + macOS 出包
 -> 产物转存到七牛或自有 HTTPS
 
 desktop-v3 delivery/updater docs:

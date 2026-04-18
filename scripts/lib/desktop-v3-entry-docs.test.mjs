@@ -4,6 +4,20 @@ import { resolveDesktopV3Wave1ReadinessConfig } from "./desktop-v3-wave1-readine
 import { readWorkspaceFile } from "./workspace-doc-test-helpers.mjs";
 
 describe("desktop-v3 entry docs", () => {
+  it("keeps the post-reinstall recovery entry aligned with the current host preflight and summary entrypoints", async () => {
+    const config = resolveDesktopV3Wave1ReadinessConfig();
+    const recoveryEntryPath = "docs/281-desktop-v3-post-reinstall-recovery-entry.md";
+    const text = await readWorkspaceFile(config.rootDir, recoveryEntryPath);
+
+    expect(text).toContain("Windows + WSL2");
+    expect(text).toContain("当前默认执行面固定为 `WSL`");
+    expect(text).toContain("pnpm qa:rust-host-readiness");
+    expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
+    expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
+    expect(text).toContain("output/verification/rust-host-readiness-summary.json");
+    expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
+  });
+
   it("keeps docs README aligned with the desktop clean closeout entry", async () => {
     const config = resolveDesktopV3Wave1ReadinessConfig();
     const readmePath = "docs/README.md";

@@ -57,6 +57,23 @@ export function resolveGithubRepoContext(options = {}) {
   };
 }
 
+export function resolveRemoteTrackingRef(options = {}) {
+  const branch = options.branch?.trim();
+
+  if (!branch) {
+    throw new Error("Cannot resolve remote-tracking ref because the branch name is empty.");
+  }
+
+  const ref = options.remoteTrackingRef?.trim() || `origin/${branch}`;
+  const headSha =
+    options.remoteTrackingHeadSha?.trim() || runGitCommand(["rev-parse", "--verify", ref], { cwd: options.cwd });
+
+  return {
+    headSha,
+    ref,
+  };
+}
+
 export function resolveGithubCredentialFromGit(options = {}) {
   const cwd = options.cwd;
   const request = options.request ?? "protocol=https\nhost=github.com\n\n";

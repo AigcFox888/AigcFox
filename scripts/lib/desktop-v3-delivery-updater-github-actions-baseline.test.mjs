@@ -51,6 +51,8 @@ describe("desktop-v3 delivery/updater GitHub Actions baseline", () => {
       "pnpm install --frozen-lockfile",
       "pnpm test:desktop-v3-delivery-updater-docs",
       "pnpm qa:desktop-v3-delivery-updater-docs",
+      "pnpm qa:github-actions-lint",
+      "pnpm qa:governance-command-docs",
       "actions/upload-artifact@v6",
     ]);
 
@@ -59,8 +61,12 @@ describe("desktop-v3 delivery/updater GitHub Actions baseline", () => {
       "274 -> 280",
       "pnpm test:desktop-v3-delivery-updater-docs",
       "pnpm qa:desktop-v3-delivery-updater-docs",
+      "pnpm qa:github-actions-lint",
+      "pnpm qa:governance-command-docs",
       "output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json",
-      "名称、冻结路径、`active` 状态与目标分支成功 run",
+      "`remoteTrackingRef`",
+      "`remoteTrackingHeadSha`",
+      "latest run 必须成功覆盖当前 `origin/<branch>` remote-tracking ref",
       "`origin/<branch>`",
       "fast-test entrypoint wiring",
     ]);
@@ -87,6 +93,18 @@ describe("desktop-v3 delivery/updater GitHub Actions baseline", () => {
       workflowPath,
       "pnpm test:desktop-v3-delivery-updater-docs",
       "pnpm qa:desktop-v3-delivery-updater-docs",
+    );
+    expectWorkflowCommandOrder(
+      workflowText,
+      workflowPath,
+      "pnpm qa:desktop-v3-delivery-updater-docs",
+      "pnpm qa:github-actions-lint",
+    );
+    expectWorkflowCommandOrder(
+      workflowText,
+      workflowPath,
+      "pnpm qa:github-actions-lint",
+      "pnpm qa:governance-command-docs",
     );
   });
 });

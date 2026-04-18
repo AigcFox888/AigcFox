@@ -34,6 +34,7 @@
 - `pnpm qa:desktop-v3-runtime-skeleton-governance`
 - `pnpm qa:desktop-v3-command-governance`
 - `pnpm qa:desktop-v3-localdb-governance`
+- `pnpm qa:desktop-v3-host-governance`
 - `pnpm qa:desktop-v3-platform-config-governance`
 - `pnpm qa:desktop-v3-updater-governance`
 - `pnpm qa:desktop-v3-runtime-boundary`
@@ -54,6 +55,7 @@
 - `desktop-v3-command-governance`
 - `desktop-v3-capability-governance`
 - `desktop-v3-platform-config-governance`
+- `desktop-v3-host-governance`
 - `desktop-v3-updater-governance`
 - `lint`
 - `typecheck`
@@ -62,10 +64,9 @@
 - `build`
 - `responsive smoke`
 - `tauri dev smoke`
-- `linux package`
-- `packaged app smoke`
 
-当前 `desktop-v3` 已补齐三段真实验证链：`responsive smoke`、`tauri dev smoke`、`packaged app smoke`。
+当前 `desktop-v3` 已补齐两段真实验证链：`responsive smoke`、`tauri dev smoke`。
+当前终端用户安装包边界改由 GitHub Actions `desktop-v3-package.yml` 统一产出 `Windows + macOS` 构件；`ubuntu-24.04` 只保留 CI 验证宿主，不再把 Linux 打包作为当前 `Wave 1` 交付目标。
 当前 `desktop-v3-localdb-governance` 已不只冻结 `LocalDatabase` 公开方法，还会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase -> DesktopRuntime` 的单一持有边界。
 当前 `pnpm qa:desktop-v3-backend-client-governance` 会冻结 `runtime/client` 远端 skeleton 边界：文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都不允许继续补丁式扩张。
 当前 `pnpm qa:desktop-v3-app-shell-governance` 会冻结 `src/app` renderer app shell boundary：`App.tsx`、`renderer-ready.ts`、`app/layout/*`、`app/providers/*`、`app/router/*` 的文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href 与 source-level ownership 都不允许继续补丁式漂移。
@@ -73,9 +74,11 @@
 当前 `pnpm qa:desktop-v3-support-governance` 会冻结 `src/lib/errors/*`、`src/lib/query/*`、`notify.ts`、`typography.ts`、`utils.ts` 的 renderer support boundary：错误归一、support details、`queryClient / shouldRetryDesktopQuery`、toast key 集、type token 与 `cn` helper 的公开面和 ownership 都不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-runtime-skeleton-governance` 会冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 三个 runtime skeleton 模块：`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都不允许继续补丁式扩张。
 当前 `pnpm qa:desktop-v3-runtime-contract-governance` 会冻结 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 的跨边界契约：Rust model、TypeScript union/interface、`DesktopRuntime` 方法签名以及 command payload/result map 不允许继续补丁式漂移。
+当前 `pnpm qa:desktop-v3-error-contract-governance` 会冻结 `src-tauri/src/error.rs`、`src/lib/errors/app-error.ts`、`src/lib/errors/normalize-command-error.ts`、`src/lib/runtime/tauri-command-runtime.ts` 的跨层错误真相链：Wave 1 的 Rust `CommandError` 只允许保留 `code / message / request_id`，TypeScript 只允许归一成 `code / message / requestId`，`details` 只保留兼容位；任何新的错误字段、跨层消费者或本地错误码分支都必须先重写 error contract boundary。
 当前 `pnpm qa:desktop-v3-runtime-adapter-governance` 会冻结 `src/lib/runtime` adapter skeleton：文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry` 实例化入口、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 都不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-feature-governance` 会冻结 `src/features/diagnostics + src/features/preferences`：文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的持有边界都不允许继续补丁式漂移。
 当前 `desktop-v3-platform-config-governance` 会冻结 `src-tauri/tauri.conf.json` 共享字段集，并确保 `tauri.linux/windows/macos.conf.json` 仍停留在未来拆分方案，不被提前堆回当前骨架分支。
+当前 `pnpm qa:desktop-v3-host-governance` 会冻结 app/runtime/window 的宿主 env / log surface：`AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE` 以及 `desktop-v3.main-window.* / desktop-v3.command.invoke / desktop-v3.renderer.boot / desktop-v3.startup-backend-probe.*` 日志信号都不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-updater-governance` 会冻结 updater 的未实现边界：在结构化重写落地前，`Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 都不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源。
 
 ## 当前输出
@@ -103,12 +106,15 @@
 - `desktop-v3-support-governance` 成功
 - `desktop-v3-runtime-skeleton-governance` 成功
 - `desktop-v3-runtime-contract-governance` 成功
+- `desktop-v3-error-contract-governance` 成功
 - `desktop-v3-runtime-adapter-governance` 成功
 - `desktop-v3-feature-governance` 成功
 - `desktop-v3-command-governance` 成功
 - `desktop-v3-capability-governance` 成功
 - `desktop-v3-platform-config-governance` 成功
+- `desktop-v3-host-governance` 成功
 - `desktop-v3-updater-governance` 成功
 - `responsive smoke` 成功
 - `tauri dev smoke` 成功
-- `packaged app smoke` 成功
+- `desktop-v3-package.yml` 与 `docs/267-desktop-v3-github-actions-baseline.md` 对齐
+- `Windows + macOS` 包体交付边界说明成立

@@ -1,4 +1,4 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { resolveDesktopV3Wave1ReadinessConfig } from "./desktop-v3-wave1-readiness-config.mjs";
 import {
@@ -80,7 +80,7 @@ describe("desktop-v3 GitHub Actions baseline", () => {
     ]);
   });
 
-  it("uploads desktop-v3 verification archive latest summary and linux deb artifacts", async () => {
+  it("uploads desktop-v3 verification archive and latest summary artifacts", async () => {
     const config = resolveDesktopV3Wave1ReadinessConfig();
     const workflowPath = ".github/workflows/desktop-v3-ci.yml";
     const workflowText = await readWorkspaceFile(config.rootDir, workflowPath);
@@ -88,8 +88,9 @@ describe("desktop-v3 GitHub Actions baseline", () => {
     expectWorkflowArtifactPaths(workflowText, workflowPath, [
       "output/verification/desktop-v3-wave1-readiness-*/**",
       "output/verification/latest/desktop-v3-wave1-readiness-summary.json",
-      "apps/desktop-v3/src-tauri/target/release/bundle/deb/**/*.deb",
     ]);
+    expect(workflowText).not.toContain("desktop-v3-linux-deb");
+    expect(workflowText).not.toContain("bundle/deb");
   });
 
   it("runs desktop fast tests before desktop readiness verification", async () => {
@@ -117,13 +118,13 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       'workflow_dispatch:',
       '- "feature/**"',
       "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true",
-      "- os: ubuntu-24.04",
       "- os: windows-latest",
       "- os: macos-latest",
-      "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles deb,appimage,rpm",
       "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
       "actions/upload-artifact@v6",
     ]);
+    expect(workflowText).not.toContain("- os: ubuntu-24.04");
+    expect(workflowText).not.toContain("deb,appimage,rpm");
 
     expectWorkflowPathSurface(
       workflowText,

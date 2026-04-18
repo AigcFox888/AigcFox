@@ -20,11 +20,13 @@ describe("desktop-v3 delivery/updater governance docs", () => {
     expect(technicalBaseline).toContain("`dev(local disabled/mock) / staging / stable`");
     expect(technicalBaseline).toContain("`SemVer`");
     expect(technicalBaseline).toContain("启动前强更 / 会话内只提醒不强退");
+    expect(technicalBaseline).toContain("Windows + macOS");
 
     expect(detailedDesign).toContain("latest.json");
     expect(detailedDesign).toContain("policy.json");
     expect(detailedDesign).toContain("required_update_before_entry");
     expect(detailedDesign).toContain("`must_update_on_next_launch`");
+    expect(detailedDesign).toContain("Windows + macOS");
   });
 
   it("keeps execution and acceptance docs aligned on verification and non-scope boundaries", async () => {

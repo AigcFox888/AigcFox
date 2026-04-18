@@ -129,12 +129,3 @@ jobs:
             output/verification/desktop-v3-wave1-readiness-*/**
             output/verification/latest/desktop-v3-wave1-readiness-summary.json
           if-no-files-found: warn
-
-      - name: Upload Linux deb package
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: desktop-v3-linux-deb-${{ github.sha }}
-          path: |
-            apps/desktop-v3/src-tauri/target/release/bundle/deb/**/*.deb
-          if-no-files-found: warn

@@ -19,7 +19,9 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-feature-governance");
+    expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-host-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-platform-config-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
@@ -29,13 +31,18 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("desktop-v3-feature-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-page-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-support-governance-summary.json");
+    expect(acceptanceDocText).toContain("desktop-v3-error-contract-governance-summary.json");
     expect(acceptanceDocText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(acceptanceDocText).toContain("desktop-v3-runtime-contract-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-localdb-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-platform-config-governance-summary.json");
+    expect(acceptanceDocText).toContain("desktop-v3-host-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-runtime-skeleton-governance-summary.json");
+    expect(acceptanceDocText).toContain("desktop-v3.main-window.*");
     expect(acceptanceDocText).toContain("只上传 CI artifacts");
     expect(acceptanceDocText).toContain("不作为客户端更新源");
+    expect(acceptanceDocText).toContain("Windows + macOS");
+    expect(acceptanceDocText).toContain("windows-latest + macos-latest");
 
     expect(baselineDocText).toContain("desktop-v3-ci.yml");
     expect(baselineDocText).toContain("desktop-v3-package.yml");
@@ -43,5 +50,6 @@ describe("desktop-v3 acceptance docs", () => {
     expect(baselineDocText).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(baselineDocText).toContain("support governance");
     expect(baselineDocText).toContain("不自动作为客户端更新源");
+    expect(baselineDocText).toContain("Windows + macOS");
   });
 });

@@ -5,6 +5,13 @@
 当前默认开发环境按 `Windows + WSL2` 记录，仓库路径按 `D:\xiangmu\AigcFox` 与 `/mnt/d/xiangmu/aigcfox` 记录。
 单轮开发与验证默认固定在 `WSL` 执行面，禁止在 `PowerShell` 与 `WSL` 之间双宿主混跑同一条依赖、构建、测试与 dev server 链路。
 
+## 当前发布 / 验证口径
+
+- 正式发布链只保留 `Windows + macOS`；Linux 终端用户安装包已退出当前 active scope。
+- 本地 `WSL` 链只做治理、构建、测试、smoke 与文档 proof 验证，不承担 Linux 包收口。
+- `qa:desktop-v3-linux-package` 已明确排除；发布 / updater 口径以 `docs/267`、`docs/277`、`docs/278`、`docs/279`、`docs/280` 为准。
+- `docs/280-desktop-v3-delivery-updater-closeout.md` 只记录基线 closeout 入口与读取口径；当前 head 的远端 proof 结论必须读取 `output/verification/latest/desktop-v3-delivery-updater-github-remote-proof-summary.json`。
+
 ## 重装后快速恢复入口
 
 - [docs/281-desktop-v3-post-reinstall-recovery-entry.md](docs/281-desktop-v3-post-reinstall-recovery-entry.md)
@@ -16,7 +23,7 @@
 | `docs/281-desktop-v3-post-reinstall-recovery-entry.md` | 重装后快速恢复项目上下文的简明主入口 | 重装或长时间中断后先读 |
 | `docs/` | 当前 `desktop-v3` 骨架、交付 / updater、UI 规范与工程契约真相层 | 再进入任务文档链 |
 | `apps/desktop-v3/` | 当前唯一客户端代码目录 | 进入本地代码与命令入口 |
-| `scripts/` | 当前 `desktop-v3` 验证、打包与治理脚本 | 跑文档 gate 与真实验证 |
+| `scripts/` | 当前 `desktop-v3` 验证与治理脚本 | 跑文档 gate 与真实验证 |
 | `.github/workflows/desktop-v3-*.yml` | 当前 CI、出包与交付 workflow | 看 GitHub 出包与文档 proof |
 
 ## 阅读入口
@@ -33,7 +40,6 @@
 pnpm dev:desktop-v3
 pnpm test:desktop-v3-wave1-readiness
 pnpm qa:desktop-v3-wave1-readiness
-pnpm qa:desktop-v3-linux-package
 pnpm test:desktop-v3-delivery-updater-docs
 pnpm qa:desktop-v3-delivery-updater-docs
 pnpm qa:desktop-v3-delivery-updater-github-remote-proof

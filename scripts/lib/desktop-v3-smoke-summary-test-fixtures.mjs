@@ -149,68 +149,6 @@ export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
   };
 }
 
-export function buildDesktopV3PackagedAppSmokeSummary(config = {}) {
-  const resolvedConfig = resolveOutputConfig("desktop-v3-packaged-app-smoke", config);
-
-  return {
-    appId: "aigcfox-desktop-v3",
-    appliedEnvOverrides: {
-      AIGCFOX_DESKTOP_V3_TRACE_COMMANDS: "1",
-      LIBGL_ALWAYS_SOFTWARE: "1",
-    },
-    binaryPath: "/workspace/apps/desktop-v3/src-tauri/target/release/aigcfox-desktop-v3",
-    checkedAt: "2026-04-14T10:00:00.000Z",
-    error: null,
-    initialRoute: "/preferences",
-    latestSummaryPath: resolvedConfig.latestSummaryPath,
-    logPath: `${resolvedConfig.outputDir}/packaged-app.log`,
-    markers: {
-      documentBootSeen: true,
-      mainWindowPageLoadFinished: true,
-      mainWindowPageLoadStarted: true,
-      rendererBootSeen: true,
-      wslgWindowRegistered: true,
-    },
-    observed: {
-      commandInvocations: [
-        "desktop_report_renderer_boot",
-        "desktop_get_theme_preference",
-      ],
-      devRequests: [],
-      mainWindowNavigations: [
-        {
-          allowed: true,
-          url: "tauri://localhost#/preferences",
-        },
-      ],
-      pageLoads: [
-        {
-          event: "finished",
-          url: "tauri://localhost#/preferences",
-        },
-      ],
-      rendererBoots: [
-        {
-          route: "#/preferences",
-          runtime: "tauri",
-          stage: "app",
-        },
-      ],
-    },
-    outputDir: resolvedConfig.outputDir,
-    postReadyDelayMs: 750,
-    requiredCommandInvocations: [
-      "desktop_report_renderer_boot",
-      "desktop_get_theme_preference",
-    ],
-    status: "passed",
-    summaryPath: resolvedConfig.summaryPath,
-    timeoutMs: 90000,
-    warnings: [],
-    westonLogPath: "/mnt/wslg/weston.log",
-  };
-}
-
 export function createDesktopV3SmokeSummaryReadFile(entries) {
   return async (targetPath) => {
     if (!(targetPath in entries)) {

@@ -15,11 +15,14 @@ describe("desktop-v3 runbook docs", () => {
 
     expect(text).toContain("等价格式检查");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
+    expect(text).toContain("pnpm qa:rust-host-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-page-governance");
     expect(text).toContain("pnpm qa:desktop-v3-support-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-error-contract-governance");
     expect(text).toContain("pnpm qa:desktop-v3-feature-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-host-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-platform-config-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
@@ -35,8 +38,12 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("NavItem");
     expect(text).toContain("useShellLayout");
     expect(text).toContain("AppErrorShape");
+    expect(text).toContain("src-tauri/src/error.rs");
+    expect(text).toContain("code / message / requestId");
     expect(text).toContain("queryClient");
     expect(text).toContain("notify");
+    expect(text).toContain("AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE");
+    expect(text).toContain("desktop-v3.main-window.*");
     expect(text).toContain("runtime/models.rs");
     expect(text).toContain("src/lib/runtime/contracts.ts");
     expect(text).toContain("SecureStore");
@@ -45,6 +52,9 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("tauri.conf.json");
     expect(text).toContain("runtime/mod.rs");
     expect(text).toContain("README docs");
+    expect(text).toContain("rust-host-readiness-summary.json");
     expect(text).toContain("fast-test entrypoint wiring");
+    expect(text).toContain("desktop-v3-package.yml");
+    expect(text).toContain("Windows + macOS");
   });
 });
