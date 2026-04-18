@@ -39,13 +39,13 @@ export const desktopV3UpdaterGovernanceForbiddenContentRuleIds = Object.freeze([
 const desktopV3UpdaterGovernanceForbiddenFileNameRules = Object.freeze([
   {
     detail:
-      "desktop-v3 当前仍冻结在 updater 未实现边界。不要提前创建 updater 命名文件；先完成 updater runtime / capability / config 的结构化重写，再放开治理门禁。",
+      "desktop-v3 当前仍冻结在 updater 未实现边界。不要提前创建 updater 命名文件；先完成 updater runtime / capability / config 的结构化重写，再放开治理门禁，并保持“首次完整安装包 + 后续在线更新”边界分离。",
     kind: "updater-file-name-drift",
     pattern: /updater/iu,
   },
   {
     detail:
-      "desktop-v3 当前不允许提前落地 Update Guard shell 文件。先按交付文档重写 updater 进入边界，再引入更新守卫壳层。",
+      "desktop-v3 当前不允许提前落地 Update Guard shell 文件。先按交付文档重写 updater 进入边界，再引入更新守卫壳层，并保持“当前会话不打断、下一次启动才强更”的冻结策略。",
     kind: "update-guard-file-name-drift",
     pattern: /update-guard/iu,
   },
@@ -87,7 +87,7 @@ const desktopV3UpdaterGovernanceForbiddenContentRules = Object.freeze([
   },
   {
     detail:
-      "desktop-v3 当前还不允许在代码里硬接 updater manifest 端点。真正接入时必须通过受控 updater runtime 重写，而不是零散补丁。",
+      "desktop-v3 当前还不允许在代码里硬接 updater manifest 端点。真正接入时必须通过受控 updater runtime 重写，而不是零散补丁，并保持首次完整安装包与后续在线更新分离。",
     kind: "update-manifest-endpoint",
     pattern: /\blatest\.json\b/u,
   },
@@ -105,19 +105,19 @@ const desktopV3UpdaterGovernanceForbiddenContentRules = Object.freeze([
   },
   {
     detail:
-      "desktop-v3 当前还不允许在代码里提前实现 required_on_startup 强更策略。先完成 updater 进入边界重写，再落策略判断。",
+      "desktop-v3 当前还不允许在代码里提前实现 required_on_startup 强更策略。先完成 updater 进入边界重写，再落策略判断；冻结语义是不打断当前会话，只在用户下一次启动时执行强更。",
     kind: "update-policy-required-on-startup",
     pattern: /\brequired_on_startup\b/u,
   },
   {
     detail:
-      "desktop-v3 当前还不允许在代码里提前实现 must_update_on_next_launch 状态。先完成 updater runtime / guard 重写，再落会话内规则。",
+      "desktop-v3 当前还不允许在代码里提前实现 must_update_on_next_launch 状态。先完成 updater runtime / guard 重写，再落会话内规则；冻结语义是用户重新打开客户端时才进入强更。",
     kind: "update-policy-next-launch-flag",
     pattern: /\bmust_update_on_next_launch\b/u,
   },
   {
     detail:
-      "desktop-v3 当前不允许把 GitHub Releases URL 硬编码成客户端更新源。正式更新入口只能在结构化重写后落到七牛对象存储或自有 HTTPS 源。",
+      "desktop-v3 当前不允许把 GitHub Releases URL 硬编码成客户端更新源。首次完整安装包由维护者分发，正式在线更新入口只能在结构化重写后落到七牛对象存储（Kodo）或自有 HTTPS 源。",
     kind: "github-releases-update-source",
     pattern: /https:\/\/github\.com\/[^\s"'`]+\/[^\s"'`]+\/releases(?:\/download)?/u,
   },

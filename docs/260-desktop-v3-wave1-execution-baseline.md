@@ -83,6 +83,7 @@
 当前 `desktop-v3-platform-config-governance` 会冻结 `src-tauri/tauri.conf.json` 共享字段集，并确保 `tauri.linux/windows/macos.conf.json` 仍停留在未来拆分方案，不被提前堆回当前骨架分支。
 当前 `pnpm qa:desktop-v3-host-governance` 会冻结 app/runtime/window 的宿主 env / log surface：`AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE` 以及 `desktop-v3.main-window.* / desktop-v3.command.invoke / desktop-v3.renderer.boot / desktop-v3.startup-backend-probe.*` 日志信号都不允许继续补丁式漂移；同一条 gate 还会交叉校验 renderer `src/app/router/route-registry.ts` 与 Rust `src-tauri/src/window/initial_route.rs` 的允许初始路由集合必须完全一致。
 当前 `pnpm qa:desktop-v3-updater-governance` 会冻结 updater 的未实现边界：在结构化重写落地前，`Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 都不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源。
+当前首次安装包仍由 GitHub Actions `desktop-v3-package.yml` 产出并经由维护者上传到七牛对象存储（Kodo）或自有 HTTPS 下载源；已安装用户后续版本的更新策略固定为在线更新，不重复下载安装包，且运行中的客户端不强制打断，命中强更时只在下一次启动生效。
 
 ## 当前输出
 

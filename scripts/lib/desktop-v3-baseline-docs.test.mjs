@@ -22,8 +22,13 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("shadcn/ui + Radix UI + Tailwind CSS 4");
     expect(baselineText).toContain("rusqlite (bundled) + rusqlite_migration");
     expect(baselineText).toContain("自有 HTTPS 下载源");
+    expect(baselineText).toContain("七牛对象存储（Kodo）");
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
     expect(baselineText).toContain("维护者从 GitHub Actions 下载 `Windows + macOS` bundle");
+    expect(baselineText).toContain("完整安装包");
+    expect(baselineText).toContain("在线更新");
+    expect(baselineText).toContain("强制更新策略已冻结");
+    expect(baselineText).toContain("下次重新打开客户端");
     expect(baselineText).toContain("中国用户分发");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
@@ -75,6 +80,8 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("code / message / requestId");
     expect(designText).toContain("AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE");
     expect(designText).toContain("desktop-v3.renderer.boot");
+    expect(designText).toContain("七牛对象存储（Kodo）");
+    expect(designText).toContain("下一次启动时再执行强更");
 
     expect(governanceText).toContain("src-tauri/capabilities/*");
     expect(governanceText).toContain("label");
@@ -120,8 +127,11 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
     expect(governanceText).toContain("runtime/mod.rs");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-boundary");
-    expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源");
+    expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 七牛对象存储（Kodo）或自有 HTTPS 更新源");
     expect(governanceText).toContain("维护者从 GitHub Actions 下载构件");
+    expect(governanceText).toContain("仍下载完整安装包");
+    expect(governanceText).toContain("已安装用户后续版本只允许走在线更新");
+    expect(governanceText).toContain("不打断当前正在使用的会话");
 
     expect(executionText).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(executionText).toContain("desktop-v3-document-check");
@@ -138,6 +148,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-runtime-contract-governance");
     expect(executionText).toContain("desktop-v3-runtime-skeleton-governance");
     expect(executionText).toContain("desktop-v3-feature-governance");
+    expect(executionText).toContain("七牛对象存储（Kodo）");
+    expect(executionText).toContain("不重复下载安装包");
+    expect(executionText).toContain("下一次启动生效");
     expect(executionText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(executionText).toContain("runtime/models.rs");
     expect(executionText).toContain("desktop-v3-runtime-boundary");

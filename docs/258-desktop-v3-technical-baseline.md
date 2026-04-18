@@ -51,7 +51,7 @@
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL、尺寸、初始路由和导航 telemetry 由 Rust `window/main_window.rs + window/main_window_target.rs + window/initial_route.rs + window/telemetry.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
-- 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源`
+- 自动更新后续只允许走 `Tauri 2 updater plugin + 签名 + 七牛对象存储（Kodo）或自有 HTTPS 更新源`
 
 详细规则见 [269-desktop-v3-tauri-2-governance-baseline.md](./269-desktop-v3-tauri-2-governance-baseline.md)。
 
@@ -120,10 +120,12 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 
 - 开发主链：`Windows + WSL2（默认固定 WSL 单执行面） -> GitHub -> GitHub Actions`
 - `Windows + macOS` 打包交给 CI
-- 生产更新源必须使用自有 HTTPS 下载源
+- 生产更新源必须使用七牛对象存储（Kodo）或自有 HTTPS 下载源
 - 不以 GitHub 作为中国用户的生产更新源
-- 当前更新源优先落到七牛对象存储或自有 HTTPS 服务器，GitHub Actions 只负责产出构件
-- 当前实际分发路径固定为：维护者从 GitHub Actions 下载 `Windows + macOS` bundle，再上传到七牛对象存储或自有 HTTPS 下载源，随后面向中国用户分发
+- GitHub Actions 只负责产出构件，不直接作为客户端更新源
+- 当前首次交付固定为完整安装包：维护者从 GitHub Actions 下载 `Windows + macOS` bundle，再上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，随后面向中国用户分发首次下载地址或离线包
+- 后续在线更新策略已冻结为：已安装用户不再重复下载安装包，而是走客户端在线更新
+- 强制更新策略已冻结为：不打断当前正在使用的会话；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新
 - 更新能力后续进入实现时，必须采用受控、可审计、可签名的方式
 
 这些是设计约束，不代表当前已进入实现。

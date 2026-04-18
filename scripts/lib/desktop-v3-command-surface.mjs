@@ -19,6 +19,7 @@ export const desktopV3AllowedSupportingCommands = [
   "pnpm --filter @aigcfox/desktop-v3 lint",
   "pnpm --filter @aigcfox/desktop-v3 tauri build",
   "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
+  "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles msi",
   "pnpm --filter @aigcfox/desktop-v3 tauri dev",
   "pnpm --filter @aigcfox/desktop-v3 test",
   "pnpm --filter @aigcfox/desktop-v3 typecheck",
