@@ -1,6 +1,7 @@
 import {
   desktopV3ResponsiveSmokeRoutes,
   desktopV3ResponsiveSmokeViewports,
+  findDesktopV3ResponsiveSmokeRoute,
 } from "./desktop-v3-smoke-contract.mjs";
 
 function resolveOutputConfig(kind, config = {}) {
@@ -92,6 +93,11 @@ export function buildDesktopV3ResponsiveSmokeSummary(config = {}) {
 
 export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
   const resolvedConfig = resolveOutputConfig("desktop-v3-tauri-dev-smoke", config);
+  const dashboardRoute = findDesktopV3ResponsiveSmokeRoute("dashboard");
+
+  if (!dashboardRoute) {
+    throw new Error("desktop-v3 smoke route truth is missing the dashboard route.");
+  }
 
   return {
     appId: "aigcfox-desktop-v3",
@@ -122,18 +128,18 @@ export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
       mainWindowNavigations: [
         {
           allowed: true,
-          url: "http://127.0.0.1:31420/#/",
+          url: `http://127.0.0.1:31420/${dashboardRoute.hash}`,
         },
       ],
       pageLoads: [
         {
           event: "finished",
-          url: "http://127.0.0.1:31420/#/",
+          url: `http://127.0.0.1:31420/${dashboardRoute.hash}`,
         },
       ],
       rendererBoots: [
         {
-          route: "#/",
+          route: dashboardRoute.hash,
           runtime: "tauri",
           stage: "app",
         },

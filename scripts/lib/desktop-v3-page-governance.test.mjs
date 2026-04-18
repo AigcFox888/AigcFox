@@ -35,7 +35,7 @@ describe("desktop-v3 page governance", () => {
 
     expect(result.presentationFiles).toEqual(config.allowedPresentationFiles);
     expect(result.dashboardPageSurface).toEqual(config.allowedDashboardPageSurface);
-    expect(result.dashboardQuickLinkHrefs).toEqual(config.allowedDashboardQuickLinkHrefs);
+    expect(result.dashboardQuickLinkBindings).toEqual(config.allowedDashboardQuickLinkBindings);
     expect(result.diagnosticsPageSurface).toEqual(config.allowedDiagnosticsPageSurface);
     expect(result.preferencesPageSurface).toEqual(config.allowedPreferencesPageSurface);
     expect(result.preferencesThemeValues).toEqual(config.allowedPreferencesThemeValues);
@@ -47,6 +47,9 @@ describe("desktop-v3 page governance", () => {
     expect(result.errorStateProperties).toEqual(config.allowedErrorStateProperties);
     expect(result.loadingStateSurface).toEqual(config.allowedLoadingStateSurface);
     expect(result.loadingStateProperties).toEqual(config.allowedLoadingStateProperties);
+    expect(result.keyboardShortcutNavigationTargets).toEqual(
+      config.allowedKeyboardShortcutNavigationTargets,
+    );
     expect(result.keyboardShortcutsSurface).toEqual(config.allowedKeyboardShortcutsSurface);
     expect(result.shellLayoutSurface).toEqual(config.allowedShellLayoutSurface);
     expect(result.shellLayoutProperties).toEqual(config.allowedShellLayoutProperties);

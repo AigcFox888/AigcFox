@@ -18,15 +18,13 @@ export const desktopV3AppShellFileSet = Object.freeze([
   "apps/desktop-v3/src/app/App.tsx",
   "apps/desktop-v3/src/app/bootstrap/renderer-ready.ts",
   "apps/desktop-v3/src/app/layout/app-shell.tsx",
-  "apps/desktop-v3/src/app/layout/navigation-items.ts",
   "apps/desktop-v3/src/app/layout/page-header.tsx",
   "apps/desktop-v3/src/app/layout/shell-scaffold.tsx",
   "apps/desktop-v3/src/app/layout/sidebar.tsx",
   "apps/desktop-v3/src/app/providers/app-providers.tsx",
   "apps/desktop-v3/src/app/providers/theme-provider.tsx",
   "apps/desktop-v3/src/app/router/index.tsx",
-  "apps/desktop-v3/src/app/router/initial-route.ts",
-  "apps/desktop-v3/src/app/router/route-handle.ts",
+  "apps/desktop-v3/src/app/router/route-registry.ts",
   "apps/desktop-v3/src/app/router/routes.tsx",
 ]);
 
@@ -55,23 +53,39 @@ export const desktopV3AllowedAppShellSurface = Object.freeze([
   "fn:hasRouteHandle",
   "fn:isRouteHandle",
 ]);
-export const desktopV3AllowedNavigationItemsSurface = Object.freeze([
+export const desktopV3AllowedRouteRegistrySurface = Object.freeze([
+  "const:allowedInitialRoutes",
+  "const:desktopV3RouteDefinitions",
+  "const:desktopV3RoutePathById",
   "const:primaryNavigationItems",
   "const:secondaryNavigationItems",
-  "interface:NavigationItem",
+  "fn:normalizeInitialRoute",
+  "fn:resolveDesktopV3InitialRoute",
+  "interface:AppRouteHandle",
+  "interface:DesktopV3NavigationItem",
+  "interface:DesktopV3RouteDefinition",
+  "type:DesktopV3InitialRoute",
+  "type:DesktopV3NavigationGroup",
+  "type:DesktopV3RouteId",
+  "type:DesktopV3RoutePath",
 ]);
 export const desktopV3AllowedNavigationItemProperties = Object.freeze([
   "description: string",
-  "href: string",
+  "href: DesktopV3RoutePath",
   "icon: LucideIcon",
   "label: string",
 ]);
-export const desktopV3AllowedPrimaryNavigationHrefs = Object.freeze([
+export const desktopV3AllowedRouteRegistryPathValues = Object.freeze([
   "/",
   "/diagnostics",
-]);
-export const desktopV3AllowedSecondaryNavigationHrefs = Object.freeze([
   "/preferences",
+]);
+export const desktopV3AllowedPrimaryNavigationHrefBindings = Object.freeze([
+  "desktopV3RoutePathById.dashboard",
+  "desktopV3RoutePathById.diagnostics",
+]);
+export const desktopV3AllowedSecondaryNavigationHrefBindings = Object.freeze([
+  "desktopV3RoutePathById.preferences",
 ]);
 export const desktopV3AllowedPageHeaderSurface = Object.freeze([
   "fn:PageHeader",
@@ -125,19 +139,10 @@ export const desktopV3AllowedThemeProviderProperties = Object.freeze([
 export const desktopV3AllowedRouterIndexSurface = Object.freeze([
   "re-export:appRouter",
 ]);
-export const desktopV3AllowedInitialRouteSurface = Object.freeze([
-  "const:allowedInitialRoutes",
-  "fn:normalizeInitialRoute",
-  "fn:resolveDesktopV3InitialRoute",
-  "type:DesktopV3InitialRoute",
-]);
 export const desktopV3AllowedInitialRouteValues = Object.freeze([
   "/",
   "/diagnostics",
   "/preferences",
-]);
-export const desktopV3AllowedRouteHandleSurface = Object.freeze([
-  "interface:AppRouteHandle",
 ]);
 export const desktopV3AllowedRouteHandleProperties = Object.freeze([
   "shortLabel?: string",
@@ -146,17 +151,10 @@ export const desktopV3AllowedRouteHandleProperties = Object.freeze([
 ]);
 export const desktopV3AllowedRoutesSurface = Object.freeze([
   "const:appRouter",
-  "const:dashboardHandle",
-  "const:diagnosticsHandle",
+  "const:dashboardRoute",
   "const:initialRoute",
   "const:initialRouteElement",
-  "const:preferencesHandle",
-]);
-export const desktopV3AllowedRouterPathSurface = Object.freeze([
-  "index:/",
-  "path:/",
-  "path:/diagnostics",
-  "path:/preferences",
+  "fn:getRouteElement",
 ]);
 
 export const desktopV3AllowedAppExternalReferenceFiles = Object.freeze([
@@ -168,8 +166,12 @@ export const desktopV3AllowedRendererReadyExternalReferenceFiles = Object.freeze
 export const desktopV3AllowedAppShellExternalReferenceFiles = Object.freeze([
   "apps/desktop-v3/src/app/router/routes.tsx",
 ]);
-export const desktopV3AllowedNavigationItemsExternalReferenceFiles = Object.freeze([
+export const desktopV3AllowedRouteRegistryExternalReferenceFiles = Object.freeze([
+  "apps/desktop-v3/src/app/layout/app-shell.tsx",
   "apps/desktop-v3/src/app/layout/sidebar.tsx",
+  "apps/desktop-v3/src/app/router/routes.tsx",
+  "apps/desktop-v3/src/hooks/use-keyboard-shortcuts.ts",
+  "apps/desktop-v3/src/pages/dashboard-page.tsx",
 ]);
 export const desktopV3AllowedPageHeaderExternalReferenceFiles = Object.freeze([
   "apps/desktop-v3/src/app/layout/app-shell.tsx",
@@ -188,13 +190,6 @@ export const desktopV3AllowedThemeProviderExternalReferenceFiles = Object.freeze
 ]);
 export const desktopV3AllowedRouterIndexExternalReferenceFiles = Object.freeze([
   "apps/desktop-v3/src/app/App.tsx",
-]);
-export const desktopV3AllowedInitialRouteExternalReferenceFiles = Object.freeze([
-  "apps/desktop-v3/src/app/router/routes.tsx",
-]);
-export const desktopV3AllowedRouteHandleExternalReferenceFiles = Object.freeze([
-  "apps/desktop-v3/src/app/layout/app-shell.tsx",
-  "apps/desktop-v3/src/app/router/routes.tsx",
 ]);
 export const desktopV3AllowedRoutesExternalReferenceFiles = Object.freeze([
   "apps/desktop-v3/src/app/router/index.tsx",
@@ -420,6 +415,19 @@ function collectObjectLiteralProperty(objectLiteral, propertyName) {
   return null;
 }
 
+function unwrapTypeScriptExpression(expression) {
+  if (
+    ts.isAsExpression(expression)
+    || ts.isSatisfiesExpression(expression)
+    || ts.isTypeAssertionExpression(expression)
+    || ts.isParenthesizedExpression(expression)
+  ) {
+    return unwrapTypeScriptExpression(expression.expression);
+  }
+
+  return expression;
+}
+
 function normalizeRoutePath(parentPath, childPath) {
   if (childPath === "/") {
     return "/";
@@ -558,29 +566,62 @@ export function collectTypeScriptTypeAliasUnionValues(
   aliasName,
 ) {
   const sourceFile = createTypeScriptSourceFile(sourceText, absoluteFilePath);
+  const typeAliasMap = new Map();
 
   for (const statement of sourceFile.statements) {
-    if (
-      ts.isTypeAliasDeclaration(statement)
-      && statement.name.text === aliasName
-      && ts.isUnionTypeNode(statement.type)
-    ) {
-      return sortStrings(
-        statement.type.types.flatMap((typeNode) => {
-          if (
-            ts.isLiteralTypeNode(typeNode)
-            && ts.isStringLiteralLike(typeNode.literal)
-          ) {
-            return [typeNode.literal.text];
-          }
-
-          return [];
-        }),
-      );
+    if (ts.isTypeAliasDeclaration(statement)) {
+      typeAliasMap.set(statement.name.text, statement.type);
     }
   }
 
-  return [];
+  function collectUnionValuesFromTypeNode(typeNode, seenAliases = new Set()) {
+    if (ts.isParenthesizedTypeNode(typeNode)) {
+      return collectUnionValuesFromTypeNode(typeNode.type, seenAliases);
+    }
+
+    if (ts.isUnionTypeNode(typeNode)) {
+      return typeNode.types.flatMap((memberType) =>
+        collectUnionValuesFromTypeNode(memberType, seenAliases));
+    }
+
+    if (
+      ts.isLiteralTypeNode(typeNode)
+      && ts.isStringLiteralLike(typeNode.literal)
+    ) {
+      return [typeNode.literal.text];
+    }
+
+    if (ts.isTypeReferenceNode(typeNode) && ts.isIdentifier(typeNode.typeName)) {
+      const referencedAliasName = typeNode.typeName.text;
+
+      if (seenAliases.has(referencedAliasName)) {
+        return [];
+      }
+
+      const referencedTypeNode = typeAliasMap.get(referencedAliasName);
+
+      if (!referencedTypeNode) {
+        return [];
+      }
+
+      return collectUnionValuesFromTypeNode(
+        referencedTypeNode,
+        new Set([...seenAliases, referencedAliasName]),
+      );
+    }
+
+    return [];
+  }
+
+  const aliasTypeNode = typeAliasMap.get(aliasName);
+
+  if (!aliasTypeNode) {
+    return [];
+  }
+
+  return sortStrings(
+    new Set(collectUnionValuesFromTypeNode(aliasTypeNode, new Set([aliasName]))),
+  );
 }
 
 export function collectTypeScriptObjectArrayPropertyValues(
@@ -602,12 +643,18 @@ export function collectTypeScriptObjectArrayPropertyValues(
         !ts.isIdentifier(declaration.name)
         || declaration.name.text !== constName
         || declaration.initializer === undefined
-        || !ts.isArrayLiteralExpression(declaration.initializer)
+        || !ts.isArrayLiteralExpression(unwrapTypeScriptExpression(declaration.initializer))
       ) {
         continue;
       }
 
-      for (const element of declaration.initializer.elements) {
+      const initializer = unwrapTypeScriptExpression(declaration.initializer);
+
+      if (!ts.isArrayLiteralExpression(initializer)) {
+        continue;
+      }
+
+      for (const element of initializer.elements) {
         if (!ts.isObjectLiteralExpression(element)) {
           continue;
         }
@@ -624,6 +671,204 @@ export function collectTypeScriptObjectArrayPropertyValues(
       }
     }
   }
+
+  return sortStrings(values);
+}
+
+function collectNestedObjectLiteralProperty(objectLiteral, propertyPath) {
+  let currentObjectLiteral = objectLiteral;
+  let property = null;
+
+  for (const segment of propertyPath) {
+    property = collectObjectLiteralProperty(currentObjectLiteral, segment);
+
+    if (
+      property === null
+      || !ts.isPropertyAssignment(property)
+      || (segment !== propertyPath.at(-1) && !ts.isObjectLiteralExpression(property.initializer))
+    ) {
+      return null;
+    }
+
+    if (segment !== propertyPath.at(-1)) {
+      currentObjectLiteral = property.initializer;
+    }
+  }
+
+  return property;
+}
+
+export function collectTypeScriptObjectArrayPropertyInitializerTexts(
+  sourceText,
+  absoluteFilePath,
+  constName,
+  propertyPath,
+) {
+  const sourceFile = createTypeScriptSourceFile(sourceText, absoluteFilePath);
+  const values = [];
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) {
+      continue;
+    }
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (
+        !ts.isIdentifier(declaration.name)
+        || declaration.name.text !== constName
+        || declaration.initializer === undefined
+        || !ts.isArrayLiteralExpression(unwrapTypeScriptExpression(declaration.initializer))
+      ) {
+        continue;
+      }
+
+      const initializer = unwrapTypeScriptExpression(declaration.initializer);
+
+      if (!ts.isArrayLiteralExpression(initializer)) {
+        continue;
+      }
+
+      for (const element of initializer.elements) {
+        if (!ts.isObjectLiteralExpression(element)) {
+          continue;
+        }
+
+        const property = collectNestedObjectLiteralProperty(element, propertyPath);
+
+        if (property && ts.isPropertyAssignment(property)) {
+          values.push(normalizeTypeScriptText(property.initializer.getText(sourceFile)));
+        }
+      }
+    }
+  }
+
+  return sortStrings(values);
+}
+
+export function collectTypeScriptObjectPropertyStringValues(
+  sourceText,
+  absoluteFilePath,
+  constName,
+) {
+  const sourceFile = createTypeScriptSourceFile(sourceText, absoluteFilePath);
+  const values = [];
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) {
+      continue;
+    }
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (
+        !ts.isIdentifier(declaration.name)
+        || declaration.name.text !== constName
+        || declaration.initializer === undefined
+        || !ts.isObjectLiteralExpression(unwrapTypeScriptExpression(declaration.initializer))
+      ) {
+        continue;
+      }
+
+      const initializer = unwrapTypeScriptExpression(declaration.initializer);
+
+      if (!ts.isObjectLiteralExpression(initializer)) {
+        continue;
+      }
+
+      for (const property of initializer.properties) {
+        if (
+          ts.isPropertyAssignment(property)
+          && ts.isStringLiteralLike(property.initializer)
+        ) {
+          values.push(property.initializer.text);
+        }
+      }
+    }
+  }
+
+  return sortStrings(values);
+}
+
+export function collectTypeScriptRouteRegistryNavigationHrefBindings(
+  sourceText,
+  absoluteFilePath,
+  groupName,
+) {
+  const sourceFile = createTypeScriptSourceFile(sourceText, absoluteFilePath);
+  const values = [];
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) {
+      continue;
+    }
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (
+        !ts.isIdentifier(declaration.name)
+        || declaration.name.text !== "desktopV3RouteDefinitions"
+        || declaration.initializer === undefined
+        || !ts.isArrayLiteralExpression(unwrapTypeScriptExpression(declaration.initializer))
+      ) {
+        continue;
+      }
+
+      const initializer = unwrapTypeScriptExpression(declaration.initializer);
+
+      if (!ts.isArrayLiteralExpression(initializer)) {
+        continue;
+      }
+
+      for (const element of initializer.elements) {
+        if (!ts.isObjectLiteralExpression(element)) {
+          continue;
+        }
+
+        const groupProperty = collectNestedObjectLiteralProperty(element, ["navigation", "group"]);
+        const hrefProperty = collectNestedObjectLiteralProperty(element, ["navigation", "href"]);
+
+        if (
+          groupProperty
+          && hrefProperty
+          && ts.isPropertyAssignment(groupProperty)
+          && ts.isPropertyAssignment(hrefProperty)
+          && ts.isStringLiteralLike(groupProperty.initializer)
+          && groupProperty.initializer.text === groupName
+        ) {
+          values.push(normalizeTypeScriptText(hrefProperty.initializer.getText(sourceFile)));
+        }
+      }
+    }
+  }
+
+  return sortStrings(values);
+}
+
+export function collectTypeScriptFunctionCallArgumentTexts(
+  sourceText,
+  absoluteFilePath,
+  functionName,
+) {
+  const sourceFile = createTypeScriptSourceFile(sourceText, absoluteFilePath);
+  const values = [];
+
+  function walk(node) {
+    if (ts.isCallExpression(node)) {
+      const expressionName = ts.isIdentifier(node.expression)
+        ? node.expression.text
+        : ts.isPropertyAccessExpression(node.expression)
+          ? node.expression.name.text
+          : null;
+
+      if (expressionName === functionName) {
+        for (const argument of node.arguments) {
+          values.push(normalizeTypeScriptText(argument.getText(sourceFile)));
+        }
+      }
+    }
+
+    ts.forEachChild(node, walk);
+  }
+
+  walk(sourceFile);
 
   return sortStrings(values);
 }
@@ -952,15 +1197,13 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
   const appSource = await readSourceText(config.appFilePath);
   const rendererReadySource = await readSourceText(config.rendererReadyFilePath);
   const appShellSource = await readSourceText(config.appShellFilePath);
-  const navigationItemsSource = await readSourceText(config.navigationItemsFilePath);
+  const routeRegistrySource = await readSourceText(config.routeRegistryFilePath);
   const pageHeaderSource = await readSourceText(config.pageHeaderFilePath);
   const shellScaffoldSource = await readSourceText(config.shellScaffoldFilePath);
   const sidebarSource = await readSourceText(config.sidebarFilePath);
   const appProvidersSource = await readSourceText(config.appProvidersFilePath);
   const themeProviderSource = await readSourceText(config.themeProviderFilePath);
   const routerIndexSource = await readSourceText(config.routerIndexFilePath);
-  const initialRouteSource = await readSourceText(config.initialRouteFilePath);
-  const routeHandleSource = await readSourceText(config.routeHandleFilePath);
   const routesSource = await readSourceText(config.routesFilePath);
 
   const appSurface = formatDeclarationSurface(
@@ -983,31 +1226,47 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
   const appShellSurface = formatDeclarationSurface(
     collectTypeScriptTopLevelDeclarations(appShellSource, config.appShellFilePath, { rootDir: config.rootDir }),
   );
-  const navigationItemsDeclarations = collectTypeScriptTopLevelDeclarations(
-    navigationItemsSource,
-    config.navigationItemsFilePath,
+  const routeRegistryDeclarations = collectTypeScriptTopLevelDeclarations(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
     { rootDir: config.rootDir },
   );
-  const navigationItemsSurface = formatDeclarationSurface(navigationItemsDeclarations);
+  const routeRegistrySurface = formatDeclarationSurface(routeRegistryDeclarations);
   const navigationItemProperties = formatPropertySurface(
     collectTypeScriptInterfaceProperties(
-      navigationItemsSource,
-      config.navigationItemsFilePath,
-      "NavigationItem",
+      routeRegistrySource,
+      config.routeRegistryFilePath,
+      "DesktopV3NavigationItem",
       { rootDir: config.rootDir },
     ),
   );
-  const primaryNavigationHrefs = collectTypeScriptObjectArrayPropertyValues(
-    navigationItemsSource,
-    config.navigationItemsFilePath,
-    "primaryNavigationItems",
-    "href",
+  const routeRegistryPathValues = collectTypeScriptObjectPropertyStringValues(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
+    "desktopV3RoutePathById",
   );
-  const secondaryNavigationHrefs = collectTypeScriptObjectArrayPropertyValues(
-    navigationItemsSource,
-    config.navigationItemsFilePath,
-    "secondaryNavigationItems",
-    "href",
+  const primaryNavigationHrefBindings = collectTypeScriptRouteRegistryNavigationHrefBindings(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
+    "primary",
+  );
+  const secondaryNavigationHrefBindings = collectTypeScriptRouteRegistryNavigationHrefBindings(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
+    "secondary",
+  );
+  const initialRouteValues = collectTypeScriptTypeAliasUnionValues(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
+    "DesktopV3InitialRoute",
+  );
+  const routeHandleProperties = formatPropertySurface(
+    collectTypeScriptInterfaceProperties(
+      routeRegistrySource,
+      config.routeRegistryFilePath,
+      "AppRouteHandle",
+      { rootDir: config.rootDir },
+    ),
   );
   const pageHeaderSurface = formatDeclarationSurface(
     collectTypeScriptTopLevelDeclarations(pageHeaderSource, config.pageHeaderFilePath, { rootDir: config.rootDir }),
@@ -1072,33 +1331,8 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
   const routerIndexSurface = formatDeclarationSurface(
     collectTypeScriptTopLevelDeclarations(routerIndexSource, config.routerIndexFilePath, { rootDir: config.rootDir }),
   );
-  const initialRouteSurface = formatDeclarationSurface(
-    collectTypeScriptTopLevelDeclarations(initialRouteSource, config.initialRouteFilePath, { rootDir: config.rootDir }),
-  );
-  const initialRouteValues = collectTypeScriptTypeAliasUnionValues(
-    initialRouteSource,
-    config.initialRouteFilePath,
-    "DesktopV3InitialRoute",
-  );
-  const routeHandleSurface = formatDeclarationSurface(
-    collectTypeScriptTopLevelDeclarations(routeHandleSource, config.routeHandleFilePath, { rootDir: config.rootDir }),
-  );
-  const routeHandleProperties = formatPropertySurface(
-    collectTypeScriptInterfaceProperties(
-      routeHandleSource,
-      config.routeHandleFilePath,
-      "AppRouteHandle",
-      { rootDir: config.rootDir },
-    ),
-  );
   const routesSurface = formatDeclarationSurface(
     collectTypeScriptTopLevelDeclarations(routesSource, config.routesFilePath, { rootDir: config.rootDir }),
-  );
-  const routerPathSurface = collectTypeScriptCreateHashRouterPathSurface(
-    routesSource,
-    config.routesFilePath,
-    "appRouter",
-    { rootDir: config.rootDir },
   );
 
   addSurfaceDriftViolation({
@@ -1147,47 +1381,57 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     seenViolations,
   });
   addSurfaceDriftViolation({
-    actualSurface: navigationItemsSurface,
-    detail: `navigation-items drifted from the frozen Wave 1 navigation surface (${config.allowedNavigationItemsSurface.join(", ")}). Rewrite the shell navigation boundary before widening it.`,
-    entries: navigationItemsDeclarations,
-    expectedSurface: config.allowedNavigationItemsSurface,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.navigationItemsFilePath),
-    kind: "navigation-items-surface-drift",
+    actualSurface: routeRegistrySurface,
+    detail: `route-registry drifted from the frozen Wave 1 route truth surface (${config.allowedRouteRegistrySurface.join(", ")}). Rewrite route truth ownership before widening it.`,
+    entries: routeRegistryDeclarations,
+    expectedSurface: config.allowedRouteRegistrySurface,
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
+    kind: "route-registry-surface-drift",
     violations,
     seenViolations,
   });
   addSurfaceDriftViolation({
     actualSurface: navigationItemProperties,
-    detail: `NavigationItem drifted from the frozen Wave 1 navigation contract (${config.allowedNavigationItemProperties.join(", ")}). Rewrite shell navigation modeling before widening it.`,
+    detail: `DesktopV3NavigationItem drifted from the frozen Wave 1 navigation contract (${config.allowedNavigationItemProperties.join(", ")}). Rewrite route registry modeling before widening it.`,
     entries: collectTypeScriptInterfaceProperties(
-      navigationItemsSource,
-      config.navigationItemsFilePath,
-      "NavigationItem",
+      routeRegistrySource,
+      config.routeRegistryFilePath,
+      "DesktopV3NavigationItem",
       { rootDir: config.rootDir },
     ),
     expectedSurface: config.allowedNavigationItemProperties,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.navigationItemsFilePath),
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
     kind: "navigation-item-property-drift",
     violations,
     seenViolations,
   });
   addSurfaceDriftViolation({
-    actualSurface: primaryNavigationHrefs,
-    detail: `primaryNavigationItems href set drifted from the frozen Wave 1 shell route set (${config.allowedPrimaryNavigationHrefs.join(", ")}). Rewrite the app shell route topology before changing primary navigation.`,
-    entries: navigationItemsDeclarations,
-    expectedSurface: config.allowedPrimaryNavigationHrefs,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.navigationItemsFilePath),
-    kind: "primary-navigation-href-drift",
+    actualSurface: routeRegistryPathValues,
+    detail: `desktopV3RoutePathById drifted from the frozen Wave 1 route path set (${config.allowedRouteRegistryPathValues.join(", ")}). Rewrite the route registry before changing path truth.`,
+    entries: routeRegistryDeclarations,
+    expectedSurface: config.allowedRouteRegistryPathValues,
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
+    kind: "route-registry-path-drift",
     violations,
     seenViolations,
   });
   addSurfaceDriftViolation({
-    actualSurface: secondaryNavigationHrefs,
-    detail: `secondaryNavigationItems href set drifted from the frozen Wave 1 shell route set (${config.allowedSecondaryNavigationHrefs.join(", ")}). Rewrite the app shell route topology before changing secondary navigation.`,
-    entries: navigationItemsDeclarations,
-    expectedSurface: config.allowedSecondaryNavigationHrefs,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.navigationItemsFilePath),
-    kind: "secondary-navigation-href-drift",
+    actualSurface: primaryNavigationHrefBindings,
+    detail: `primary navigation href bindings drifted from the frozen Wave 1 route registry (${config.allowedPrimaryNavigationHrefBindings.join(", ")}). Rewrite route registry ownership before changing primary navigation.`,
+    entries: routeRegistryDeclarations,
+    expectedSurface: config.allowedPrimaryNavigationHrefBindings,
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
+    kind: "primary-navigation-href-binding-drift",
+    violations,
+    seenViolations,
+  });
+  addSurfaceDriftViolation({
+    actualSurface: secondaryNavigationHrefBindings,
+    detail: `secondary navigation href bindings drifted from the frozen Wave 1 route registry (${config.allowedSecondaryNavigationHrefBindings.join(", ")}). Rewrite route registry ownership before changing secondary navigation.`,
+    entries: routeRegistryDeclarations,
+    expectedSurface: config.allowedSecondaryNavigationHrefBindings,
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
+    kind: "secondary-navigation-href-binding-drift",
     violations,
     seenViolations,
   });
@@ -1337,32 +1581,12 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     seenViolations,
   });
   addSurfaceDriftViolation({
-    actualSurface: initialRouteSurface,
-    detail: `initial-route drifted from the frozen Wave 1 initial route surface (${config.allowedInitialRouteSurface.join(", ")}). Rewrite route bootstrapping before widening it.`,
-    entries: collectTypeScriptTopLevelDeclarations(initialRouteSource, config.initialRouteFilePath, { rootDir: config.rootDir }),
-    expectedSurface: config.allowedInitialRouteSurface,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.initialRouteFilePath),
-    kind: "initial-route-surface-drift",
-    violations,
-    seenViolations,
-  });
-  addSurfaceDriftViolation({
     actualSurface: initialRouteValues,
-    detail: `DesktopV3InitialRoute drifted from the frozen Wave 1 route set (${config.allowedInitialRouteValues.join(", ")}). Rewrite route bootstrapping before changing the initial route contract.`,
-    entries: collectTypeScriptTopLevelDeclarations(initialRouteSource, config.initialRouteFilePath, { rootDir: config.rootDir }),
+    detail: `DesktopV3InitialRoute drifted from the frozen Wave 1 route set (${config.allowedInitialRouteValues.join(", ")}). Rewrite route registry before changing the initial route contract.`,
+    entries: routeRegistryDeclarations,
     expectedSurface: config.allowedInitialRouteValues,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.initialRouteFilePath),
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
     kind: "initial-route-value-drift",
-    violations,
-    seenViolations,
-  });
-  addSurfaceDriftViolation({
-    actualSurface: routeHandleSurface,
-    detail: `route-handle drifted from the frozen Wave 1 route metadata surface (${config.allowedRouteHandleSurface.join(", ")}). Rewrite route metadata ownership before widening it.`,
-    entries: collectTypeScriptTopLevelDeclarations(routeHandleSource, config.routeHandleFilePath, { rootDir: config.rootDir }),
-    expectedSurface: config.allowedRouteHandleSurface,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeHandleFilePath),
-    kind: "route-handle-surface-drift",
     violations,
     seenViolations,
   });
@@ -1370,13 +1594,13 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     actualSurface: routeHandleProperties,
     detail: `AppRouteHandle drifted from the frozen Wave 1 route metadata contract (${config.allowedRouteHandleProperties.join(", ")}). Rewrite route metadata ownership before changing it.`,
     entries: collectTypeScriptInterfaceProperties(
-      routeHandleSource,
-      config.routeHandleFilePath,
+      routeRegistrySource,
+      config.routeRegistryFilePath,
       "AppRouteHandle",
       { rootDir: config.rootDir },
     ),
     expectedSurface: config.allowedRouteHandleProperties,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeHandleFilePath),
+    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
     kind: "route-handle-prop-drift",
     violations,
     seenViolations,
@@ -1391,17 +1615,6 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     violations,
     seenViolations,
   });
-  addSurfaceDriftViolation({
-    actualSurface: routerPathSurface,
-    detail: `appRouter route path surface drifted from the frozen Wave 1 shell route set (${config.allowedRouterPathSurface.join(", ")}). Rewrite shell routing before changing route topology.`,
-    entries: collectTypeScriptTopLevelDeclarations(routesSource, config.routesFilePath, { rootDir: config.rootDir }),
-    expectedSurface: config.allowedRouterPathSurface,
-    filePath: normalizeWorkspaceRelativePath(config.rootDir, config.routesFilePath),
-    kind: "router-path-surface-drift",
-    violations,
-    seenViolations,
-  });
-
   const appReferenceEntries = await collectReferenceEntries({
     config,
     filePaths: sourceFilePaths,
@@ -1420,11 +1633,11 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     readSourceText,
     selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.appShellFilePath),
   });
-  const navigationItemsReferenceEntries = await collectReferenceEntries({
+  const routeRegistryReferenceEntries = await collectReferenceEntries({
     config,
     filePaths: sourceFilePaths,
     readSourceText,
-    selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.navigationItemsFilePath),
+    selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeRegistryFilePath),
   });
   const pageHeaderReferenceEntries = await collectReferenceEntries({
     config,
@@ -1462,18 +1675,6 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     readSourceText,
     selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.routerIndexFilePath),
   });
-  const initialRouteReferenceEntries = await collectReferenceEntries({
-    config,
-    filePaths: sourceFilePaths,
-    readSourceText,
-    selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.initialRouteFilePath),
-  });
-  const routeHandleReferenceEntries = await collectReferenceEntries({
-    config,
-    filePaths: sourceFilePaths,
-    readSourceText,
-    selfFilePath: normalizeWorkspaceRelativePath(config.rootDir, config.routeHandleFilePath),
-  });
   const routesReferenceEntries = await collectReferenceEntries({
     config,
     filePaths: sourceFilePaths,
@@ -1484,15 +1685,13 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
   const appReferenceFiles = sortStrings(new Set(appReferenceEntries.map((entry) => entry.filePath)));
   const rendererReadyReferenceFiles = sortStrings(new Set(rendererReadyReferenceEntries.map((entry) => entry.filePath)));
   const appShellReferenceFiles = sortStrings(new Set(appShellReferenceEntries.map((entry) => entry.filePath)));
-  const navigationItemsReferenceFiles = sortStrings(new Set(navigationItemsReferenceEntries.map((entry) => entry.filePath)));
+  const routeRegistryReferenceFiles = sortStrings(new Set(routeRegistryReferenceEntries.map((entry) => entry.filePath)));
   const pageHeaderReferenceFiles = sortStrings(new Set(pageHeaderReferenceEntries.map((entry) => entry.filePath)));
   const shellScaffoldReferenceFiles = sortStrings(new Set(shellScaffoldReferenceEntries.map((entry) => entry.filePath)));
   const sidebarReferenceFiles = sortStrings(new Set(sidebarReferenceEntries.map((entry) => entry.filePath)));
   const appProvidersReferenceFiles = sortStrings(new Set(appProvidersReferenceEntries.map((entry) => entry.filePath)));
   const themeProviderReferenceFiles = sortStrings(new Set(themeProviderReferenceEntries.map((entry) => entry.filePath)));
   const routerIndexReferenceFiles = sortStrings(new Set(routerIndexReferenceEntries.map((entry) => entry.filePath)));
-  const initialRouteReferenceFiles = sortStrings(new Set(initialRouteReferenceEntries.map((entry) => entry.filePath)));
-  const routeHandleReferenceFiles = sortStrings(new Set(routeHandleReferenceEntries.map((entry) => entry.filePath)));
   const routesReferenceFiles = sortStrings(new Set(routesReferenceEntries.map((entry) => entry.filePath)));
 
   addExternalReferenceViolations({
@@ -1520,10 +1719,10 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     violations,
   });
   addExternalReferenceViolations({
-    actualReferenceEntries: navigationItemsReferenceEntries,
-    allowedExternalReferenceFiles: config.allowedNavigationItemsExternalReferenceFiles,
-    detail: `navigation-items escaped the frozen Wave 1 navigation ownership boundary. Only ${config.allowedNavigationItemsExternalReferenceFiles.join(", ")} may hold shell navigation items directly.`,
-    kind: "navigation-items-external-reference",
+    actualReferenceEntries: routeRegistryReferenceEntries,
+    allowedExternalReferenceFiles: config.allowedRouteRegistryExternalReferenceFiles,
+    detail: `route-registry escaped the frozen Wave 1 route truth ownership boundary. Only ${config.allowedRouteRegistryExternalReferenceFiles.join(", ")} may hold route registry truth directly.`,
+    kind: "route-registry-external-reference",
     seenViolations,
     violations,
   });
@@ -1576,22 +1775,6 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     violations,
   });
   addExternalReferenceViolations({
-    actualReferenceEntries: initialRouteReferenceEntries,
-    allowedExternalReferenceFiles: config.allowedInitialRouteExternalReferenceFiles,
-    detail: `initial-route escaped the frozen Wave 1 route bootstrap ownership boundary. Only ${config.allowedInitialRouteExternalReferenceFiles.join(", ")} may resolve the initial route directly.`,
-    kind: "initial-route-external-reference",
-    seenViolations,
-    violations,
-  });
-  addExternalReferenceViolations({
-    actualReferenceEntries: routeHandleReferenceEntries,
-    allowedExternalReferenceFiles: config.allowedRouteHandleExternalReferenceFiles,
-    detail: `route-handle escaped the frozen Wave 1 route metadata ownership boundary. Only ${config.allowedRouteHandleExternalReferenceFiles.join(", ")} may depend on AppRouteHandle directly.`,
-    kind: "route-handle-external-reference",
-    seenViolations,
-    violations,
-  });
-  addExternalReferenceViolations({
     actualReferenceEntries: routesReferenceEntries,
     allowedExternalReferenceFiles: config.allowedRoutesExternalReferenceFiles,
     detail: `routes.tsx escaped the frozen Wave 1 route shell ownership boundary. Only ${config.allowedRoutesExternalReferenceFiles.join(", ")} may hold appRouter composition directly.`,
@@ -1609,31 +1792,27 @@ export async function collectDesktopV3AppShellGovernanceViolations(config, optio
     appShellReferenceFiles,
     appShellSurface,
     appSurface,
-    initialRouteReferenceFiles,
-    initialRouteSurface,
     initialRouteValues,
     layoutModeValues,
     navigationItemProperties,
-    navigationItemsReferenceFiles,
-    navigationItemsSurface,
     pageHeaderProperties,
     pageHeaderReferenceFiles,
     pageHeaderSurface,
-    primaryNavigationHrefs,
+    primaryNavigationHrefBindings,
     rendererReadyOptionProperties,
     rendererReadyReferenceFiles,
     rendererReadySurface,
     routeHandleProperties,
-    routeHandleReferenceFiles,
-    routeHandleSurface,
+    routeRegistryPathValues,
+    routeRegistryReferenceFiles,
+    routeRegistrySurface,
     routerIndexReferenceFiles,
     routerIndexSurface,
-    routerPathSurface,
     routesReferenceFiles,
     routesSurface,
     scannedFileCount: scannedFiles.length,
     scannedFiles,
-    secondaryNavigationHrefs,
+    secondaryNavigationHrefBindings,
     shellScaffoldProperties,
     shellScaffoldReferenceFiles,
     shellScaffoldSurface,
@@ -1658,29 +1837,25 @@ export function createDesktopV3AppShellGovernanceSummary(config) {
       allowedAppShellFiles: [...config.allowedAppShellFiles],
       allowedAppShellSurface: [...config.allowedAppShellSurface],
       allowedAppSurface: [...config.allowedAppSurface],
-      allowedInitialRouteExternalReferenceFiles: [...config.allowedInitialRouteExternalReferenceFiles],
-      allowedInitialRouteSurface: [...config.allowedInitialRouteSurface],
       allowedInitialRouteValues: [...config.allowedInitialRouteValues],
       allowedLayoutModeValues: [...config.allowedLayoutModeValues],
       allowedNavigationItemProperties: [...config.allowedNavigationItemProperties],
-      allowedNavigationItemsExternalReferenceFiles: [...config.allowedNavigationItemsExternalReferenceFiles],
-      allowedNavigationItemsSurface: [...config.allowedNavigationItemsSurface],
       allowedPageHeaderExternalReferenceFiles: [...config.allowedPageHeaderExternalReferenceFiles],
       allowedPageHeaderProperties: [...config.allowedPageHeaderProperties],
       allowedPageHeaderSurface: [...config.allowedPageHeaderSurface],
-      allowedPrimaryNavigationHrefs: [...config.allowedPrimaryNavigationHrefs],
+      allowedPrimaryNavigationHrefBindings: [...config.allowedPrimaryNavigationHrefBindings],
       allowedRendererReadyExternalReferenceFiles: [...config.allowedRendererReadyExternalReferenceFiles],
       allowedRendererReadyOptionProperties: [...config.allowedRendererReadyOptionProperties],
       allowedRendererReadySurface: [...config.allowedRendererReadySurface],
-      allowedRouteHandleExternalReferenceFiles: [...config.allowedRouteHandleExternalReferenceFiles],
       allowedRouteHandleProperties: [...config.allowedRouteHandleProperties],
-      allowedRouteHandleSurface: [...config.allowedRouteHandleSurface],
+      allowedRouteRegistryExternalReferenceFiles: [...config.allowedRouteRegistryExternalReferenceFiles],
+      allowedRouteRegistryPathValues: [...config.allowedRouteRegistryPathValues],
+      allowedRouteRegistrySurface: [...config.allowedRouteRegistrySurface],
       allowedRouterIndexExternalReferenceFiles: [...config.allowedRouterIndexExternalReferenceFiles],
       allowedRouterIndexSurface: [...config.allowedRouterIndexSurface],
-      allowedRouterPathSurface: [...config.allowedRouterPathSurface],
       allowedRoutesExternalReferenceFiles: [...config.allowedRoutesExternalReferenceFiles],
       allowedRoutesSurface: [...config.allowedRoutesSurface],
-      allowedSecondaryNavigationHrefs: [...config.allowedSecondaryNavigationHrefs],
+      allowedSecondaryNavigationHrefBindings: [...config.allowedSecondaryNavigationHrefBindings],
       allowedShellScaffoldExternalReferenceFiles: [...config.allowedShellScaffoldExternalReferenceFiles],
       allowedShellScaffoldProperties: [...config.allowedShellScaffoldProperties],
       allowedShellScaffoldSurface: [...config.allowedShellScaffoldSurface],
@@ -1700,34 +1875,30 @@ export function createDesktopV3AppShellGovernanceSummary(config) {
       appSurface: [],
       checkedAt: null,
       error: null,
-      initialRouteReferenceFiles: [],
-      initialRouteSurface: [],
       initialRouteValues: [],
       latestSummaryPath: config.latestSummaryPath,
       layoutModeValues: [],
       navigationItemProperties: [],
-      navigationItemsReferenceFiles: [],
-      navigationItemsSurface: [],
       outputDir: config.outputDir,
       pageHeaderProperties: [],
       pageHeaderReferenceFiles: [],
       pageHeaderSurface: [],
-      primaryNavigationHrefs: [],
+      primaryNavigationHrefBindings: [],
       rendererReadyOptionProperties: [],
       rendererReadyReferenceFiles: [],
       rendererReadySurface: [],
       routeHandleProperties: [],
-      routeHandleReferenceFiles: [],
-      routeHandleSurface: [],
+      routeRegistryPathValues: [],
+      routeRegistryReferenceFiles: [],
+      routeRegistrySurface: [],
       routerIndexReferenceFiles: [],
       routerIndexSurface: [],
-      routerPathSurface: [],
       routesReferenceFiles: [],
       routesSurface: [],
       runId: config.runId,
       scannedFileCount: 0,
       scannedFiles: [],
-      secondaryNavigationHrefs: [],
+      secondaryNavigationHrefBindings: [],
       shellScaffoldProperties: [],
       shellScaffoldReferenceFiles: [],
       shellScaffoldSurface: [],
@@ -1784,29 +1955,25 @@ export function resolveDesktopV3AppShellGovernanceConfig(options = {}) {
     allowedAppShellFiles: [...desktopV3AppShellFileSet],
     allowedAppShellSurface: [...desktopV3AllowedAppShellSurface],
     allowedAppSurface: [...desktopV3AllowedAppSurface],
-    allowedInitialRouteExternalReferenceFiles: [...desktopV3AllowedInitialRouteExternalReferenceFiles],
-    allowedInitialRouteSurface: [...desktopV3AllowedInitialRouteSurface],
     allowedInitialRouteValues: [...desktopV3AllowedInitialRouteValues],
     allowedLayoutModeValues: [...desktopV3AllowedLayoutModeValues],
     allowedNavigationItemProperties: [...desktopV3AllowedNavigationItemProperties],
-    allowedNavigationItemsExternalReferenceFiles: [...desktopV3AllowedNavigationItemsExternalReferenceFiles],
-    allowedNavigationItemsSurface: [...desktopV3AllowedNavigationItemsSurface],
     allowedPageHeaderExternalReferenceFiles: [...desktopV3AllowedPageHeaderExternalReferenceFiles],
     allowedPageHeaderProperties: [...desktopV3AllowedPageHeaderProperties],
     allowedPageHeaderSurface: [...desktopV3AllowedPageHeaderSurface],
-    allowedPrimaryNavigationHrefs: [...desktopV3AllowedPrimaryNavigationHrefs],
+    allowedPrimaryNavigationHrefBindings: [...desktopV3AllowedPrimaryNavigationHrefBindings],
     allowedRendererReadyExternalReferenceFiles: [...desktopV3AllowedRendererReadyExternalReferenceFiles],
     allowedRendererReadyOptionProperties: [...desktopV3AllowedRendererReadyOptionProperties],
     allowedRendererReadySurface: [...desktopV3AllowedRendererReadySurface],
-    allowedRouteHandleExternalReferenceFiles: [...desktopV3AllowedRouteHandleExternalReferenceFiles],
     allowedRouteHandleProperties: [...desktopV3AllowedRouteHandleProperties],
-    allowedRouteHandleSurface: [...desktopV3AllowedRouteHandleSurface],
+    allowedRouteRegistryExternalReferenceFiles: [...desktopV3AllowedRouteRegistryExternalReferenceFiles],
+    allowedRouteRegistryPathValues: [...desktopV3AllowedRouteRegistryPathValues],
+    allowedRouteRegistrySurface: [...desktopV3AllowedRouteRegistrySurface],
     allowedRouterIndexExternalReferenceFiles: [...desktopV3AllowedRouterIndexExternalReferenceFiles],
     allowedRouterIndexSurface: [...desktopV3AllowedRouterIndexSurface],
-    allowedRouterPathSurface: [...desktopV3AllowedRouterPathSurface],
     allowedRoutesExternalReferenceFiles: [...desktopV3AllowedRoutesExternalReferenceFiles],
     allowedRoutesSurface: [...desktopV3AllowedRoutesSurface],
-    allowedSecondaryNavigationHrefs: [...desktopV3AllowedSecondaryNavigationHrefs],
+    allowedSecondaryNavigationHrefBindings: [...desktopV3AllowedSecondaryNavigationHrefBindings],
     allowedShellScaffoldExternalReferenceFiles: [...desktopV3AllowedShellScaffoldExternalReferenceFiles],
     allowedShellScaffoldProperties: [...desktopV3AllowedShellScaffoldProperties],
     allowedShellScaffoldSurface: [...desktopV3AllowedShellScaffoldSurface],
@@ -1820,17 +1987,15 @@ export function resolveDesktopV3AppShellGovernanceConfig(options = {}) {
     appFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/App.tsx"),
     appProvidersFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/providers/app-providers.tsx"),
     appShellFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/layout/app-shell.tsx"),
-    initialRouteFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/router/initial-route.ts"),
     latestSummaryPath: resolveLatestVerificationSummaryPath(
       workspaceRoot,
       "desktop-v3-app-shell-governance-summary.json",
     ),
-    navigationItemsFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/layout/navigation-items.ts"),
     outputDir,
     pageHeaderFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/layout/page-header.tsx"),
     rendererReadyFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/bootstrap/renderer-ready.ts"),
     rootDir: workspaceRoot,
-    routeHandleFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/router/route-handle.ts"),
+    routeRegistryFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/router/route-registry.ts"),
     routerIndexFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/router/index.tsx"),
     routesFilePath: path.join(workspaceRoot, "apps/desktop-v3/src/app/router/routes.tsx"),
     runId,

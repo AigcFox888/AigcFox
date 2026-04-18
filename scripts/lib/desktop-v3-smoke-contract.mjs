@@ -2,32 +2,16 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+export {
+  buildDesktopV3ResponsiveSmokeRouteHelpLine,
+  desktopV3ResponsiveSmokeRoutes,
+  findDesktopV3ResponsiveSmokeRoute,
+} from "./desktop-v3-route-truth.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, "..", "..");
 const runStamp = new Date().toISOString().replace(/[:.]/g, "-");
-
-export const desktopV3ResponsiveSmokeRoutes = [
-  {
-    href: "/#/",
-    hash: "#/",
-    key: "dashboard",
-    testId: "desktop-v3-dashboard-page",
-  },
-  {
-    href: "/#/preferences",
-    hash: "#/preferences",
-    key: "preferences",
-    testId: "desktop-v3-preferences-page",
-  },
-  {
-    href: "/#/diagnostics",
-    hash: "#/diagnostics",
-    key: "diagnostics",
-    testId: "desktop-v3-diagnostics-page",
-  },
-];
 
 export const desktopV3ResponsiveSmokeViewports = [
   {

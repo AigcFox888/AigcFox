@@ -15,11 +15,14 @@ describe("verify-desktop-v3-host-governance", () => {
       collectViolationsImpl: async () => {
         invoked = true;
         return {
+          allowedInitialRouteValues: [],
           envBindings: [],
           logSignals: [],
+          rendererInitialRouteValues: [],
           scannedFileCount: 0,
           scannedFiles: [],
           violations: [],
+          windowInitialRouteValues: [],
         };
       },
       consoleLogImpl: (message) => {
@@ -34,7 +37,8 @@ describe("verify-desktop-v3-host-governance", () => {
 
   it("persists a passing summary before logging success", async () => {
     const config = {
-      allowedEnvBindings: [{ filePath: "apps/desktop-v3/src/app/router/initial-route.ts", name: "VITE_DESKTOP_V3_INITIAL_ROUTE" }],
+      allowedInitialRouteValues: ["/", "/diagnostics", "/preferences"],
+      allowedEnvBindings: [{ filePath: "apps/desktop-v3/src/app/router/route-registry.ts", name: "VITE_DESKTOP_V3_INITIAL_ROUTE" }],
       allowedLogSignals: [{ filePath: "apps/desktop-v3/src-tauri/src/window/telemetry.rs", name: "desktop-v3.main-window.navigation" }],
       latestSummaryPath: "/tmp/host-governance/latest.json",
       outputDir: "/tmp/host-governance",
@@ -43,16 +47,20 @@ describe("verify-desktop-v3-host-governance", () => {
     };
     const consoleLogImpl = vi.fn();
     const collectViolationsImpl = vi.fn(async () => ({
-      envBindings: [{ column: 9, filePath: "apps/desktop-v3/src/app/router/initial-route.ts", line: 20, name: "VITE_DESKTOP_V3_INITIAL_ROUTE" }],
+      allowedInitialRouteValues: ["/", "/diagnostics", "/preferences"],
+      envBindings: [{ column: 9, filePath: "apps/desktop-v3/src/app/router/route-registry.ts", line: 20, name: "VITE_DESKTOP_V3_INITIAL_ROUTE" }],
       logSignals: [{ column: 15, filePath: "apps/desktop-v3/src-tauri/src/window/telemetry.rs", line: 4, name: "desktop-v3.main-window.navigation" }],
+      rendererInitialRouteValues: ["/", "/diagnostics", "/preferences"],
       scannedFileCount: 2,
       scannedFiles: [
-        "apps/desktop-v3/src/app/router/initial-route.ts",
+        "apps/desktop-v3/src/app/router/route-registry.ts",
         "apps/desktop-v3/src-tauri/src/window/telemetry.rs",
       ],
       violations: [],
+      windowInitialRouteValues: ["/", "/diagnostics", "/preferences"],
     }));
     const createSummaryImpl = vi.fn(() => ({
+      allowedInitialRouteValues: [...config.allowedInitialRouteValues],
       allowedEnvBindings: [...config.allowedEnvBindings],
       allowedLogSignals: [...config.allowedLogSignals],
       checkedAt: null,
@@ -61,6 +69,7 @@ describe("verify-desktop-v3-host-governance", () => {
       latestSummaryPath: config.latestSummaryPath,
       logSignals: [],
       outputDir: config.outputDir,
+      rendererInitialRouteValues: [],
       runId: "host-governance-test",
       scannedFileCount: 0,
       scannedFiles: [],
@@ -69,6 +78,7 @@ describe("verify-desktop-v3-host-governance", () => {
       summaryPath: config.summaryPath,
       violationCount: 0,
       violations: [],
+      windowInitialRouteValues: [],
     }));
     const mkdirImpl = vi.fn(async () => {});
     const persistVerificationSummaryImpl = vi.fn(async () => {});

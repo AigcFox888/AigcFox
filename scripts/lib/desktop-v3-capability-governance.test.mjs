@@ -14,6 +14,7 @@ import {
   resolveDesktopV3CapabilityGovernanceConfig,
   rootDir,
 } from "./desktop-v3-capability-governance.mjs";
+import { desktopV3AllowedPermissionEntries } from "./desktop-v3-command-truth.mjs";
 
 describe("desktop-v3 capability governance config", () => {
   it("resolves verification output paths under output/verification", () => {
@@ -33,6 +34,14 @@ describe("desktop-v3 capability governance config", () => {
     );
     expect(config.latestSummaryPath).toContain(
       path.join("output", "verification", "latest", "desktop-v3-capability-governance-summary.json"),
+    );
+  });
+});
+
+describe("desktop-v3 capability truth", () => {
+  it("keeps app permissions and permission entries derived from the frozen command truth", () => {
+    expect(desktopV3AllowedPermissionEntries.map((entry) => entry.identifier)).toEqual(
+      desktopV3AllowedAppPermissions,
     );
   });
 });

@@ -26,6 +26,7 @@ export function buildDesktopV3HostGovernanceHelpText() {
     "Checks:",
     "  - app/runtime/window only consume the current frozen AIGCFOX_*/VITE_DESKTOP_V3_* env bindings",
     "  - desktop-v3.* host log markers stay frozen at the current main-window / startup-probe / renderer-boot / command trace surface",
+    "  - renderer route-registry and Rust window initial-route allowlists stay pinned to the same frozen initial-route set",
     "  - any new host env binding or log signal requires a host-boundary rewrite before implementation continues",
   ].join("\n");
 }
@@ -59,13 +60,16 @@ export async function runDesktopV3HostGovernanceCli(options = {}) {
         const result = await collectViolationsImpl(config);
 
         summary.checkedAt = new Date().toISOString();
+        summary.allowedInitialRouteValues = result.allowedInitialRouteValues;
         summary.envBindings = result.envBindings;
         summary.logSignals = result.logSignals;
+        summary.rendererInitialRouteValues = result.rendererInitialRouteValues;
         summary.scannedFileCount = result.scannedFileCount;
         summary.scannedFiles = result.scannedFiles;
         summary.status = result.violations.length === 0 ? "passed" : "failed";
         summary.violationCount = result.violations.length;
         summary.violations = result.violations;
+        summary.windowInitialRouteValues = result.windowInitialRouteValues;
         summary.error =
           result.violations.length === 0 ? null : buildDesktopV3HostGovernanceFailureMessage(summary);
 

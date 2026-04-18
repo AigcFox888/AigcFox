@@ -3,7 +3,9 @@ import path from "node:path";
 import process from "node:process";
 
 import {
+  collectTypeScriptFunctionCallArgumentTexts,
   collectTypeScriptInterfaceProperties,
+  collectTypeScriptObjectArrayPropertyInitializerTexts,
   collectTypeScriptModuleReferenceEntries,
   collectTypeScriptObjectArrayPropertyValues,
   collectTypeScriptTopLevelDeclarations,
@@ -40,9 +42,9 @@ export const desktopV3AllowedDashboardPageSurface = Object.freeze([
   "const:quickLinks",
   "fn:DashboardPage",
 ]);
-export const desktopV3AllowedDashboardQuickLinkHrefs = Object.freeze([
-  "/diagnostics",
-  "/preferences",
+export const desktopV3AllowedDashboardQuickLinkBindings = Object.freeze([
+  "desktopV3RoutePathById.diagnostics",
+  "desktopV3RoutePathById.preferences",
 ]);
 export const desktopV3AllowedDiagnosticsPageSurface = Object.freeze([
   "const:diagnosticsOverviewQueryKey",
@@ -99,6 +101,9 @@ export const desktopV3AllowedLoadingStateProperties = Object.freeze([
 export const desktopV3AllowedKeyboardShortcutsSurface = Object.freeze([
   "fn:isEditableElement",
   "fn:useKeyboardShortcuts",
+]);
+export const desktopV3AllowedKeyboardShortcutNavigationTargets = Object.freeze([
+  "desktopV3RoutePathById.preferences",
 ]);
 export const desktopV3AllowedShellLayoutSurface = Object.freeze([
   "fn:getLayoutState",
@@ -381,11 +386,11 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
     { rootDir: config.rootDir },
   );
   const dashboardPageSurface = formatDeclarationSurface(dashboardPageDeclarations);
-  const dashboardQuickLinkHrefs = collectTypeScriptObjectArrayPropertyValues(
+  const dashboardQuickLinkBindings = collectTypeScriptObjectArrayPropertyInitializerTexts(
     dashboardPageSource,
     config.dashboardPageFilePath,
     "quickLinks",
-    "href",
+    ["href"],
   );
 
   const diagnosticsPageDeclarations = collectTypeScriptTopLevelDeclarations(
@@ -474,6 +479,11 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
     { rootDir: config.rootDir },
   );
   const keyboardShortcutsSurface = formatDeclarationSurface(keyboardShortcutsDeclarations);
+  const keyboardShortcutNavigationTargets = collectTypeScriptFunctionCallArgumentTexts(
+    keyboardShortcutsSource,
+    config.keyboardShortcutsFilePath,
+    "navigate",
+  );
 
   const shellLayoutDeclarations = collectTypeScriptTopLevelDeclarations(
     shellLayoutSource,
@@ -506,12 +516,12 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
     seenViolations,
   });
   addSurfaceDriftViolation({
-    actualSurface: dashboardQuickLinkHrefs,
-    detail: `dashboard quick-link href set drifted from the frozen Wave 1 page route set (${config.allowedDashboardQuickLinkHrefs.join(", ")}). Rewrite dashboard navigation before changing this page topology.`,
+    actualSurface: dashboardQuickLinkBindings,
+    detail: `dashboard quick-link bindings drifted from the frozen Wave 1 route registry contract (${config.allowedDashboardQuickLinkBindings.join(", ")}). Rewrite dashboard navigation before changing this page topology.`,
     entries: dashboardPageDeclarations,
-    expectedSurface: config.allowedDashboardQuickLinkHrefs,
+    expectedSurface: config.allowedDashboardQuickLinkBindings,
     filePath: dashboardPageFile,
-    kind: "dashboard-quick-link-drift",
+    kind: "dashboard-quick-link-binding-drift",
     violations,
     seenViolations,
   });
@@ -652,6 +662,16 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
     expectedSurface: config.allowedKeyboardShortcutsSurface,
     filePath: keyboardShortcutsFile,
     kind: "keyboard-shortcuts-surface-drift",
+    violations,
+    seenViolations,
+  });
+  addSurfaceDriftViolation({
+    actualSurface: keyboardShortcutNavigationTargets,
+    detail: `use-keyboard-shortcuts navigate targets drifted from the frozen Wave 1 route registry contract (${config.allowedKeyboardShortcutNavigationTargets.join(", ")}). Rewrite shell shortcut routing before changing shortcut navigation.`,
+    entries: keyboardShortcutsDeclarations,
+    expectedSurface: config.allowedKeyboardShortcutNavigationTargets,
+    filePath: keyboardShortcutsFile,
+    kind: "keyboard-shortcuts-navigation-target-drift",
     violations,
     seenViolations,
   });
@@ -832,7 +852,7 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
   return {
     dashboardPageReferenceFiles,
     dashboardPageSurface,
-    dashboardQuickLinkHrefs,
+    dashboardQuickLinkBindings,
     diagnosticsPageReferenceFiles,
     diagnosticsPageSurface,
     emptyStateProperties,
@@ -841,6 +861,7 @@ export async function collectDesktopV3PageGovernanceViolations(config, options =
     errorStateProperties,
     errorStateReferenceFiles,
     errorStateSurface,
+    keyboardShortcutNavigationTargets,
     keyboardShortcutsReferenceFiles,
     keyboardShortcutsSurface,
     loadingStateProperties,
@@ -868,7 +889,7 @@ export function createDesktopV3PageGovernanceSummary(config) {
     {
       allowedDashboardPageExternalReferenceFiles: [...config.allowedDashboardPageExternalReferenceFiles],
       allowedDashboardPageSurface: [...config.allowedDashboardPageSurface],
-      allowedDashboardQuickLinkHrefs: [...config.allowedDashboardQuickLinkHrefs],
+      allowedDashboardQuickLinkBindings: [...config.allowedDashboardQuickLinkBindings],
       allowedDiagnosticsPageExternalReferenceFiles: [...config.allowedDiagnosticsPageExternalReferenceFiles],
       allowedDiagnosticsPageSurface: [...config.allowedDiagnosticsPageSurface],
       allowedEmptyStateExternalReferenceFiles: [...config.allowedEmptyStateExternalReferenceFiles],
@@ -877,6 +898,7 @@ export function createDesktopV3PageGovernanceSummary(config) {
       allowedErrorStateExternalReferenceFiles: [...config.allowedErrorStateExternalReferenceFiles],
       allowedErrorStateProperties: [...config.allowedErrorStateProperties],
       allowedErrorStateSurface: [...config.allowedErrorStateSurface],
+      allowedKeyboardShortcutNavigationTargets: [...config.allowedKeyboardShortcutNavigationTargets],
       allowedKeyboardShortcutsExternalReferenceFiles: [...config.allowedKeyboardShortcutsExternalReferenceFiles],
       allowedKeyboardShortcutsSurface: [...config.allowedKeyboardShortcutsSurface],
       allowedLoadingStateExternalReferenceFiles: [...config.allowedLoadingStateExternalReferenceFiles],
@@ -895,7 +917,7 @@ export function createDesktopV3PageGovernanceSummary(config) {
       allowedShellLayoutSurface: [...config.allowedShellLayoutSurface],
       dashboardPageReferenceFiles: [],
       dashboardPageSurface: [],
-      dashboardQuickLinkHrefs: [],
+      dashboardQuickLinkBindings: [],
       diagnosticsPageReferenceFiles: [],
       diagnosticsPageSurface: [],
       emptyStateProperties: [],
@@ -905,6 +927,7 @@ export function createDesktopV3PageGovernanceSummary(config) {
       errorStateProperties: [],
       errorStateReferenceFiles: [],
       errorStateSurface: [],
+      keyboardShortcutNavigationTargets: [],
       keyboardShortcutsReferenceFiles: [],
       keyboardShortcutsSurface: [],
       latestSummaryPath: config.latestSummaryPath,
@@ -957,7 +980,7 @@ export function resolveDesktopV3PageGovernanceConfig(options = {}) {
   return {
     allowedDashboardPageExternalReferenceFiles: desktopV3AllowedDashboardPageExternalReferenceFiles,
     allowedDashboardPageSurface: desktopV3AllowedDashboardPageSurface,
-    allowedDashboardQuickLinkHrefs: desktopV3AllowedDashboardQuickLinkHrefs,
+    allowedDashboardQuickLinkBindings: desktopV3AllowedDashboardQuickLinkBindings,
     allowedDiagnosticsPageExternalReferenceFiles: desktopV3AllowedDiagnosticsPageExternalReferenceFiles,
     allowedDiagnosticsPageSurface: desktopV3AllowedDiagnosticsPageSurface,
     allowedEmptyStateExternalReferenceFiles: desktopV3AllowedEmptyStateExternalReferenceFiles,
@@ -966,6 +989,7 @@ export function resolveDesktopV3PageGovernanceConfig(options = {}) {
     allowedErrorStateExternalReferenceFiles: desktopV3AllowedErrorStateExternalReferenceFiles,
     allowedErrorStateProperties: desktopV3AllowedErrorStateProperties,
     allowedErrorStateSurface: desktopV3AllowedErrorStateSurface,
+    allowedKeyboardShortcutNavigationTargets: desktopV3AllowedKeyboardShortcutNavigationTargets,
     allowedKeyboardShortcutsExternalReferenceFiles: desktopV3AllowedKeyboardShortcutsExternalReferenceFiles,
     allowedKeyboardShortcutsSurface: desktopV3AllowedKeyboardShortcutsSurface,
     allowedLoadingStateExternalReferenceFiles: desktopV3AllowedLoadingStateExternalReferenceFiles,

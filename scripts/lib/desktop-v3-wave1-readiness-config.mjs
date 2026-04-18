@@ -7,17 +7,22 @@ import { resolveLatestVerificationSummaryPath } from "./verification-summary-out
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, "..", "..");
 const documentFiles = [
-  "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
   "docs/README.md",
   "docs/248-autonomous-execution-baseline.md",
   "docs/257-desktop-v3-replatform-proposal.md",
   "docs/258-desktop-v3-technical-baseline.md",
   "docs/259-desktop-v3-detailed-design.md",
+  "docs/269-desktop-v3-tauri-2-governance-baseline.md",
   "docs/260-desktop-v3-wave1-execution-baseline.md",
   "docs/263-desktop-v3-wave1-acceptance-matrix.md",
   "docs/264-desktop-v3-wave1-execution-runbook.md",
   "docs/267-desktop-v3-github-actions-baseline.md",
-  "docs/269-desktop-v3-tauri-2-governance-baseline.md",
+  "docs/268-desktop-v3-clean-pr-closeout.md",
+  "docs/ui-client/system.md",
+  "docs/ui-client/layout.md",
+  "docs/ui-client/components.md",
+  "docs/ui-client/interaction.md",
+  "docs/ui-client/charts.md",
   "apps/desktop-v3/README.md",
 ];
 

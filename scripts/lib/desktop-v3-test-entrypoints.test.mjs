@@ -58,7 +58,6 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     const scripts = await readPackageJsonScripts();
     const script = scripts["test:desktop-v3-wave1-readiness"];
     const missing = listPrefixedTestFiles({
-      excludePrefixes: ["desktop-v3-delivery-updater"],
       prefixes: ["desktop-v3-"],
       topLevelNames: [
         "desktop-v3-responsive-smoke.test.mjs",

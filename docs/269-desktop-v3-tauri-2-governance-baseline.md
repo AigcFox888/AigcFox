@@ -45,13 +45,14 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
 - 当前用 `pnpm qa:desktop-v3-error-contract-governance` 对 `src-tauri/src/error.rs`、`src/lib/errors/app-error.ts`、`src/lib/errors/normalize-command-error.ts`、`src/lib/runtime/tauri-command-runtime.ts` 做静态门禁；当前 command error truth chain 只允许承认 `code / message / requestId`，`details` 只保留兼容位，不允许 Rust / Tauri / renderer 各自补丁式长错误字段或消费者
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
-- 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、路由拓扑、导航 href 和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
-- 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 route/sidebar/page-state/app-shell ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 page helper、状态组件变体或 shell hook
+- 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、`route-registry.ts` 内收拢的路径 / handle / 导航 / 初始路由真相，以及 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
+- 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode，以及 dashboard quick link / keyboard shortcut 继续绑定 `route-registry.ts` 路径真相的约束都必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 page helper、状态组件变体或 shell hook
 - 当前用 `pnpm qa:desktop-v3-support-governance` 对 `src/lib/errors/*`、`src/lib/query/*`、`src/lib/notify.ts`、`src/lib/typography.ts`、`src/lib/utils.ts` 做静态门禁；错误归一、query singleton、toast 支撑、type token、`cn` helper 的公开面和 provider/page/runtime/ui primitive ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 support helper、query 分支或 token/helper 变体
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
-- 当前用 `pnpm qa:desktop-v3-host-governance` 对 `src-tauri/src/lib.rs`、`commands/mod.rs`、`runtime/mod.rs`、`window/initial_route.rs`、`window/main_window_target.rs`、`window/telemetry.rs`、`src/app/bootstrap/renderer-ready.ts`、`src/app/router/initial-route.ts`、`src/lib/runtime/runtime-mode.ts` 做静态门禁；宿主 env / log signal truth chain 必须保持同一条冻结真相，不允许 app/runtime/window 各自补丁式长新的 host switch 或日志标记
+- 当前 `pnpm qa:desktop-v3-command-governance`、`pnpm qa:desktop-v3-capability-governance`、`pnpm qa:desktop-v3-runtime-contract-governance` 在验证层共享 `scripts/lib/desktop-v3-command-truth.mjs` 这一份冻结命令真相；命令名、permission 映射与 payload/result 契约不允许再在三条 gate 内各自补丁式漂移
+- 当前用 `pnpm qa:desktop-v3-host-governance` 对 `src-tauri/src/env.rs`、`src-tauri/src/lib.rs`、`commands/mod.rs`、`runtime/mod.rs`、`window/initial_route.rs`、`window/main_window_target.rs`、`window/telemetry.rs`、`src/app/bootstrap/renderer-ready.ts`、`src/app/router/route-registry.ts`、`src/lib/runtime/runtime-mode.ts` 做静态门禁；Rust 宿主 env 名称必须统一收拢在 `src-tauri/src/env.rs`，宿主 env / log signal truth chain 必须保持同一条冻结真相，不允许 app/runtime/window 各自补丁式长新的 host switch 或日志标记；同一条 gate 还会校验 `route-registry.ts` 与 `window/initial_route.rs` 的允许初始路由集合完全一致
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
 - Rust 侧能力先进入 `runtime/*`，`commands/*` 只保留薄层转发
 
@@ -206,26 +207,24 @@ React UI
 - `src/app/App.tsx`
 - `src/app/bootstrap/renderer-ready.ts`
 - `src/app/layout/app-shell.tsx`
-- `src/app/layout/navigation-items.ts`
 - `src/app/layout/page-header.tsx`
 - `src/app/layout/shell-scaffold.tsx`
 - `src/app/layout/sidebar.tsx`
 - `src/app/providers/app-providers.tsx`
 - `src/app/providers/theme-provider.tsx`
 - `src/app/router/index.tsx`
-- `src/app/router/initial-route.ts`
-- `src/app/router/route-handle.ts`
+- `src/app/router/route-registry.ts`
 - `src/app/router/routes.tsx`
 
-以及它们在 `src/app` 内的固定文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href、layout mode 与 source-level ownership。
+以及它们在 `src/app` 内的固定文件集、顶层声明面、`route-registry.ts` 内的 `"/" / "/diagnostics" / "/preferences"` 路径真相、导航 href 绑定、初始路由解析、layout mode 与 source-level ownership。
 
 规则：
 
 - `main.tsx` 只允许直接持有 `App` 与 `renderer-ready`
 - `App` 只允许直接持有 `AppProviders` 与 `appRouter`
-- `routes.tsx` 只允许直接持有 `AppShell` 与初始路由装配
+- `routes.tsx` 只允许直接持有 `AppShell` 与基于 `route-registry.ts` 的路由装配
 - `app-shell.tsx` 只允许直接持有 `PageHeader / ShellScaffold / Sidebar`
-- `navigation-items.ts` 只允许由 `sidebar.tsx` 直接持有
+- `route-registry.ts` 是当前唯一的路由路径 / handle / 导航 / 初始路由真相源
 - provider、bootstrap、layout、router 之间不允许继续补丁式横向扩 source-level ownership
 
 只要要扩当前 app shell boundary，就先结构化重写 `src/app` 分层，再同步更新门禁与文档。
@@ -246,11 +245,11 @@ React UI
 - `src/hooks/use-keyboard-shortcuts.ts`
 - `src/hooks/use-shell-layout.ts`
 
-以及它们在当前 renderer presentation boundary 内的固定文件集、顶层声明面、quick link / query key / theme option 常量、shared state props、`LayoutMode / ShellLayoutState` 与 source-level ownership。
+以及它们在当前 renderer presentation boundary 内的固定文件集、顶层声明面、quick link / query key / theme option 常量、shared state props、`LayoutMode / ShellLayoutState`、dashboard quick link / keyboard shortcut 的 route-registry 绑定与 source-level ownership。
 
 规则：
 
-- `DashboardPage` 只允许保留 `highlights / quickLinks / DashboardPage`，并把 quick link href 固定在 `"/diagnostics"` 与 `"/preferences"`
+- `DashboardPage` 只允许保留 `highlights / quickLinks / DashboardPage`，并把 quick link href 固定绑定到 `route-registry.ts` 暴露的 diagnostics / preferences 路径真相
 - `DiagnosticsPage` 只允许保留 `diagnosticsOverviewQueryKey / DiagnosticsCard / DiagnosticsPage`；`PreferencesPage` 只允许保留 `themeOptions / PreferencesPage`
 - `NavItem` props 固定为 `href / label / description / icon / compact`，不允许继续补丁式长成通用菜单项容器
 - `EmptyState / ErrorState / LoadingState` 的 props contract 当前固定为页面共用展示边界，不允许各页面各自再长一套漂移版本
@@ -439,7 +438,7 @@ tauri.macos.conf.json
 - smoke 变量只服务真实验证
 - 不能把 smoke 变量演变成业务开关
 - 不能把生产配置硬编码回 smoke 脚本
-- 当前 app/runtime/window 侧允许读取的宿主变量只包括 `AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE`；任何新增变量先通过 `pnpm qa:desktop-v3-host-governance` 失败闭口，再回到结构化重写
+- 当前 app/runtime/window 侧允许读取的宿主变量只包括 `AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`、`VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE`；其中 Rust 宿主 env 名称只允许在 `src-tauri/src/env.rs` 维护，其他 Rust 模块只允许经由该模块读取；任何新增变量先通过 `pnpm qa:desktop-v3-host-governance` 失败闭口，再回到结构化重写
 - 当前允许输出的宿主日志信号只包括 `desktop-v3.main-window.navigation`、`desktop-v3.main-window.page-load`、`desktop-v3.main-window.url`、`desktop-v3.command.invoke`、`desktop-v3.renderer.boot`、`desktop-v3.startup-backend-probe.scheduled / begin / end / liveness.ok / liveness.err / readiness.ok / readiness.err`；任何新增 host log signal 都视为治理回退
 
 ## Updater 进入条件
@@ -467,6 +466,7 @@ tauri.macos.conf.json
 - `apps/desktop-v3/src-tauri/tauri.conf.json`
 - `apps/desktop-v3/src-tauri/capabilities/main-window.json`
 - `apps/desktop-v3/src-tauri/src/window/*`
+- `apps/desktop-v3/src-tauri/src/env.rs`
 - `apps/desktop-v3/src-tauri/src/lib.rs`
 - `apps/desktop-v3/src-tauri/src/commands/*`
 - `apps/desktop-v3/src-tauri/src/runtime/*`

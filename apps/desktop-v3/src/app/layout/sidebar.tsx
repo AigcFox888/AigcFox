@@ -1,6 +1,6 @@
 import { ShieldCheck } from "lucide-react";
 
-import { primaryNavigationItems, secondaryNavigationItems } from "@/app/layout/navigation-items";
+import { primaryNavigationItems, secondaryNavigationItems } from "@/app/router/route-registry";
 import { NavItem } from "@/components/navigation/nav-item";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";

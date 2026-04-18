@@ -3,33 +3,23 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+import {
+  desktopV3AllowedCommandModuleNames,
+  desktopV3AllowedCommandModules,
+  desktopV3AllowedTauriCommands,
+} from "./desktop-v3-command-truth.mjs";
 import { decorateVerificationArtifactRefs } from "./verification-artifact-ref.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
+
+export {
+  desktopV3AllowedCommandModuleNames,
+  desktopV3AllowedCommandModules,
+  desktopV3AllowedTauriCommands,
+} from "./desktop-v3-command-truth.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 export const rootDir = path.resolve(currentDir, "..", "..");
 export const desktopV3CommandGovernanceDir = "apps/desktop-v3/src-tauri/src/commands";
-export const desktopV3AllowedCommandModules = Object.freeze([
-  "backend.rs",
-  "diagnostics.rs",
-  "mod.rs",
-  "preferences.rs",
-  "renderer.rs",
-]);
-export const desktopV3AllowedCommandModuleNames = Object.freeze([
-  "backend",
-  "diagnostics",
-  "preferences",
-  "renderer",
-]);
-export const desktopV3AllowedTauriCommands = Object.freeze([
-  "desktop_get_backend_liveness",
-  "desktop_get_backend_readiness",
-  "desktop_get_diagnostics_snapshot",
-  "desktop_get_theme_preference",
-  "desktop_set_theme_preference",
-  "desktop_report_renderer_boot",
-]);
 export const desktopV3AllowedCommandSupportFunctions = Object.freeze([
   "should_trace_desktop_commands",
   "trace_desktop_command",

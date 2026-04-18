@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveDesktopV3InitialRoute } from "@/app/router/initial-route";
+import { resolveDesktopV3InitialRoute } from "@/app/router/route-registry";
 
 describe("resolveDesktopV3InitialRoute", () => {
   it("falls back to the dashboard route when the env override is empty", () => {

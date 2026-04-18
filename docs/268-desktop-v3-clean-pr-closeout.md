@@ -11,7 +11,7 @@
 
 ## 目的
 
-本文档用于记录当出现 PR 污染 时，如何从 `dev` 重新建立 clean branch，并把 `workflow.md` 与 [267-desktop-v3-github-actions-baseline.md](./267-desktop-v3-github-actions-baseline.md) 的治理要求落实到实际 PR 收口。
+本文档用于记录当出现 PR 污染时，如何从 `dev` 重新建立 clean branch，并把 `AGENTS.md`、[docs/README.md](./README.md) 与 [267-desktop-v3-github-actions-baseline.md](./267-desktop-v3-github-actions-baseline.md) 的治理要求落实到实际 PR 收口。
 
 ## 关键信号
 

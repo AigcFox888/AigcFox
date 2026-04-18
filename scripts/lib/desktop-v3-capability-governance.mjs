@@ -3,9 +3,19 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { desktopV3AllowedTauriCommands } from "./desktop-v3-command-governance.mjs";
+import {
+  desktopV3AllowedAppPermissions,
+  desktopV3AllowedPermissionEntries,
+  desktopV3AllowedTauriCommands,
+} from "./desktop-v3-command-truth.mjs";
 import { decorateVerificationArtifactRefs } from "./verification-artifact-ref.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
+
+export {
+  desktopV3AllowedAppPermissions,
+  desktopV3AllowedPermissionEntries,
+  desktopV3AllowedTauriCommands,
+} from "./desktop-v3-command-truth.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 export const rootDir = path.resolve(currentDir, "..", "..");
@@ -26,36 +36,6 @@ export const desktopV3AllowedCorePermissions = Object.freeze([
   "core:webview:default",
   "core:window:default",
 ]);
-export const desktopV3AllowedAppPermissions = Object.freeze([
-  "desktop-preferences-read",
-  "desktop-preferences-write",
-  "desktop-diagnostics-read",
-  "desktop-backend-probe-read",
-  "desktop-renderer-boot-write",
-]);
-export const desktopV3AllowedPermissionEntries = Object.freeze([
-  {
-    commands: ["desktop_get_theme_preference"],
-    identifier: "desktop-preferences-read",
-  },
-  {
-    commands: ["desktop_set_theme_preference"],
-    identifier: "desktop-preferences-write",
-  },
-  {
-    commands: ["desktop_get_diagnostics_snapshot"],
-    identifier: "desktop-diagnostics-read",
-  },
-  {
-    commands: ["desktop_get_backend_liveness", "desktop_get_backend_readiness"],
-    identifier: "desktop-backend-probe-read",
-  },
-  {
-    commands: ["desktop_report_renderer_boot"],
-    identifier: "desktop-renderer-boot-write",
-  },
-]);
-export { desktopV3AllowedTauriCommands } from "./desktop-v3-command-governance.mjs";
 
 function resolveRunId(env, now) {
   const explicitRunId = env.AIGCFOX_DESKTOP_V3_CAPABILITY_GOVERNANCE_RUN_ID?.trim();

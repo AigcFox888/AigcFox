@@ -13,6 +13,10 @@ import {
   resolveDesktopV3CommandGovernanceConfig,
   rootDir,
 } from "./desktop-v3-command-governance.mjs";
+import {
+  desktopV3AllowedCommandModuleNames,
+  desktopV3FrozenCommands,
+} from "./desktop-v3-command-truth.mjs";
 
 describe("desktop-v3 command governance config", () => {
   it("resolves verification output paths under output/verification", () => {
@@ -35,6 +39,15 @@ describe("desktop-v3 command governance config", () => {
     );
     expect(config.allowedCommandModules).toEqual(desktopV3AllowedCommandModules);
     expect(config.allowedCommands).toEqual(desktopV3AllowedTauriCommands);
+  });
+});
+
+describe("desktop-v3 command truth", () => {
+  it("keeps the frozen command truth aligned with module and command surfaces", () => {
+    expect(desktopV3FrozenCommands.map((entry) => entry.name)).toEqual(desktopV3AllowedTauriCommands);
+    expect(
+      [...new Set(desktopV3FrozenCommands.map((entry) => entry.moduleName))],
+    ).toEqual(desktopV3AllowedCommandModuleNames);
   });
 });
 
@@ -130,7 +143,7 @@ describe("desktop-v3 command governance scan", () => {
           "pub mod renderer;",
           "",
           "fn should_trace_desktop_commands() -> bool {",
-          "    crate::env::env_flag(\"AIGCFOX_DESKTOP_V3_TRACE_COMMANDS\")",
+          "    crate::env::env_flag(crate::env::TRACE_COMMANDS_ENV)",
           "}",
           "",
           "pub fn trace_desktop_command(command_name: &str) {",

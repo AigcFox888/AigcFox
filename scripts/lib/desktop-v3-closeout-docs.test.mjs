@@ -13,7 +13,8 @@ describe("desktop-v3 closeout docs", () => {
     expect(text).toContain("PR：`#2`");
     expect(text).toContain("desktop-v3-ci");
     expect(text).toContain("desktop-v3-package");
-    expect(text).toContain("workflow.md");
+    expect(text).toContain("AGENTS.md");
+    expect(text).toContain("docs/README.md");
     expect(text).toContain("267-desktop-v3-github-actions-baseline.md");
     expect(text).toContain("PR 污染");
   });

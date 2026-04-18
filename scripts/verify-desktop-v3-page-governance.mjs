@@ -26,6 +26,7 @@ export function buildDesktopV3PageGovernanceHelpText() {
     "Checks:",
     "  - src/pages + components/navigation + components/states + hooks file set stays frozen at the current Wave 1 page boundary",
     "  - dashboard/diagnostics/preferences pages, shared state components, and shell hooks keep their current declaration surfaces and prop contracts",
+    "  - dashboard quick links and keyboard shortcut routing stay bound to route-registry truth instead of hardcoded paths",
     "  - route ownership, sidebar ownership, page-state ownership, and app-shell hook ownership stay pinned to the current Wave 1 composition",
   ].join("\n");
 }
@@ -61,7 +62,7 @@ export async function runDesktopV3PageGovernanceCli(options = {}) {
         summary.checkedAt = new Date().toISOString();
         summary.dashboardPageReferenceFiles = result.dashboardPageReferenceFiles;
         summary.dashboardPageSurface = result.dashboardPageSurface;
-        summary.dashboardQuickLinkHrefs = result.dashboardQuickLinkHrefs;
+        summary.dashboardQuickLinkBindings = result.dashboardQuickLinkBindings;
         summary.diagnosticsPageReferenceFiles = result.diagnosticsPageReferenceFiles;
         summary.diagnosticsPageSurface = result.diagnosticsPageSurface;
         summary.emptyStateProperties = result.emptyStateProperties;
@@ -70,6 +71,7 @@ export async function runDesktopV3PageGovernanceCli(options = {}) {
         summary.errorStateProperties = result.errorStateProperties;
         summary.errorStateReferenceFiles = result.errorStateReferenceFiles;
         summary.errorStateSurface = result.errorStateSurface;
+        summary.keyboardShortcutNavigationTargets = result.keyboardShortcutNavigationTargets;
         summary.keyboardShortcutsReferenceFiles = result.keyboardShortcutsReferenceFiles;
         summary.keyboardShortcutsSurface = result.keyboardShortcutsSurface;
         summary.loadingStateProperties = result.loadingStateProperties;

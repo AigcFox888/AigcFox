@@ -164,6 +164,86 @@ describe("desktop-v3 tauri dev smoke runner", () => {
     expect(closeWritableStreamImpl).toHaveBeenCalledWith(logStream);
   });
 
+  it("waits for the renderer app boot marker before passing", async () => {
+    const config = {
+      appId: "aigcfox-desktop-v3",
+      devServerPort: 31420,
+      latestSummaryPath: "/tmp/tauri-dev/latest-summary.json",
+      logPath: "/tmp/tauri-dev.log",
+      outputDir: "/tmp/tauri-dev",
+      pollIntervalMs: 10,
+      postReadyDelayMs: 0,
+      rootDir: "/workspace",
+      summaryPath: "/tmp/summary.json",
+      timeoutMs: 1000,
+      westonLogPath: "/mnt/wslg/weston.log",
+    };
+    const child = createMockChild();
+    const writeJsonFileImpl = vi.fn(async () => {});
+    const closeWritableStreamImpl = vi.fn(async () => {});
+    const logStream = {
+      write: vi.fn(),
+    };
+    let pollCount = 0;
+    const detectMarkersImpl = vi.fn(() => {
+      pollCount += 1;
+
+      return {
+        cargoRunning: true,
+        commandInvocations: pollCount >= 2 ? ["desktop_report_renderer_boot"] : [],
+        devRequests: [],
+        documentBootSeen: true,
+        mainWindowNavigations: [
+          {
+            allowed: true,
+            url: "http://127.0.0.1:31420/",
+          },
+        ],
+        mainWindowPageLoadFinished: true,
+        mainWindowPageLoadStarted: true,
+        pageLoads: [
+          {
+            event: "finished",
+            url: "http://127.0.0.1:31420/",
+          },
+        ],
+        rendererBootSeen: pollCount >= 2,
+        rendererBoots: pollCount >= 2
+          ? [
+              {
+                route: "#/",
+                runtime: "tauri",
+                stage: "app",
+              },
+            ]
+          : [],
+        viteReady: true,
+        windowWarnings: [],
+      };
+    });
+
+    const summary = await runDesktopV3TauriDevSmoke(config, {
+      closeWritableStreamImpl,
+      createWriteStreamImpl: () => logStream,
+      detectMarkersImpl,
+      detectWindowRegistrationImpl: () => true,
+      mkdirImpl: async () => {},
+      readFileImpl: async () => "[weston]",
+      sleepImpl: async () => {},
+      spawnImpl: () => child,
+      statIfExistsImpl: async () => ({ size: 0 }),
+      terminateMockDevServerConflictImpl: async () => null,
+      terminateChildProcessImpl: async () => {},
+      writeJsonFileImpl,
+    });
+
+    expect(summary.status).toBe("passed");
+    expect(summary.markers.rendererBootSeen).toBe(true);
+    expect(summary.observed.commandInvocations).toEqual(["desktop_report_renderer_boot"]);
+    expect(detectMarkersImpl).toHaveBeenCalledTimes(2);
+    expect(closeWritableStreamImpl).toHaveBeenCalledWith(logStream);
+  });
+
   it("surfaces port conflicts and still tears down the detached dev process group", async () => {
     const config = {
       appId: "aigcfox-desktop-v3",

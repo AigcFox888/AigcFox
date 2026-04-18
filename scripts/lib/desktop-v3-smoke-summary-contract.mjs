@@ -58,6 +58,10 @@ function assertExpectedString(actualValue, expectedValue, label) {
   }
 }
 
+function compareStringSets(leftValues, rightValues) {
+  return JSON.stringify([...leftValues].sort()) === JSON.stringify([...rightValues].sort());
+}
+
 function assertFinalStatus(value, label) {
   assert(["passed", "failed"].includes(value), `${label} must be "passed" or "failed".`);
 }
@@ -234,6 +238,18 @@ export function assertDesktopV3ResponsiveSmokeSummaryContract(summary, options =
       summary.routes.length === expectedRouteCount,
       `${label}.routes did not cover the full route/viewport matrix.`,
     );
+    const actualRouteMatrix = summary.routes.map(
+      (entry) => `${entry.viewport}:${entry.key}:${entry.testId}:${entry.metrics.hash}`,
+    );
+    const expectedRouteMatrix = desktopV3ResponsiveSmokeViewports.flatMap((viewport) =>
+      desktopV3ResponsiveSmokeRoutes.map(
+        (route) => `${viewport.key}:${route.key}:${route.testId}:${route.hash}`,
+      ));
+
+    assert(
+      compareStringSets(actualRouteMatrix, expectedRouteMatrix),
+      `${label}.routes did not stay aligned with the current route truth matrix.`,
+    );
 
     assertObject(summary.interactions.preferences, `${label}.interactions.preferences`);
     assertNonEmptyString(
@@ -287,7 +303,13 @@ export function assertDesktopV3TauriDevSmokeSummaryContract(summary, options = {
   assertExpectedString(summary.summaryPath, options.expectedSummaryPath, `${label}.summaryPath`);
 
   if (summary.status === "passed") {
-    for (const key of ["cargoRunning", "mainWindowPageLoadFinished", "viteReady", "wslgWindowRegistered"]) {
+    for (const key of [
+      "cargoRunning",
+      "mainWindowPageLoadFinished",
+      "rendererBootSeen",
+      "viteReady",
+      "wslgWindowRegistered",
+    ]) {
       assert(summary.markers[key] === true, `${label}.markers.${key} must be true for a passed run.`);
     }
   }

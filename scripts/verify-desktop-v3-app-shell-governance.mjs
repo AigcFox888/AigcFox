@@ -26,7 +26,7 @@ export function buildDesktopV3AppShellGovernanceHelpText() {
     "Checks:",
     "  - src/app non-test source file set stays frozen at the current Wave 1 app shell boundary",
     "  - App, bootstrap, provider, router, and layout modules keep their current declaration surfaces and prop/type contracts",
-    "  - navigation hrefs, initial routes, and appRouter path topology stay pinned to the current shell route set",
+    "  - route-registry path truth, navigation bindings, and initial routes stay pinned to the current shell route set",
     "  - main entry, provider stack, router entry, route shell, and layout shell ownership edges stay fixed",
   ].join("\n");
 }
@@ -68,31 +68,27 @@ export async function runDesktopV3AppShellGovernanceCli(options = {}) {
         summary.appShellSurface = result.appShellSurface;
         summary.appSurface = result.appSurface;
         summary.checkedAt = new Date().toISOString();
-        summary.initialRouteReferenceFiles = result.initialRouteReferenceFiles;
-        summary.initialRouteSurface = result.initialRouteSurface;
         summary.initialRouteValues = result.initialRouteValues;
         summary.layoutModeValues = result.layoutModeValues;
         summary.navigationItemProperties = result.navigationItemProperties;
-        summary.navigationItemsReferenceFiles = result.navigationItemsReferenceFiles;
-        summary.navigationItemsSurface = result.navigationItemsSurface;
         summary.pageHeaderProperties = result.pageHeaderProperties;
         summary.pageHeaderReferenceFiles = result.pageHeaderReferenceFiles;
         summary.pageHeaderSurface = result.pageHeaderSurface;
-        summary.primaryNavigationHrefs = result.primaryNavigationHrefs;
+        summary.primaryNavigationHrefBindings = result.primaryNavigationHrefBindings;
         summary.rendererReadyOptionProperties = result.rendererReadyOptionProperties;
         summary.rendererReadyReferenceFiles = result.rendererReadyReferenceFiles;
         summary.rendererReadySurface = result.rendererReadySurface;
         summary.routeHandleProperties = result.routeHandleProperties;
-        summary.routeHandleReferenceFiles = result.routeHandleReferenceFiles;
-        summary.routeHandleSurface = result.routeHandleSurface;
+        summary.routeRegistryPathValues = result.routeRegistryPathValues;
+        summary.routeRegistryReferenceFiles = result.routeRegistryReferenceFiles;
+        summary.routeRegistrySurface = result.routeRegistrySurface;
         summary.routerIndexReferenceFiles = result.routerIndexReferenceFiles;
         summary.routerIndexSurface = result.routerIndexSurface;
-        summary.routerPathSurface = result.routerPathSurface;
         summary.routesReferenceFiles = result.routesReferenceFiles;
         summary.routesSurface = result.routesSurface;
         summary.scannedFileCount = result.scannedFileCount;
         summary.scannedFiles = result.scannedFiles;
-        summary.secondaryNavigationHrefs = result.secondaryNavigationHrefs;
+        summary.secondaryNavigationHrefBindings = result.secondaryNavigationHrefBindings;
         summary.shellScaffoldProperties = result.shellScaffoldProperties;
         summary.shellScaffoldReferenceFiles = result.shellScaffoldReferenceFiles;
         summary.shellScaffoldSurface = result.shellScaffoldSurface;

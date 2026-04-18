@@ -19,11 +19,14 @@ describe("desktop-v3 Wave 1 active docs explicit coverage", () => {
   it("keeps every desktop-v3 Wave 1 source-of-truth doc guarded by at least three explicit test references", () => {
     const insufficient = sharedCoverage.filter((item) => item.count < 3);
 
-    expect(desktopV3ActiveDocCoverageTargets).toContain("docs/281-desktop-v3-post-reinstall-recovery-entry.md");
+    expect(desktopV3ActiveDocCoverageTargets).toContain("docs/README.md");
     expect(desktopV3ActiveDocCoverageTargets).toContain("docs/257-desktop-v3-replatform-proposal.md");
     expect(desktopV3ActiveDocCoverageTargets).toContain("docs/258-desktop-v3-technical-baseline.md");
     expect(desktopV3ActiveDocCoverageTargets).toContain("docs/264-desktop-v3-wave1-execution-runbook.md");
     expect(desktopV3ActiveDocCoverageTargets).toContain("docs/267-desktop-v3-github-actions-baseline.md");
+    expect(desktopV3ActiveDocCoverageTargets).toContain("docs/268-desktop-v3-clean-pr-closeout.md");
+    expect(desktopV3ActiveDocCoverageTargets).toContain("docs/ui-client/system.md");
+    expect(desktopV3ActiveDocCoverageTargets).toContain("docs/ui-client/charts.md");
     expect(desktopV3ActiveDocCoverageTargets).toContain("apps/desktop-v3/README.md");
     expect(insufficient).toEqual([]);
   });

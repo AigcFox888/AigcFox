@@ -3,6 +3,10 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+import {
+  collectTypeScriptTypeAliasUnionValues,
+  desktopV3AllowedInitialRouteValues,
+} from "./desktop-v3-app-shell-governance.mjs";
 import { decorateVerificationArtifactRefs } from "./verification-artifact-ref.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
 
@@ -15,14 +19,14 @@ export const desktopV3HostGovernanceSourceRoots = Object.freeze([
 ]);
 export const desktopV3AllowedHostEnvBindings = Object.freeze([
   { filePath: "apps/desktop-v3/src/app/bootstrap/renderer-ready.ts", name: "VITE_DESKTOP_V3_RENDERER_BOOT_PROBE" },
-  { filePath: "apps/desktop-v3/src/app/router/initial-route.ts", name: "VITE_DESKTOP_V3_INITIAL_ROUTE" },
+  { filePath: "apps/desktop-v3/src/app/router/route-registry.ts", name: "VITE_DESKTOP_V3_INITIAL_ROUTE" },
   { filePath: "apps/desktop-v3/src/lib/runtime/runtime-mode.ts", name: "VITE_DESKTOP_V3_RUNTIME_MODE" },
-  { filePath: "apps/desktop-v3/src-tauri/src/commands/mod.rs", name: "AIGCFOX_DESKTOP_V3_TRACE_COMMANDS" },
-  { filePath: "apps/desktop-v3/src-tauri/src/lib.rs", name: "AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE" },
-  { filePath: "apps/desktop-v3/src-tauri/src/runtime/mod.rs", name: "AIGCFOX_BACKEND_BASE_URL" },
-  { filePath: "apps/desktop-v3/src-tauri/src/window/initial_route.rs", name: "AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE" },
-  { filePath: "apps/desktop-v3/src-tauri/src/window/main_window_target.rs", name: "AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL" },
-  { filePath: "apps/desktop-v3/src-tauri/src/window/main_window_target.rs", name: "AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_BACKEND_BASE_URL" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_DESKTOP_V3_TRACE_COMMANDS" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE" },
+  { filePath: "apps/desktop-v3/src-tauri/src/env.rs", name: "AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE" },
 ]);
 export const desktopV3AllowedHostLogSignals = Object.freeze([
   { filePath: "apps/desktop-v3/src-tauri/src/commands/mod.rs", name: "desktop-v3.command.invoke" },
@@ -58,6 +62,10 @@ function normalizeWorkspaceRelativePath(workspaceRoot, absolutePath) {
 
 function sortStrings(values) {
   return [...values].sort((left, right) => left.localeCompare(right));
+}
+
+function compareStringSets(leftValues, rightValues) {
+  return JSON.stringify(sortStrings(leftValues)) === JSON.stringify(sortStrings(rightValues));
 }
 
 function sortNamedEntries(entries) {
@@ -176,6 +184,26 @@ export function collectDesktopV3HostGovernanceEntriesFromSource(
   };
 }
 
+export function collectDesktopV3RustInitialRouteValuesFromSource(sourceText) {
+  const sourceWithoutTests = sourceText.split("#[cfg(test)]")[0] ?? sourceText;
+  const values = [];
+  const seenValues = new Set();
+  const pattern = /Some\("([^"]+)"\)/gu;
+
+  for (const match of sourceWithoutTests.matchAll(pattern)) {
+    const value = match[1];
+
+    if (!value || seenValues.has(value)) {
+      continue;
+    }
+
+    seenValues.add(value);
+    values.push(value);
+  }
+
+  return sortStrings(values);
+}
+
 async function walkSourceFiles(directoryPath, readdirImpl, collected) {
   const entries = await readdirImpl(directoryPath, { withFileTypes: true });
 
@@ -283,6 +311,16 @@ export async function collectDesktopV3HostGovernanceViolations(config, options =
   const seenViolations = new Set();
   const sortedEnvBindings = sortNamedEntries(envBindings);
   const sortedLogSignals = sortNamedEntries(logSignals);
+  const routeRegistrySource = await readFileImpl(config.routeRegistryFilePath, "utf8");
+  const windowInitialRouteSource = await readFileImpl(config.windowInitialRouteFilePath, "utf8");
+  const rendererInitialRouteValues = collectTypeScriptTypeAliasUnionValues(
+    routeRegistrySource,
+    config.routeRegistryFilePath,
+    "DesktopV3InitialRoute",
+  );
+  const windowInitialRouteValues = collectDesktopV3RustInitialRouteValuesFromSource(
+    windowInitialRouteSource,
+  );
 
   addMissingBindingViolations({
     actualEntries: sortedEnvBindings,
@@ -317,11 +355,44 @@ export async function collectDesktopV3HostGovernanceViolations(config, options =
     violations,
   });
 
+  if (!compareStringSets(rendererInitialRouteValues, config.allowedInitialRouteValues)) {
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Renderer initial route set drifted from the frozen Wave 1 route truth (${config.allowedInitialRouteValues.join(", ")}). Keep apps/desktop-v3/src/app/router/route-registry.ts aligned with apps/desktop-v3/src-tauri/src/window/initial_route.rs before changing initial-route behavior.`,
+      filePath: "apps/desktop-v3/src/app/router/route-registry.ts",
+      kind: "renderer-initial-route-value-drift",
+      line: 1,
+    });
+  }
+
+  if (!compareStringSets(windowInitialRouteValues, config.allowedInitialRouteValues)) {
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Host initial route set drifted from the frozen Wave 1 route truth (${config.allowedInitialRouteValues.join(", ")}). Keep apps/desktop-v3/src-tauri/src/window/initial_route.rs aligned with apps/desktop-v3/src/app/router/route-registry.ts before changing initial-route behavior.`,
+      filePath: "apps/desktop-v3/src-tauri/src/window/initial_route.rs",
+      kind: "host-window-initial-route-value-drift",
+      line: 1,
+    });
+  }
+
+  if (!compareStringSets(rendererInitialRouteValues, windowInitialRouteValues)) {
+    addViolation(violations, seenViolations, {
+      column: 1,
+      detail: `Renderer and host initial route sets diverged. apps/desktop-v3/src/app/router/route-registry.ts exposes ${rendererInitialRouteValues.join(", ") || "<empty>"} while apps/desktop-v3/src-tauri/src/window/initial_route.rs exposes ${windowInitialRouteValues.join(", ") || "<empty>"}. Rewrite the initial-route truth chain before continuing.`,
+      filePath: "apps/desktop-v3/src-tauri/src/window/initial_route.rs",
+      kind: "host-initial-route-truth-chain-drift",
+      line: 1,
+    });
+  }
+
   return {
+    allowedInitialRouteValues: [...config.allowedInitialRouteValues],
     envBindings: sortedEnvBindings,
     logSignals: sortedLogSignals,
+    rendererInitialRouteValues,
     scannedFileCount: scannedFiles.length,
     scannedFiles: sortStrings(scannedFiles),
+    windowInitialRouteValues,
     violations: sortViolations(violations),
   };
 }
@@ -329,6 +400,7 @@ export async function collectDesktopV3HostGovernanceViolations(config, options =
 export function createDesktopV3HostGovernanceSummary(config) {
   return decorateVerificationArtifactRefs({
     allowedEnvBindings: [...config.allowedEnvBindings],
+    allowedInitialRouteValues: [...config.allowedInitialRouteValues],
     allowedLogSignals: [...config.allowedLogSignals],
     checkedAt: null,
     envBindings: [],
@@ -336,6 +408,7 @@ export function createDesktopV3HostGovernanceSummary(config) {
     latestSummaryPath: config.latestSummaryPath,
     logSignals: [],
     outputDir: config.outputDir,
+    rendererInitialRouteValues: [],
     runId: config.runId,
     scannedFileCount: 0,
     scannedFiles: [],
@@ -344,6 +417,7 @@ export function createDesktopV3HostGovernanceSummary(config) {
     summaryPath: config.summaryPath,
     violationCount: 0,
     violations: [],
+    windowInitialRouteValues: [],
   }, config.rootDir, ["latestSummaryPath", "outputDir", "summaryPath"]);
 }
 
@@ -375,9 +449,11 @@ export function resolveDesktopV3HostGovernanceConfig(options = {}) {
 
   return {
     allowedEnvBindings: sortNamedEntries(desktopV3AllowedHostEnvBindings),
+    allowedInitialRouteValues: [...desktopV3AllowedInitialRouteValues],
     allowedLogSignals: sortNamedEntries(desktopV3AllowedHostLogSignals),
     latestSummaryPath: resolveLatestVerificationSummaryPath(rootDir, "desktop-v3-host-governance-summary.json"),
     outputDir,
+    routeRegistryFilePath: path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
     rootDir,
     runId,
     sourceRootDirectories: desktopV3HostGovernanceSourceRoots.map((sourceRoot) =>
@@ -385,5 +461,6 @@ export function resolveDesktopV3HostGovernanceConfig(options = {}) {
     ),
     sourceRootPaths: [...desktopV3HostGovernanceSourceRoots],
     summaryPath: path.join(outputDir, "summary.json"),
+    windowInitialRouteFilePath: path.join(rootDir, "apps/desktop-v3/src-tauri/src/window/initial_route.rs"),
   };
 }

@@ -69,6 +69,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("notify.ts");
     expect(designText).toContain("queryClient");
     expect(designText).toContain("src-tauri/src/error.rs");
+    expect(designText).toContain("src-tauri/src/env.rs");
     expect(designText).toContain("code / message / requestId");
     expect(designText).toContain("AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE");
     expect(designText).toContain("desktop-v3.renderer.boot");
@@ -110,6 +111,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("notify");
     expect(governanceText).toContain("Command Error Truth Chain");
     expect(governanceText).toContain("AIGCFOX_BACKEND_BASE_URL");
+    expect(governanceText).toContain("src-tauri/src/env.rs");
     expect(governanceText).toContain("desktop-v3.main-window.navigation");
     expect(governanceText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");

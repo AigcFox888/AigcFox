@@ -175,9 +175,7 @@ impl DesktopRuntime {
 }
 
 fn resolve_backend_base_url() -> String {
-    std::env::var("AIGCFOX_BACKEND_BASE_URL")
-        .ok()
-        .filter(|value| !value.trim().is_empty())
+    crate::env::optional_env(crate::env::BACKEND_BASE_URL_ENV)
         .unwrap_or_else(|| "http://127.0.0.1:3211".to_string())
 }
 

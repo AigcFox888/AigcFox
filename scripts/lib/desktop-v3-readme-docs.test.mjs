@@ -9,10 +9,15 @@ describe("desktop-v3 README docs", () => {
     const readmePath = "apps/desktop-v3/README.md";
     const text = await readWorkspaceFile(config.rootDir, readmePath);
 
-    expect(text).toContain("281-desktop-v3-post-reinstall-recovery-entry.md");
     expect(text).toContain("../../docs/README.md");
     expect(text).toContain("../../docs/248-autonomous-execution-baseline.md");
     expect(text).toContain("../../AGENTS.md");
+    expect(text).toContain("../../docs/268-desktop-v3-clean-pr-closeout.md");
+    expect(text).toContain("../../docs/ui-client/system.md");
+    expect(text).toContain("../../docs/ui-client/layout.md");
+    expect(text).toContain("../../docs/ui-client/components.md");
+    expect(text).toContain("../../docs/ui-client/interaction.md");
+    expect(text).toContain("../../docs/ui-client/charts.md");
     expect(text).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:rust-host-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
@@ -40,9 +45,11 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("code / message / requestId");
     expect(text).toContain("src/features/diagnostics");
     expect(text).toContain("src/features/preferences");
+    expect(text).toContain("src-tauri/src/env.rs");
     expect(text).toContain("window/main_window_target.rs");
     expect(text).toContain("desktop-v3.main-window.*");
     expect(text).toContain("AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE");
+    expect(text).toContain("desktop_report_renderer_boot");
     expect(text).toContain("rust-host-readiness-summary.json");
     expect(text).toContain("runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs");
     expect(text).toContain("tauri.conf.json");
@@ -53,15 +60,18 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("Windows + macOS");
   });
 
-  it("keeps root README aligned with the post-reinstall recovery entry", async () => {
+  it("keeps root README aligned with the current skeleton entry surface", async () => {
     const config = resolveDesktopV3Wave1ReadinessConfig();
     const text = await readWorkspaceFile(config.rootDir, "README.md");
 
-    expect(text).toContain("docs/281-desktop-v3-post-reinstall-recovery-entry.md");
+    expect(text).toContain("docs/README.md");
+    expect(text).toContain("docs/248-autonomous-execution-baseline.md");
+    expect(text).toContain("AGENTS.md");
     expect(text).toContain("仓库目录矩阵");
-    expect(text).toContain("重装后快速恢复入口");
+    expect(text).toContain("pnpm qa:rust-host-readiness");
+    expect(text).toContain("pnpm qa:governance-command-docs");
     expect(text).toContain("desktop-v3-ci");
     expect(text).toContain("desktop-v3-package");
-    expect(text).toContain("desktop-v3-delivery-updater-docs");
+    expect(text).toContain("Windows + WSL2");
   });
 });

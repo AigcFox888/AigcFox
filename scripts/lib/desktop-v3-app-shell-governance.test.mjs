@@ -8,13 +8,19 @@ import {
   collectTypeScriptCreateHashRouterPathSurface,
   collectTypeScriptInterfaceProperties,
   collectTypeScriptModuleReferenceEntries,
-  collectTypeScriptObjectArrayPropertyValues,
+  collectTypeScriptObjectArrayPropertyInitializerTexts,
+  collectTypeScriptObjectPropertyStringValues,
+  collectTypeScriptRouteRegistryNavigationHrefBindings,
   collectTypeScriptTopLevelDeclarations,
   collectTypeScriptTypeAliasUnionValues,
   createDesktopV3AppShellGovernanceSummary,
   resolveDesktopV3AppShellGovernanceConfig,
   rootDir,
 } from "./desktop-v3-app-shell-governance.mjs";
+import {
+  buildDesktopV3ResponsiveSmokeRoutes,
+  collectDesktopV3RoutePathEntriesFromSource,
+} from "./desktop-v3-route-truth.mjs";
 
 describe("desktop-v3 app shell governance helpers", () => {
   it("collects route path surface from createHashRouter", () => {
@@ -30,16 +36,23 @@ describe("desktop-v3 app shell governance helpers", () => {
     ).toEqual(["index:/", "path:/", "path:/diagnostics", "path:/preferences"]);
   });
 
-  it("collects object-array property values and optional interface properties", () => {
-    const navigationSource = [
-      "interface NavigationItem {",
-      "  href: string;",
+  it("collects route-registry initializer texts, path values, and optional interface properties", () => {
+    const routeRegistrySource = [
+      "interface DesktopV3NavigationItem {",
+      "  href: DesktopV3RoutePath;",
       "  label: string;",
       "}",
       "",
-      "const primaryNavigationItems = [",
-      '  { href: "/", label: "Home" },',
-      '  { href: "/diagnostics", label: "Diagnostics" },',
+      'const desktopV3RoutePathById = { dashboard: "/", diagnostics: "/diagnostics", preferences: "/preferences" } as const;',
+      "const desktopV3RouteDefinitions = [",
+      '  { navigation: { group: "primary", href: desktopV3RoutePathById.dashboard } },',
+      '  { navigation: { group: "primary", href: desktopV3RoutePathById.diagnostics } },',
+      '  { navigation: { group: "secondary", href: desktopV3RoutePathById.preferences } },',
+      "];",
+      "",
+      "const quickLinks = [",
+      "  { href: desktopV3RoutePathById.diagnostics },",
+      "  { href: desktopV3RoutePathById.preferences },",
       "];",
     ].join("\n");
     const headerSource = [
@@ -50,13 +63,27 @@ describe("desktop-v3 app shell governance helpers", () => {
     ].join("\n");
 
     expect(
-      collectTypeScriptObjectArrayPropertyValues(
-        navigationSource,
-        path.join(rootDir, "apps/desktop-v3/src/app/layout/navigation-items.ts"),
-        "primaryNavigationItems",
-        "href",
+      collectTypeScriptObjectArrayPropertyInitializerTexts(
+        routeRegistrySource,
+        path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
+        "quickLinks",
+        ["href"],
       ),
-    ).toEqual(["/", "/diagnostics"]);
+    ).toEqual(["desktopV3RoutePathById.diagnostics", "desktopV3RoutePathById.preferences"]);
+    expect(
+      collectTypeScriptObjectPropertyStringValues(
+        routeRegistrySource,
+        path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
+        "desktopV3RoutePathById",
+      ),
+    ).toEqual(["/", "/diagnostics", "/preferences"]);
+    expect(
+      collectTypeScriptRouteRegistryNavigationHrefBindings(
+        routeRegistrySource,
+        path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
+        "primary",
+      ),
+    ).toEqual(["desktopV3RoutePathById.dashboard", "desktopV3RoutePathById.diagnostics"]);
     expect(
       collectTypeScriptInterfaceProperties(
         headerSource,
@@ -78,6 +105,43 @@ describe("desktop-v3 app shell governance helpers", () => {
         typeText: "string",
       },
     ]);
+    expect(
+      collectDesktopV3RoutePathEntriesFromSource(
+        routeRegistrySource,
+        path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
+      ),
+    ).toEqual([
+      { id: "dashboard", path: "/" },
+      { id: "diagnostics", path: "/diagnostics" },
+      { id: "preferences", path: "/preferences" },
+    ]);
+    expect(
+      buildDesktopV3ResponsiveSmokeRoutes(
+        collectDesktopV3RoutePathEntriesFromSource(
+          routeRegistrySource,
+          path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
+        ),
+      ),
+    ).toEqual([
+      {
+        hash: "#/",
+        href: "/#/",
+        key: "dashboard",
+        testId: "desktop-v3-dashboard-page",
+      },
+      {
+        hash: "#/diagnostics",
+        href: "/#/diagnostics",
+        key: "diagnostics",
+        testId: "desktop-v3-diagnostics-page",
+      },
+      {
+        hash: "#/preferences",
+        href: "/#/preferences",
+        key: "preferences",
+        testId: "desktop-v3-preferences-page",
+      },
+    ]);
   });
 
   it("collects union values and top-level re-exports", () => {
@@ -92,7 +156,7 @@ describe("desktop-v3 app shell governance helpers", () => {
     expect(
       collectTypeScriptTypeAliasUnionValues(
         initialRouteSource,
-        path.join(rootDir, "apps/desktop-v3/src/app/router/initial-route.ts"),
+        path.join(rootDir, "apps/desktop-v3/src/app/router/route-registry.ts"),
         "DesktopV3InitialRoute",
       ),
     ).toEqual(["/", "/diagnostics", "/preferences"]);
@@ -162,10 +226,11 @@ describe("desktop-v3 app shell governance", () => {
     expect(result.rendererReadySurface).toEqual(config.allowedRendererReadySurface);
     expect(result.rendererReadyOptionProperties).toEqual(config.allowedRendererReadyOptionProperties);
     expect(result.appShellSurface).toEqual(config.allowedAppShellSurface);
-    expect(result.navigationItemsSurface).toEqual(config.allowedNavigationItemsSurface);
+    expect(result.routeRegistrySurface).toEqual(config.allowedRouteRegistrySurface);
     expect(result.navigationItemProperties).toEqual(config.allowedNavigationItemProperties);
-    expect(result.primaryNavigationHrefs).toEqual(config.allowedPrimaryNavigationHrefs);
-    expect(result.secondaryNavigationHrefs).toEqual(config.allowedSecondaryNavigationHrefs);
+    expect(result.routeRegistryPathValues).toEqual(config.allowedRouteRegistryPathValues);
+    expect(result.primaryNavigationHrefBindings).toEqual(config.allowedPrimaryNavigationHrefBindings);
+    expect(result.secondaryNavigationHrefBindings).toEqual(config.allowedSecondaryNavigationHrefBindings);
     expect(result.pageHeaderSurface).toEqual(config.allowedPageHeaderSurface);
     expect(result.pageHeaderProperties).toEqual(config.allowedPageHeaderProperties);
     expect(result.shellScaffoldSurface).toEqual(config.allowedShellScaffoldSurface);
@@ -178,24 +243,19 @@ describe("desktop-v3 app shell governance", () => {
     expect(result.themeProviderSurface).toEqual(config.allowedThemeProviderSurface);
     expect(result.themeProviderProperties).toEqual(config.allowedThemeProviderProperties);
     expect(result.routerIndexSurface).toEqual(config.allowedRouterIndexSurface);
-    expect(result.initialRouteSurface).toEqual(config.allowedInitialRouteSurface);
     expect(result.initialRouteValues).toEqual(config.allowedInitialRouteValues);
-    expect(result.routeHandleSurface).toEqual(config.allowedRouteHandleSurface);
     expect(result.routeHandleProperties).toEqual(config.allowedRouteHandleProperties);
     expect(result.routesSurface).toEqual(config.allowedRoutesSurface);
-    expect(result.routerPathSurface).toEqual(config.allowedRouterPathSurface);
     expect(result.appReferenceFiles).toEqual(config.allowedAppExternalReferenceFiles);
     expect(result.rendererReadyReferenceFiles).toEqual(config.allowedRendererReadyExternalReferenceFiles);
     expect(result.appShellReferenceFiles).toEqual(config.allowedAppShellExternalReferenceFiles);
-    expect(result.navigationItemsReferenceFiles).toEqual(config.allowedNavigationItemsExternalReferenceFiles);
+    expect(result.routeRegistryReferenceFiles).toEqual(config.allowedRouteRegistryExternalReferenceFiles);
     expect(result.pageHeaderReferenceFiles).toEqual(config.allowedPageHeaderExternalReferenceFiles);
     expect(result.shellScaffoldReferenceFiles).toEqual(config.allowedShellScaffoldExternalReferenceFiles);
     expect(result.sidebarReferenceFiles).toEqual(config.allowedSidebarExternalReferenceFiles);
     expect(result.appProvidersReferenceFiles).toEqual(config.allowedAppProvidersExternalReferenceFiles);
     expect(result.themeProviderReferenceFiles).toEqual(config.allowedThemeProviderExternalReferenceFiles);
     expect(result.routerIndexReferenceFiles).toEqual(config.allowedRouterIndexExternalReferenceFiles);
-    expect(result.initialRouteReferenceFiles).toEqual(config.allowedInitialRouteExternalReferenceFiles);
-    expect(result.routeHandleReferenceFiles).toEqual(config.allowedRouteHandleExternalReferenceFiles);
     expect(result.routesReferenceFiles).toEqual(config.allowedRoutesExternalReferenceFiles);
     expect(result.violations).toEqual([]);
   }, 15000);

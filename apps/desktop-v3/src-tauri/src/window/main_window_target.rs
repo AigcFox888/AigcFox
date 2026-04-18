@@ -5,7 +5,6 @@ use tauri::{Url, WebviewUrl};
 const MAIN_WINDOW_DEV_URL: &str = "http://127.0.0.1:31420/";
 const MAIN_WINDOW_PROD_ORIGIN: &str = "tauri://localhost";
 const MAIN_WINDOW_PROD_PATH: &str = "index.html";
-const MAIN_WINDOW_TARGET_MODE_ENV: &str = "AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE";
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub(crate) struct NavigationBoundary {
@@ -85,13 +84,11 @@ impl MainWindowTarget {
 }
 
 pub fn resolve_main_window_target() -> Result<MainWindowTarget, Box<dyn Error>> {
-    match resolve_main_window_target_mode(
-        std::env::var(MAIN_WINDOW_TARGET_MODE_ENV).ok().as_deref(),
-    )? {
+    let target_mode = crate::env::optional_env(crate::env::MAIN_WINDOW_TARGET_MODE_ENV);
+
+    match resolve_main_window_target_mode(target_mode.as_deref())? {
         MainWindowTargetMode::Dev => {
-            let raw_url = std::env::var("AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL")
-                .ok()
-                .filter(|value| !value.trim().is_empty())
+            let raw_url = crate::env::optional_env(crate::env::DEV_WINDOW_URL_ENV)
                 .unwrap_or_else(|| MAIN_WINDOW_DEV_URL.to_string());
             let parsed_url: Url = raw_url.parse()?;
             let navigation_boundary = NavigationBoundary::from_url(&parsed_url)?;
@@ -131,7 +128,8 @@ fn resolve_main_window_target_mode(
             }
         }
         Some(other) => Err(format!(
-            "{MAIN_WINDOW_TARGET_MODE_ENV} must be one of: auto, app, dev (received {other})"
+            "{} must be one of: auto, app, dev (received {other})",
+            crate::env::MAIN_WINDOW_TARGET_MODE_ENV
         )
         .into()),
     }
@@ -140,7 +138,7 @@ fn resolve_main_window_target_mode(
 #[cfg(test)]
 mod tests {
     use super::{
-        MAIN_WINDOW_PROD_ORIGIN, MAIN_WINDOW_TARGET_MODE_ENV, MainWindowTarget,
+        MAIN_WINDOW_PROD_ORIGIN, MainWindowTarget,
         NavigationBoundary,
         MainWindowTargetMode,
         resolve_main_window_target, resolve_main_window_target_mode,
@@ -173,7 +171,10 @@ mod tests {
         assert!(
             error
                 .to_string()
-                .contains(&format!("{MAIN_WINDOW_TARGET_MODE_ENV} must be one of")),
+                .contains(&format!(
+                    "{} must be one of",
+                    crate::env::MAIN_WINDOW_TARGET_MODE_ENV
+                )),
         );
     }
 

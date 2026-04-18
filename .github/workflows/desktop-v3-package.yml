@@ -18,13 +18,6 @@ on:
       - "docs/258-desktop-v3-technical-baseline.md"
       - "docs/267-desktop-v3-github-actions-baseline.md"
       - "docs/269-desktop-v3-tauri-2-governance-baseline.md"
-      - "docs/274-desktop-v3-delivery-updater-proposal.md"
-      - "docs/275-desktop-v3-delivery-updater-technical-baseline.md"
-      - "docs/276-desktop-v3-delivery-updater-detailed-design.md"
-      - "docs/277-desktop-v3-delivery-updater-execution-baseline.md"
-      - "docs/278-desktop-v3-delivery-updater-acceptance-matrix.md"
-      - "docs/279-desktop-v3-delivery-updater-execution-runbook.md"
-      - "docs/280-desktop-v3-delivery-updater-closeout.md"
   workflow_dispatch:
 
 concurrency:

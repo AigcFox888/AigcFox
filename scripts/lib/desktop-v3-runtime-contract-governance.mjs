@@ -5,13 +5,22 @@ import { fileURLToPath } from "node:url";
 
 import ts from "typescript";
 
-import { desktopV3AllowedTauriCommands } from "./desktop-v3-command-governance.mjs";
+import {
+  desktopV3AllowedTauriCommands,
+  desktopV3AllowedTsDesktopCommandPayloadEntries,
+  desktopV3AllowedTsDesktopCommandResultEntries,
+} from "./desktop-v3-command-truth.mjs";
 import {
   collectRustEnumVariantsFromSource,
   collectRustStructFieldsFromSource,
 } from "./desktop-v3-runtime-skeleton-governance.mjs";
 import { decorateVerificationArtifactRefs } from "./verification-artifact-ref.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
+
+export {
+  desktopV3AllowedTsDesktopCommandPayloadEntries,
+  desktopV3AllowedTsDesktopCommandResultEntries,
+} from "./desktop-v3-command-truth.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -151,26 +160,6 @@ export const desktopV3AllowedTsTauriCommandTypesExports = Object.freeze([
   "interface:DesktopCommandPayloadMap",
   "interface:DesktopCommandResultMap",
   "type:DesktopCommandName",
-]);
-export const desktopV3AllowedTsDesktopCommandPayloadEntries = Object.freeze([
-  { name: "desktop_get_backend_liveness", optional: false, typeText: "undefined" },
-  { name: "desktop_get_backend_readiness", optional: false, typeText: "undefined" },
-  { name: "desktop_get_diagnostics_snapshot", optional: false, typeText: "undefined" },
-  { name: "desktop_get_theme_preference", optional: false, typeText: "undefined" },
-  {
-    name: "desktop_report_renderer_boot",
-    optional: false,
-    typeText: "{ route: string; runtime: string; stage: RendererBootStage; }",
-  },
-  { name: "desktop_set_theme_preference", optional: false, typeText: "{ mode: ThemeMode; }" },
-]);
-export const desktopV3AllowedTsDesktopCommandResultEntries = Object.freeze([
-  { name: "desktop_get_backend_liveness", optional: false, typeText: "BackendProbe" },
-  { name: "desktop_get_backend_readiness", optional: false, typeText: "BackendProbe" },
-  { name: "desktop_get_diagnostics_snapshot", optional: false, typeText: "DiagnosticsSnapshot" },
-  { name: "desktop_get_theme_preference", optional: false, typeText: "ThemePreference" },
-  { name: "desktop_report_renderer_boot", optional: false, typeText: "void" },
-  { name: "desktop_set_theme_preference", optional: false, typeText: "ThemePreference" },
 ]);
 export const desktopV3AllowedTsDesktopCommandNameTypeText = "keyof DesktopCommandPayloadMap";
 

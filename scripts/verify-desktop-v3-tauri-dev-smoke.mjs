@@ -11,7 +11,7 @@ export function buildDesktopV3TauriDevSmokeHelpText() {
   return [
     "desktop-v3 tauri dev smoke",
     "",
-    "Starts pnpm --filter @aigcfox/desktop-v3 tauri dev, waits for Vite ready, cargo running, WSLg window registration, and main-window page-load markers, then writes a summary.",
+    "Starts pnpm --filter @aigcfox/desktop-v3 tauri dev, waits for Vite ready, cargo running, WSLg window registration, main-window page-load finished, and renderer boot stage=app markers, then writes a summary.",
     "",
     "Environment overrides:",
     "  AIGCFOX_DESKTOP_V3_TAURI_DEV_SMOKE_OUTPUT_DIR=<absolute-output-dir>",

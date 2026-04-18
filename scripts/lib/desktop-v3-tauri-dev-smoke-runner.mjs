@@ -188,7 +188,8 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
         summary.markers.viteReady &&
         summary.markers.cargoRunning &&
         summary.markers.wslgWindowRegistered &&
-        summary.markers.mainWindowPageLoadFinished
+        summary.markers.mainWindowPageLoadFinished &&
+        summary.markers.rendererBootSeen
       ) {
         if (config.postReadyDelayMs > 0) {
           await sleepImpl(config.postReadyDelayMs);
@@ -208,7 +209,7 @@ export async function runDesktopV3TauriDevSmoke(config, options = {}) {
     }
 
     throw new Error(
-      "desktop-v3 tauri dev smoke timed out before Vite ready, cargo running, WSLg window registration, and main-window page-load finished all became true.",
+      "desktop-v3 tauri dev smoke timed out before Vite ready, cargo running, WSLg window registration, main-window page-load finished, and renderer boot stage=app all became true.",
     );
   } catch (error) {
     summary.status = "failed";

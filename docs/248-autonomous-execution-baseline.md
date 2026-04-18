@@ -14,12 +14,9 @@
 
 ## 当前适用范围
 
-本基线当前只服务于两条 active 执行线：
+本基线当前只服务于 `desktop-v3 Wave 1 Skeleton` 这一条 active 执行线。
 
-- `desktop-v3 Wave 1 Skeleton`
-- `desktop-v3 Delivery / Updater Baseline`
-
-任何不在当前文档链内的业务域、未来波次或历史方案，都不因为“顺手”而自动进入实现。
+任何不在当前骨架文档链内的业务域、未来波次或历史方案，都不因为“顺手”而自动进入实现。
 
 ## 优先级
 
@@ -34,12 +31,11 @@
 
 每次开始新任务或从中断恢复时，必须先完成：
 
-1. 如果属于系统重装、跨环境恢复或长时间中断恢复，先重读 `docs/281-desktop-v3-post-reinstall-recovery-entry.md`
-2. 重读 `docs/README.md`
-3. 重读 `docs/248-autonomous-execution-baseline.md`
-4. 重读当前任务所属的 source-of-truth 文档链
-5. 明确本轮范围、写入边界和验证计划
-6. 如果当前机器是 `Windows + WSL2` 混合宿主，先固定本轮唯一执行面；默认执行面固定为 `WSL`，不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
+1. 重读 `docs/README.md`
+2. 重读 `docs/248-autonomous-execution-baseline.md`
+3. 重读当前任务所属的 source-of-truth 文档链
+4. 明确本轮范围、写入边界和验证计划
+5. 如果当前机器是 `Windows + WSL2` 混合宿主，先固定本轮唯一执行面；默认执行面固定为 `WSL`，不要在同一仓库、同一依赖目录、同一 dev server / watcher / build / test 链路上同时混跑 `PowerShell` 与 `WSL`
 
 ## 当前边界映射
 
@@ -124,13 +120,12 @@
 - `desktop-v3`：
   - `pnpm test:desktop-v3-wave1-readiness`
   - `pnpm qa:desktop-v3-wave1-readiness`
-  - `pnpm test:desktop-v3-delivery-updater-docs`
-  - `pnpm qa:desktop-v3-delivery-updater-docs`
-  - `pnpm qa:desktop-v3-delivery-updater-github-remote-proof`
+  - `pnpm qa:github-actions-lint`
+  - `pnpm qa:governance-command-docs`
 
 ## 范围约束规则
 
-当前 active 文档链只允许继续 `desktop-v3` 骨架与交付治理工作。
+当前 active 文档链只允许继续 `desktop-v3` 骨架工作。
 
 因此默认不做：
 
