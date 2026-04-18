@@ -58,6 +58,9 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("desktop-v3-error-contract-governance-summary.json");
     expect(text).toContain("output/verification/latest/desktop-v3-wave1-readiness-summary.json");
     expect(text).toContain("Windows + macOS");
+    expect(text).toContain("GitHub Actions 下载 artifact");
+    expect(text).toContain("七牛对象存储或自有 HTTPS 下载源");
+    expect(text).toContain("中国区用户");
   });
 
   it("keeps root README aligned with the current skeleton entry surface", async () => {
@@ -73,5 +76,7 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("desktop-v3-ci");
     expect(text).toContain("desktop-v3-package");
     expect(text).toContain("Windows + WSL2");
+    expect(text).toContain("维护者下载 Actions artifact");
+    expect(text).toContain("七牛或自有 HTTPS 下载源");
   });
 });
