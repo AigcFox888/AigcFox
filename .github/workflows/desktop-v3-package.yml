@@ -41,7 +41,7 @@ jobs:
         include:
           - os: windows-latest
             label: windows
-            build_command: pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign
+            build_command: pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign --bundles msi
             artifact_path: apps/desktop-v3/src-tauri/target/release/bundle/**
           - os: macos-latest
             label: macos

@@ -147,7 +147,7 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 updater 未实现边界由 `pnpm qa:desktop-v3-updater-governance` 先行拦截；它会同时冻结 `Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source，防止把 updater plugin、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源提前补丁式塞进当前骨架
 - 当前 renderer runtime 边界回归由 `pnpm qa:desktop-v3-runtime-boundary` 先行拦截
 - 当前终端用户安装包改由 GitHub Actions `desktop-v3-package.yml` 统一产出 `Windows + macOS` 构件；`ubuntu-24.04` 只保留 CI 验证宿主，不再把 Linux 包体验证纳入本地 `Wave 1` runbook
-- 当前 `desktop-v3-package.yml` 的 Windows job 还必须先显式预装并导出固定 `WiX Toolset 3.14.1`，避免把 MSI 打包稳定性绑到 `tauri build` 内部对 GitHub release 的单次在线下载；如果 Windows 包失败，优先先看 WiX 预装步骤与 package job 日志，而不是先怀疑 renderer / Rust skeleton
+- 当前 `desktop-v3-package.yml` 的 Windows job 还必须先显式预装并导出固定 `WiX Toolset 3.14.1`，并把 Windows bundle 目标固定在 `msi` 单入口，避免把 MSI 打包稳定性绑到 `tauri build` 内部对 GitHub release 或 NSIS 压缩包的单次在线下载；如果 Windows 包失败，优先先看 WiX 预装步骤与 package job 日志，而不是先怀疑 renderer / Rust skeleton
 - 当前 GitHub Actions bundle 是给维护者取回和再分发的首次安装交付物，不直接作为中国区用户下载入口；对外分发必须先经由七牛对象存储（Kodo）或自有 HTTPS 下载源
 - 当前默认发布线收口不以 `dev` 绿色为终点；clean branch 在 `dev` 拿到 `desktop-v3-ci / desktop-v3-package` 证明后，还必须从 `dev` 向默认分支 `main` 发起 promotion PR，并要求 `main` head 再次通过 `desktop-v3-ci / desktop-v3-package`
 - 当前完整验证明确不包含脚本 `qa:desktop-v3-linux-package`；本地 `WSL` 链只做 renderer / host / QA proof，不承担 Linux 终端用户安装包收口
