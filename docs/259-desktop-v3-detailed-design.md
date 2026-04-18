@@ -85,6 +85,16 @@ apps/desktop-v3/
 - 路由壳层所需全局 provider
 - 查询重试策略统一集中在 provider 侧配置，不让页面各自定义重试规则
 
+### `features/diagnostics` / `features/preferences`
+
+职责：
+
+- page/provider 与 `lib/runtime` 之间的唯一 feature 过渡层
+- `diagnostics-api` 聚合 runtime probe 与本地 diagnostics snapshot，不让页面直接持有 `getDesktopRuntime`
+- `preferences-api` 与 `preferences-store` 共同管理主题偏好读写与 renderer 本地主题状态
+- `diagnostics-types` / `preferences-types` 负责 feature 边界上的 view-model 与类型重导出
+- 当前 `pnpm qa:desktop-v3-feature-governance` 会同时冻结 `src/features/diagnostics` 与 `src/features/preferences` 的文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership；任何新的 feature helper、页面直连 runtime 或 provider 侧横向扩散都必须先重写 feature boundary
+
 ### `lib/runtime`
 
 职责：
@@ -108,6 +118,7 @@ apps/desktop-v3/
 - 新增宿主能力时，先改 runtime adapter，再改页面
 - `getDesktopRuntime` 当前只允许被 `renderer-ready`、diagnostics API 和 preferences API 直接持有；`resolveDesktopRuntimeMode` 只允许留在 `runtime-registry` 与 `renderer-ready`
 - `@tauri-apps/*` import 与 `__TAURI_INTERNALS__` bridge probing 当前只允许收敛在 `tauri-bridge.ts`
+- `DiagnosticsPage` 只允许通过 `getDiagnosticsOverview` 与 `formatSecureStoreSummary` 读取诊断态；`PreferencesPage` 与 `ThemeProvider` 只允许通过 `preferences-api / preferences-store / preferences-types` 持有主题偏好与 renderer 主题状态
 
 ### `lib/errors`
 

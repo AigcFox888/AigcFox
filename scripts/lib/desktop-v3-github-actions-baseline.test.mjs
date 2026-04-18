@@ -72,6 +72,7 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "pnpm qa:desktop-v3-wave1-readiness",
       "README docs",
       "active-doc explicit coverage",
+      "feature boundary governance",
       "fast-test entrypoint wiring",
       "runtime boundary governance",
     ]);

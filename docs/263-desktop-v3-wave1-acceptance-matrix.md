@@ -10,6 +10,7 @@
 | Runtime skeleton 边界 | `runtime/security / state / diagnostics` 仍保持 Wave 1 骨架边界 | `pnpm qa:desktop-v3-runtime-skeleton-governance` 冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 文件集，以及 `SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的公开面和模块外持有面；任何 secure-store 写入、会话态扩张或诊断编排扩张都必须先结构化重写 | `output/verification/latest/desktop-v3-runtime-skeleton-governance-summary.json` |
 | Runtime contract 边界 | Rust 与 TypeScript runtime contract truth chain 仍保持 Wave 1 单边界 | `pnpm qa:desktop-v3-runtime-contract-governance` 冻结 `runtime/models.rs`、`src/lib/runtime/contracts.ts`、`src/lib/runtime/desktop-runtime.ts`、`src/lib/runtime/tauri-command-types.ts`；任何 Rust model 字段、TypeScript union/interface、`DesktopRuntime` 方法签名或 command payload/result map 扩张都必须先重写 contract boundary | `output/verification/latest/desktop-v3-runtime-contract-governance-summary.json` |
 | Runtime adapter 边界 | renderer runtime adapter skeleton 仍保持 Wave 1 单边界 | `pnpm qa:desktop-v3-runtime-adapter-governance` 冻结 `src/lib/runtime` adapter 文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership；任何新的 adapter helper、分叉实例化入口或 bridge 逻辑扩张都必须先重写 adapter boundary | `output/verification/latest/desktop-v3-runtime-adapter-governance-summary.json` |
+| Feature boundary 边界 | renderer feature ownership 仍保持 Wave 1 单边界 | `pnpm qa:desktop-v3-feature-governance` 冻结 `src/features/diagnostics + src/features/preferences` 文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership；任何新的 feature helper、页面直连 runtime 或主题状态扩散都必须先重写 feature boundary | `output/verification/latest/desktop-v3-feature-governance-summary.json` |
 | 平台配置边界 | 共享 `tauri.conf.json` 仍保持 Wave 1 单边界 | `pnpm qa:desktop-v3-platform-config-governance` 冻结 `src-tauri/tauri.conf.json` 共享字段集，并确保 `tauri.linux/windows/macos.conf.json` 仍只停留在未来拆分方案；任何平台打包细节或 updater 配置扩张都必须先重写配置分层方案 | `output/verification/latest/desktop-v3-platform-config-governance-summary.json` |
 | Updater 前置边界 | desktop-v3 仍保持 updater 未实现边界 | `pnpm qa:desktop-v3-updater-governance` 冻结 `Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source；任何 updater plugin、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源进入当前骨架前，都必须先做 updater 边界结构化重写 | `output/verification/latest/desktop-v3-updater-governance-summary.json` |
 | GitHub / Actions | GitHub 骨架复验成立 | `.github/workflows/desktop-v3-ci.yml` 与 `.github/workflows/desktop-v3-package.yml` 存在，并执行 `pnpm test:desktop-v3-wave1-readiness` 与 `pnpm qa:desktop-v3-wave1-readiness` | workflow 文件 |
@@ -23,6 +24,7 @@
 - `pnpm qa:desktop-v3-capability-governance`
 - `pnpm qa:desktop-v3-backend-client-governance`
 - `pnpm qa:desktop-v3-command-governance`
+- `pnpm qa:desktop-v3-feature-governance`
 - `pnpm qa:desktop-v3-localdb-governance`
 - `pnpm qa:desktop-v3-platform-config-governance`
 - `pnpm qa:desktop-v3-runtime-adapter-governance`

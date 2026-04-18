@@ -25,6 +25,7 @@
 
 - README docs
 - active-doc explicit coverage
+- feature boundary governance
 - runtime boundary governance
 - fast-test entrypoint wiring
 

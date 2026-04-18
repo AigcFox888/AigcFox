@@ -44,6 +44,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
+- 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
@@ -190,6 +191,31 @@ React UI
 - mock fixtures 不允许在更多页面或 feature 里横向扩散
 
 只要要扩当前 adapter boundary，就先结构化重写 renderer runtime adapter layer，再同步更新门禁与文档。
+
+## Renderer Feature Boundary Rules
+
+当前 renderer 侧的 `src/features` 也不是随便堆 page helper 的目录，而是 Wave 1 受控 feature boundary。
+
+当前 `pnpm qa:desktop-v3-feature-governance` 一起冻结：
+
+- `features/diagnostics/diagnostics-api.ts`
+- `features/diagnostics/diagnostics-formatters.ts`
+- `features/diagnostics/diagnostics-types.ts`
+- `features/preferences/preferences-api.ts`
+- `features/preferences/preferences-store.ts`
+- `features/preferences/preferences-types.ts`
+
+以及它们在 `src/features` 内的固定文件集、顶层声明面、view-model / store 形状和 source-level ownership。
+
+规则：
+
+- `DiagnosticsPage` 只允许通过 `diagnostics-api` 与 `diagnostics-formatters` 进入诊断 feature，不允许直接持有 runtime adapter
+- `PreferencesPage` 与 `ThemeProvider` 只允许通过 `preferences-api / preferences-store / preferences-types` 持有主题偏好和 renderer 主题状态
+- `DiagnosticsOverview` 不允许继续补丁式扩成通用运行态容器；一旦要并入更多 probe 或编排态，就先重写 diagnostics feature 分层
+- `ThemePreferenceState` 不允许继续补丁式长成通用全局 store；一旦要并入更多本地设置或跨页面同步逻辑，就先重写 preferences feature state boundary
+- 页面、provider 或新 feature 不允许绕过当前 feature boundary 横向扩散 runtime access、formatter helper 或主题状态持有
+
+只要要扩当前 feature boundary，就先结构化重写 renderer feature layer，再同步更新门禁与文档。
 
 ### 2. 有 I/O 的 command 默认走 `async`
 
