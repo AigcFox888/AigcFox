@@ -44,6 +44,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
+- 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、路由拓扑、导航 href 和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
@@ -191,6 +192,39 @@ React UI
 - mock fixtures 不允许在更多页面或 feature 里横向扩散
 
 只要要扩当前 adapter boundary，就先结构化重写 renderer runtime adapter layer，再同步更新门禁与文档。
+
+## Renderer App Shell Boundary Rules
+
+当前 renderer 侧的 `src/app` 也不是一个可以随手堆 provider、layout helper 或 bootstrap 逻辑的目录，而是 Wave 1 受控 app shell boundary。
+
+当前 `pnpm qa:desktop-v3-app-shell-governance` 一起冻结：
+
+- `src/app/App.tsx`
+- `src/app/bootstrap/renderer-ready.ts`
+- `src/app/layout/app-shell.tsx`
+- `src/app/layout/navigation-items.ts`
+- `src/app/layout/page-header.tsx`
+- `src/app/layout/shell-scaffold.tsx`
+- `src/app/layout/sidebar.tsx`
+- `src/app/providers/app-providers.tsx`
+- `src/app/providers/theme-provider.tsx`
+- `src/app/router/index.tsx`
+- `src/app/router/initial-route.ts`
+- `src/app/router/route-handle.ts`
+- `src/app/router/routes.tsx`
+
+以及它们在 `src/app` 内的固定文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href、layout mode 与 source-level ownership。
+
+规则：
+
+- `main.tsx` 只允许直接持有 `App` 与 `renderer-ready`
+- `App` 只允许直接持有 `AppProviders` 与 `appRouter`
+- `routes.tsx` 只允许直接持有 `AppShell` 与初始路由装配
+- `app-shell.tsx` 只允许直接持有 `PageHeader / ShellScaffold / Sidebar`
+- `navigation-items.ts` 只允许由 `sidebar.tsx` 直接持有
+- provider、bootstrap、layout、router 之间不允许继续补丁式横向扩 source-level ownership
+
+只要要扩当前 app shell boundary，就先结构化重写 `src/app` 分层，再同步更新门禁与文档。
 
 ## Renderer Feature Boundary Rules
 

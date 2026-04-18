@@ -85,6 +85,21 @@ apps/desktop-v3/
 - 路由壳层所需全局 provider
 - 查询重试策略统一集中在 provider 侧配置，不让页面各自定义重试规则
 
+### `app/*` shell boundary
+
+职责：
+
+- 固定 `App -> AppProviders -> RouterProvider -> AppShell` 的壳层装配顺序
+- 固定 `renderer-ready` bootstrap、layout shell、provider shell 与 router shell 的 source-level ownership
+- 固定当前 Wave 1 允许出现的初始路由集、导航 href 与 layout mode
+
+补充规则：
+
+- 当前 `pnpm qa:desktop-v3-app-shell-governance` 会同时冻结 `src/app/App.tsx`、`src/app/bootstrap/renderer-ready.ts`、`src/app/layout/*`、`src/app/providers/*`、`src/app/router/*` 的文件集与顶层声明面
+- 当前同一条 gate 还会冻结 `"/" / "/diagnostics" / "/preferences"` 初始路由与 `primaryNavigationItems / secondaryNavigationItems` 的 href 集，不允许补丁式扩壳层路由拓扑
+- `main.tsx` 只允许直接持有 `App` 与 `renderer-ready`；`App` 只允许直接持有 `AppProviders` 与 `appRouter`；`routes.tsx` 只允许直接持有 `AppShell`；`app-shell.tsx` 只允许直接持有 `PageHeader / ShellScaffold / Sidebar`
+- 只要 app shell 要新增 provider、bootstrap 阶段、layout helper、路由层或跨页面壳层状态，就不能继续在当前结构上叠补丁，必须先重写 `src/app` boundary，再同步更新门禁与文档
+
 ### `features/diagnostics` / `features/preferences`
 
 职责：
@@ -118,6 +133,7 @@ apps/desktop-v3/
 - 新增宿主能力时，先改 runtime adapter，再改页面
 - `getDesktopRuntime` 当前只允许被 `renderer-ready`、diagnostics API 和 preferences API 直接持有；`resolveDesktopRuntimeMode` 只允许留在 `runtime-registry` 与 `renderer-ready`
 - `@tauri-apps/*` import 与 `__TAURI_INTERNALS__` bridge probing 当前只允许收敛在 `tauri-bridge.ts`
+- `renderer-ready` 只允许留在 `src/app/bootstrap/renderer-ready.ts`，当前由 `pnpm qa:desktop-v3-app-shell-governance` 与 `pnpm qa:desktop-v3-runtime-adapter-governance` 共同冻结；任何新的 boot probe、额外 bootstrap helper 或跨页面 boot state 都必须先重写 app shell / runtime adapter 边界
 - `DiagnosticsPage` 只允许通过 `getDiagnosticsOverview` 与 `formatSecureStoreSummary` 读取诊断态；`PreferencesPage` 与 `ThemeProvider` 只允许通过 `preferences-api / preferences-store / preferences-types` 持有主题偏好与 renderer 主题状态
 
 ### `lib/errors`

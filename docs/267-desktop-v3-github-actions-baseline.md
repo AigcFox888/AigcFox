@@ -25,9 +25,12 @@
 
 - README docs
 - active-doc explicit coverage
+- app shell governance
 - feature boundary governance
 - runtime boundary governance
 - fast-test entrypoint wiring
+
+当前 `pnpm qa:desktop-v3-app-shell-governance` 也属于 CI 固定覆盖面；`src/app` 的 renderer app shell、provider、router、bootstrap 与导航拓扑一旦漂移，就必须在进入 GitHub Actions 前先失败。
 
 ## desktop-v3-package.yml
 
