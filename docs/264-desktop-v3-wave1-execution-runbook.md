@@ -41,6 +41,7 @@ pnpm test:desktop-v3-wave1-readiness
 - GitHub baseline docs
 - backend-client governance
 - runtime skeleton governance
+- runtime contract governance
 - capability governance
 - Rust command governance
 - LocalDatabase governance
@@ -65,19 +66,20 @@ pnpm qa:desktop-v3-wave1-readiness
 3. `pnpm qa:desktop-v3-localdb-governance`
 4. `pnpm qa:desktop-v3-backend-client-governance`
 5. `pnpm qa:desktop-v3-runtime-skeleton-governance`
-6. `pnpm qa:desktop-v3-command-governance`
-7. `pnpm qa:desktop-v3-capability-governance`
-8. `pnpm qa:desktop-v3-platform-config-governance`
-9. `pnpm qa:desktop-v3-updater-governance`
-10. `pnpm --filter @aigcfox/desktop-v3 lint`
-11. `pnpm --filter @aigcfox/desktop-v3 typecheck`
-12. `pnpm --filter @aigcfox/desktop-v3 test`
-13. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
-14. `pnpm --filter @aigcfox/desktop-v3 build`
-15. `pnpm qa:desktop-v3-responsive-smoke`
-16. `pnpm qa:desktop-v3-tauri-dev-smoke`
-17. `pnpm qa:desktop-v3-linux-package`
-18. `pnpm qa:desktop-v3-packaged-app-smoke`
+6. `pnpm qa:desktop-v3-runtime-contract-governance`
+7. `pnpm qa:desktop-v3-command-governance`
+8. `pnpm qa:desktop-v3-capability-governance`
+9. `pnpm qa:desktop-v3-platform-config-governance`
+10. `pnpm qa:desktop-v3-updater-governance`
+11. `pnpm --filter @aigcfox/desktop-v3 lint`
+12. `pnpm --filter @aigcfox/desktop-v3 typecheck`
+13. `pnpm --filter @aigcfox/desktop-v3 test`
+14. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
+15. `pnpm --filter @aigcfox/desktop-v3 build`
+16. `pnpm qa:desktop-v3-responsive-smoke`
+17. `pnpm qa:desktop-v3-tauri-dev-smoke`
+18. `pnpm qa:desktop-v3-linux-package`
+19. `pnpm qa:desktop-v3-packaged-app-smoke`
 
 ## 输出
 
@@ -90,6 +92,7 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 capability / permission / IPC 对齐回归由 `pnpm qa:desktop-v3-capability-governance` 先行拦截
 - 当前 `runtime/client` 远端 skeleton 回归由 `pnpm qa:desktop-v3-backend-client-governance` 先行拦截；它会同时冻结 `runtime/client` 文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面，防止把真实业务 API 继续补丁式塞进当前远端客户端
 - 当前 `runtime/security / state / diagnostics` skeleton 回归由 `pnpm qa:desktop-v3-runtime-skeleton-governance` 先行拦截；它会同时冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 文件集，以及 `SecureStore`、`SessionState`、`DiagnosticsService` 的公开面和模块外持有面，防止把真实 secure-store 写入、会话态扩张或诊断编排继续补丁式塞进当前骨架
+- 当前 Rust / TypeScript runtime contract truth chain 回归由 `pnpm qa:desktop-v3-runtime-contract-governance` 先行拦截；它会同时冻结 `runtime/models.rs`、`src/lib/runtime/contracts.ts`、`src/lib/runtime/desktop-runtime.ts`、`src/lib/runtime/tauri-command-types.ts`，防止 Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 继续补丁式漂移
 - 当前 Rust command 边界回归由 `pnpm qa:desktop-v3-command-governance` 先行拦截
 - 当前 LocalDatabase 回归由 `pnpm qa:desktop-v3-localdb-governance` 先行拦截；它会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase` 仅由 `runtime/mod.rs` 在模块外持有的边界
 - 当前 shared `tauri.conf.json` 回归由 `pnpm qa:desktop-v3-platform-config-governance` 先行拦截；它会同时冻结当前唯一配置文件集和共享字段面，防止把平台打包细节或 updater 配置继续堆回 `tauri.conf.json`

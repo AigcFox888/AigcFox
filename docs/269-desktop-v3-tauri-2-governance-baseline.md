@@ -42,6 +42,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client/*` 做静态门禁；当前 Go API 边界只允许停留在 probe-only skeleton，文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都被冻结在 Wave 1 范围
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
+- 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
@@ -134,6 +135,33 @@ React UI
 - 当前 Tauri command 公开面固定在 `desktop_get_backend_liveness / desktop_get_backend_readiness / desktop_get_diagnostics_snapshot / desktop_get_theme_preference / desktop_set_theme_preference / desktop_report_renderer_boot`
 - `commands/*` 只允许停留在 `tauri::State`、`trace_desktop_command`、`CommandError`、`DesktopRuntime` 和 `runtime::models::*` 的 import 面
 - 任何新的 command、helper、直接子运行时依赖或 I/O 细节进入 `commands/*`，都视为治理回退；先重写 runtime / command 边界，再谈扩展
+
+## Runtime Contract Truth Chain
+
+当前 `desktop-v3` 额外冻结一条跨边界 contract 规则：
+
+- `src-tauri/src/runtime/models.rs`
+- `src/lib/runtime/contracts.ts`
+- `src/lib/runtime/desktop-runtime.ts`
+- `src/lib/runtime/tauri-command-types.ts`
+
+以上四个文件当前由 `pnpm qa:desktop-v3-runtime-contract-governance` 一起守护。
+
+它当前冻结的不是“有没有文件”，而是同一条数据与命令真相链：
+
+- Rust `ThemeMode / ThemePreference / DiagnosticsSnapshot / BackendProbe`
+- TypeScript `ThemeMode / SecureStoreStatus / ThemePreference / DiagnosticsSnapshot / BackendProbe`
+- `DesktopRuntime` 方法签名
+- `DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName`
+
+规则：
+
+- 不允许只改 Rust model 不改 TypeScript contract
+- 不允许只改 TypeScript union/interface 不改 Rust model
+- 不允许先补 command payload/result map，再晚一点补 `DesktopRuntime`
+- 不允许继续在当前 contract surface 上补丁式加字段、加命令、加 boot stage
+
+只要要扩当前 contract surface，就先结构化重写 runtime contract boundary，再同步更新文档与门禁。
 
 ### 2. 有 I/O 的 command 默认走 `async`
 

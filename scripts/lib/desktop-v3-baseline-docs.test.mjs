@@ -23,6 +23,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("rusqlite (bundled) + rusqlite_migration");
     expect(baselineText).toContain("自有 HTTPS 下载源");
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
+    expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
+    expect(baselineText).toContain("runtime/models.rs");
+    expect(baselineText).toContain("src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts");
   });
 
   it("keeps the desktop detailed design governance and execution baseline aligned with the frozen skeleton boundary", async () => {
@@ -39,6 +42,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("localdb/");
     expect(designText).toContain("not_ready");
     expect(designText).toContain("其他错误最多重试一次");
+    expect(designText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
+    expect(designText).toContain("runtime/models");
+    expect(designText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap");
 
     expect(governanceText).toContain("src-tauri/capabilities/*");
     expect(governanceText).toContain("label");
@@ -49,11 +55,14 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-platform-config-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
     expect(governanceText).toContain("LocalDatabase");
     expect(governanceText).toContain("SecureStore");
     expect(governanceText).toContain("SessionState");
     expect(governanceText).toContain("DiagnosticsService");
+    expect(governanceText).toContain("Runtime Contract Truth Chain");
+    expect(governanceText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
     expect(governanceText).toContain("runtime/mod.rs");
@@ -66,8 +75,10 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-command-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
     expect(executionText).toContain("desktop-v3-platform-config-governance");
+    expect(executionText).toContain("desktop-v3-runtime-contract-governance");
     expect(executionText).toContain("desktop-v3-runtime-skeleton-governance");
     expect(executionText).toContain("runtime/localdb/mod.rs + migrations.rs");
+    expect(executionText).toContain("runtime/models.rs");
     expect(executionText).toContain("desktop-v3-runtime-boundary");
     expect(executionText).toContain("responsive smoke");
     expect(executionText).toContain("tauri dev smoke");

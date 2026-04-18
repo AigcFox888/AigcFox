@@ -93,6 +93,7 @@ apps/desktop-v3/
 - 屏蔽 Tauri command 与 browser mock runtime 的差异
 - 不让组件层散落原始 command 调用
 - 做 TypeScript 侧错误归一和契约对齐
+- `contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 与 Rust `runtime/models.rs` 共同组成跨边界 contract truth chain，当前由 `pnpm qa:desktop-v3-runtime-contract-governance` 冻结；字段、联合类型、方法签名和 command payload/result map 不允许各改各的
 - Tauri command adapter 需要可独立验证 command 名、payload 透传和 invoke 错误归一
 - Windows 宿主验证拆成两段：`tauri dev` 只证明宿主窗口真实启动；packaged runtime smoke 才作为 renderer / invoke / backend 主证据
 - 当前默认开发环境固定为 `Windows + WSL2`，真实窗口 proof 默认在固定 `WSL` 单执行面下通过 `WSLg` 完成；不要把 `WSLg` 特定图形兼容处理当作唯一主链前提，也不要把同一条验证链切回 `PowerShell`
@@ -204,6 +205,20 @@ src-tauri/
 - 输出结构化 secure store skeleton 快照：`provider / status / writes_enabled`
 - Wave 1 只保留边界与诊断合同，不落真实密钥写入实现
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 冻结 `SecureStoreStatus`、`SecureStoreSnapshot` 和 `SecureStore::snapshot()` 的骨架边界；只要 secure store 要从保留态转成真实探测、真实写入或多 provider 适配，就不能继续在当前结构上打补丁，必须先重写安全模块
+
+### `runtime/models` 与 TypeScript runtime contracts
+
+职责：
+
+- 固定 `renderer -> invoke -> Rust` 之间的结构化数据合同
+- 统一 `ThemeMode / ThemePreference / DiagnosticsSnapshot / BackendProbe`
+- 固定 `DesktopRuntime` 方法签名与 `DesktopCommandPayloadMap / DesktopCommandResultMap`
+
+补充规则：
+
+- 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 冻结 `src-tauri/src/runtime/models.rs`、`src/lib/runtime/contracts.ts`、`src/lib/runtime/desktop-runtime.ts`、`src/lib/runtime/tauri-command-types.ts`
+- Rust 与 TypeScript 两侧的合同当前只允许停留在 Wave 1 主题偏好、diagnostics snapshot、backend probe 和 renderer boot 证明边界
+- 任何新的 runtime snapshot 字段、renderer boot 阶段、command payload/result 字段或命令名扩张，都不能直接在现结构上补丁式追加；必须先重写 contract boundary，再同步更新门禁与文档
 
 ## 布局系统设计
 
