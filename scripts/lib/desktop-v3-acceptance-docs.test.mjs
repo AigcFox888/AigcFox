@@ -43,6 +43,9 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("不作为客户端更新源");
     expect(acceptanceDocText).toContain("Windows + macOS");
     expect(acceptanceDocText).toContain("windows-latest + macos-latest");
+    expect(acceptanceDocText).toContain("中国区用户不直接从 GitHub 获取安装包");
+    expect(acceptanceDocText).toContain("七牛对象存储或自有 HTTPS 下载源");
+    expect(acceptanceDocText).toContain("GitHub Releases URL");
     expect(acceptanceDocText).toContain("默认发布线收口");
     expect(acceptanceDocText).toContain("默认分支 `main`");
     expect(acceptanceDocText).toContain("promotion PR");
@@ -55,5 +58,6 @@ describe("desktop-v3 acceptance docs", () => {
     expect(baselineDocText).toContain("不自动作为客户端更新源");
     expect(baselineDocText).toContain("Windows + macOS");
     expect(baselineDocText).toContain("默认分支 `main`");
+    expect(baselineDocText).toContain("中国区用户");
   });
 });

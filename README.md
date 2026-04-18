@@ -39,3 +39,4 @@ pnpm qa:governance-command-docs
 - 当前默认不进入业务层实现，也不保留历史业务或新功能实现文档。
 - 当前文档真相层以 `docs/`、`apps/desktop-v3/README.md` 与 `AGENTS.md` 为准。
 - GitHub Actions 只负责 CI 与 `Windows + macOS` bundle 产出，不作为客户端更新源。
+- 当前正式分发路径固定为：`GitHub Actions 出包 -> 维护者下载 Actions artifact -> 上传到七牛或自有 HTTPS 下载源 -> 中国区用户下载`。

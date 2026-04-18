@@ -132,6 +132,8 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "\"WIX=$wixRoot\"",
       "pnpm --filter @aigcfox/desktop-v3 tauri build --ci --no-sign",
       "actions/upload-artifact@v6",
+      "Maintainers must download them from GitHub Actions",
+      "users in China can reach",
     ]);
     expect(workflowText).not.toContain("- os: ubuntu-24.04");
     expect(workflowText).not.toContain("deb,appimage,rpm");
@@ -167,6 +169,8 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "workflow_dispatch",
       "WiX Toolset 3.14.1",
       "Chocolatey",
+      "维护者必须从 GitHub Actions 下载 `Windows + macOS` bundle",
+      "七牛对象存储或自有 HTTPS 下载源",
       "不自动发布到 GitHub Releases",
       "不自动作为客户端更新源",
     ]);

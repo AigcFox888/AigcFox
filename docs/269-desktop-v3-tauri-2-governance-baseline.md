@@ -451,6 +451,7 @@ tauri.macos.conf.json
 - 必须要求签名校验
 - 更新源必须是七牛对象存储或自有 HTTPS 源
 - GitHub Actions 只负责产出构件，不直接作为中国用户更新入口
+- 当前实际交付路径固定为：维护者从 GitHub Actions 下载构件，再上传到七牛对象存储或自有 HTTPS 源后面向中国用户分发
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 做静态门禁；在 updater 结构化重写落地前，不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段、GitHub Releases 客户端更新源或 `update-guard` 壳层文件
 
 当前不允许：
