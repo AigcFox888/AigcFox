@@ -121,8 +121,10 @@ pnpm qa:desktop-v3-wave1-readiness
 
 1. 等默认分支 `main` 上的 `desktop-v3-package.yml` 完成并确认 `windows + macos` jobs 都通过。
 2. 从 GitHub Actions 下载 `desktop-v3-windows-bundle-<sha>` 与 `desktop-v3-macos-bundle-<sha>` artifacts。
-3. 由维护者把包体上传到七牛对象存储或自有 HTTPS 下载源，再向中国区用户分发国内可达下载地址或离线包。
+3. 由维护者把首次安装完整包上传到七牛对象存储（Kodo）或自有 HTTPS 下载源，再向中国区用户分发国内可达首次下载地址或离线包。
 4. 不直接把 GitHub Actions artifact URL 或 GitHub Releases URL 发给终端用户。
+5. 当前 `Wave 1` 只收口首次安装包交付；已安装客户端的后续在线更新实现尚未进入代码。
+6. 后续在线更新策略已冻结为：已安装用户不再重复下载安装包；运行中的客户端不强制打断；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新。
 
 ## 说明
 
@@ -146,7 +148,7 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 renderer runtime 边界回归由 `pnpm qa:desktop-v3-runtime-boundary` 先行拦截
 - 当前终端用户安装包改由 GitHub Actions `desktop-v3-package.yml` 统一产出 `Windows + macOS` 构件；`ubuntu-24.04` 只保留 CI 验证宿主，不再把 Linux 包体验证纳入本地 `Wave 1` runbook
 - 当前 `desktop-v3-package.yml` 的 Windows job 还必须先显式预装并导出固定 `WiX Toolset 3.14.1`，避免把 MSI 打包稳定性绑到 `tauri build` 内部对 GitHub release 的单次在线下载；如果 Windows 包失败，优先先看 WiX 预装步骤与 package job 日志，而不是先怀疑 renderer / Rust skeleton
-- 当前 GitHub Actions bundle 是给维护者取回和再分发的交付物，不直接作为中国区用户下载入口；对外分发必须先经由七牛对象存储或自有 HTTPS 下载源
+- 当前 GitHub Actions bundle 是给维护者取回和再分发的首次安装交付物，不直接作为中国区用户下载入口；对外分发必须先经由七牛对象存储（Kodo）或自有 HTTPS 下载源
 - 当前默认发布线收口不以 `dev` 绿色为终点；clean branch 在 `dev` 拿到 `desktop-v3-ci / desktop-v3-package` 证明后，还必须从 `dev` 向默认分支 `main` 发起 promotion PR，并要求 `main` head 再次通过 `desktop-v3-ci / desktop-v3-package`
 - 当前完整验证明确不包含脚本 `qa:desktop-v3-linux-package`；本地 `WSL` 链只做 renderer / host / QA proof，不承担 Linux 终端用户安装包收口
 - 当前 README docs、fast-test entrypoint wiring 与 active-doc explicit coverage 都必须保持通过

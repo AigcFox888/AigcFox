@@ -138,9 +138,10 @@ jobs:
       - name: Upload package bundle
         uses: actions/upload-artifact@v6
         with:
-          # These artifacts are maintainer-retrieval outputs only.
+          # These artifacts are first-install package outputs for maintainer retrieval only.
           # Maintainers must download them from GitHub Actions, then redistribute them
-          # through Qiniu or a self-hosted HTTPS origin that users in China can reach.
+          # through Qiniu Kodo or a self-hosted HTTPS origin that users in China can reach.
+          # Later in-app updates must not point users back to GitHub artifacts or Releases.
           name: desktop-v3-${{ matrix.label }}-bundle-${{ github.sha }}
           path: ${{ matrix.artifact_path }}
           if-no-files-found: error

@@ -21,7 +21,7 @@
 - `src-tauri/capabilities/*` 是宿主授权面真相，不把安全边界散落在页面代码里
 - 窗口与 webview 的权限绑定以 `label` 为准，不以 `title`、路由或页面名为准
 - `tauri.conf.json` 只放跨平台稳定项；一旦进入平台打包细化或更新实现，必须拆平台覆盖配置
-- 自动更新后续必须走 `Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源`，不允许直接把 GitHub 当用户更新源
+- 自动更新后续必须走 `Tauri 2 updater plugin + 签名 + 七牛对象存储（Kodo）或自有 HTTPS 更新源`，不允许直接把 GitHub 当用户更新源
 
 ## Tauri 2 结构边界
 
@@ -449,9 +449,12 @@ tauri.macos.conf.json
 
 - 后续必须使用 `Tauri 2 updater plugin`
 - 必须要求签名校验
-- 更新源必须是七牛对象存储或自有 HTTPS 源
+- 用户首次获取客户端时仍下载完整安装包；首次安装包由 GitHub Actions 构建、维护者取回并上传到七牛对象存储（Kodo）或自有 HTTPS 源
+- 已安装用户后续版本只允许走在线更新，不把每次升级都退回到重复下载安装包
+- 强制更新策略语义固定为：不打断当前正在使用的会话；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新
+- 更新源必须是七牛对象存储（Kodo）或自有 HTTPS 源
 - GitHub Actions 只负责产出构件，不直接作为中国用户更新入口
-- 当前实际交付路径固定为：维护者从 GitHub Actions 下载构件，再上传到七牛对象存储或自有 HTTPS 源后面向中国用户分发
+- 当前实际交付路径固定为：维护者从 GitHub Actions 下载构件，再上传到七牛对象存储（Kodo）或自有 HTTPS 源后面向中国用户分发
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 做静态门禁；在 updater 结构化重写落地前，不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段、GitHub Releases 客户端更新源或 `update-guard` 壳层文件
 
 当前不允许：
