@@ -18,6 +18,7 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-page-governance");
+    expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-support-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-platform-config-governance");
@@ -27,6 +28,7 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("desktop-v3-runtime-adapter-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-feature-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-page-governance-summary.json");
+    expect(acceptanceDocText).toContain("desktop-v3-support-governance-summary.json");
     expect(acceptanceDocText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(acceptanceDocText).toContain("desktop-v3-runtime-contract-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-localdb-governance-summary.json");
@@ -39,6 +41,7 @@ describe("desktop-v3 acceptance docs", () => {
     expect(baselineDocText).toContain("desktop-v3-package.yml");
     expect(baselineDocText).toContain("pnpm test:desktop-v3-wave1-readiness");
     expect(baselineDocText).toContain("pnpm qa:desktop-v3-wave1-readiness");
+    expect(baselineDocText).toContain("support governance");
     expect(baselineDocText).toContain("不自动作为客户端更新源");
   });
 });

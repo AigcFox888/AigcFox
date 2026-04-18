@@ -88,6 +88,20 @@
       ]
     },
     {
+      "command": "pnpm qa:desktop-v3-support-governance",
+      "script": "qa:desktop-v3-support-governance",
+      "purpose": "desktop-v3 renderer shared support governance verification entry",
+      "requiredDocPaths": [
+        "apps/desktop-v3/README.md",
+        "docs/258-desktop-v3-technical-baseline.md",
+        "docs/259-desktop-v3-detailed-design.md",
+        "docs/260-desktop-v3-wave1-execution-baseline.md",
+        "docs/263-desktop-v3-wave1-acceptance-matrix.md",
+        "docs/264-desktop-v3-wave1-execution-runbook.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md"
+      ]
+    },
+    {
       "command": "pnpm qa:desktop-v3-runtime-skeleton-governance",
       "script": "qa:desktop-v3-runtime-skeleton-governance",
       "purpose": "desktop-v3 Rust runtime security/state/diagnostics skeleton governance verification entry",

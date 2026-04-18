@@ -121,6 +121,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-page-governance",
     }),
+    buildPnpmStep("desktop-v3-support-governance", ["qa:desktop-v3-support-governance"], {
+      artifacts: {
+        latestSummaryPath: config.supportGovernanceLatestSummaryPath,
+        outputDir: config.supportGovernanceOutputDir,
+        summaryPath: path.join(config.supportGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_SUPPORT_GOVERNANCE_OUTPUT_DIR: config.supportGovernanceOutputDir,
+      },
+      label: "desktop-v3-support-governance",
+    }),
     buildPnpmStep("desktop-v3-runtime-skeleton-governance", ["qa:desktop-v3-runtime-skeleton-governance"], {
       artifacts: {
         latestSummaryPath: config.runtimeSkeletonGovernanceLatestSummaryPath,

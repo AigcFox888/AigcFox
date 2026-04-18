@@ -27,12 +27,14 @@
 - active-doc explicit coverage
 - app shell governance
 - page governance
+- support governance
 - feature boundary governance
 - runtime boundary governance
 - fast-test entrypoint wiring
 
 当前 `pnpm qa:desktop-v3-app-shell-governance` 也属于 CI 固定覆盖面；`src/app` 的 renderer app shell、provider、router、bootstrap 与导航拓扑一旦漂移，就必须在进入 GitHub Actions 前先失败。
 当前 `pnpm qa:desktop-v3-page-governance` 也属于 CI 固定覆盖面；`src/pages` 的 renderer page composition、shared state components、sidebar nav item 与 shell hooks 一旦漂移，就必须在进入 GitHub Actions 前先失败。
+当前 `pnpm qa:desktop-v3-support-governance` 也属于 CI 固定覆盖面；`src/lib/errors`、`src/lib/query`、`notify.ts`、`typography.ts`、`utils.ts` 的 renderer shared support 一旦漂移，就必须在进入 GitHub Actions 前先失败。
 
 ## desktop-v3-package.yml
 

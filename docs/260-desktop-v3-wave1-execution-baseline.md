@@ -27,6 +27,7 @@
 - `pnpm qa:desktop-v3-backend-client-governance`
 - `pnpm qa:desktop-v3-app-shell-governance`
 - `pnpm qa:desktop-v3-page-governance`
+- `pnpm qa:desktop-v3-support-governance`
 - `pnpm qa:desktop-v3-runtime-adapter-governance`
 - `pnpm qa:desktop-v3-runtime-contract-governance`
 - `pnpm qa:desktop-v3-feature-governance`
@@ -45,6 +46,7 @@
 - `desktop-v3-backend-client-governance`
 - `desktop-v3-app-shell-governance`
 - `desktop-v3-page-governance`
+- `desktop-v3-support-governance`
 - `desktop-v3-runtime-skeleton-governance`
 - `desktop-v3-runtime-contract-governance`
 - `desktop-v3-runtime-adapter-governance`
@@ -68,6 +70,7 @@
 当前 `pnpm qa:desktop-v3-backend-client-governance` 会冻结 `runtime/client` 远端 skeleton 边界：文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都不允许继续补丁式扩张。
 当前 `pnpm qa:desktop-v3-app-shell-governance` 会冻结 `src/app` renderer app shell boundary：`App.tsx`、`renderer-ready.ts`、`app/layout/*`、`app/providers/*`、`app/router/*` 的文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href 与 source-level ownership 都不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-page-governance` 会冻结 `src/pages/*`、`components/navigation/nav-item.tsx`、`components/states/*`、`hooks/*` 的 renderer presentation boundary：页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 route/sidebar/page-state/app-shell ownership 都不允许继续补丁式漂移。
+当前 `pnpm qa:desktop-v3-support-governance` 会冻结 `src/lib/errors/*`、`src/lib/query/*`、`notify.ts`、`typography.ts`、`utils.ts` 的 renderer support boundary：错误归一、support details、`queryClient / shouldRetryDesktopQuery`、toast key 集、type token 与 `cn` helper 的公开面和 ownership 都不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-runtime-skeleton-governance` 会冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 三个 runtime skeleton 模块：`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都不允许继续补丁式扩张。
 当前 `pnpm qa:desktop-v3-runtime-contract-governance` 会冻结 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 的跨边界契约：Rust model、TypeScript union/interface、`DesktopRuntime` 方法签名以及 command payload/result map 不允许继续补丁式漂移。
 当前 `pnpm qa:desktop-v3-runtime-adapter-governance` 会冻结 `src/lib/runtime` adapter skeleton：文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry` 实例化入口、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 都不允许继续补丁式漂移。
@@ -97,6 +100,7 @@
 - `desktop-v3-backend-client-governance` 成功
 - `desktop-v3-app-shell-governance` 成功
 - `desktop-v3-page-governance` 成功
+- `desktop-v3-support-governance` 成功
 - `desktop-v3-runtime-skeleton-governance` 成功
 - `desktop-v3-runtime-contract-governance` 成功
 - `desktop-v3-runtime-adapter-governance` 成功

@@ -160,6 +160,8 @@ apps/desktop-v3/
 - 统一 `ApiError / CommandError`
 - 统一页面反馈需要的错误结构
 - 把统一错误对象格式化为错误态可见的 support details，例如 `code / requestId / runtime message`
+- 当前 `pnpm qa:desktop-v3-support-governance` 会同时冻结 `app-error.ts`、`error-support-details.ts`、`normalize-command-error.ts` 的文件集、顶层声明面，以及 `AppErrorShape / ErrorSupportDetail / CommandErrorPayload` 的属性合同；任何新的错误 helper、字段或横向扩散都必须先重写 renderer error support boundary
+- `AppError` 当前只允许由 `normalize-command-error.ts` 与 `mock-command-runtime.ts` 直接持有；`buildErrorSupportDetails` 只允许由 `ErrorState`、`DiagnosticsPage`、`PreferencesPage` 直接持有；只要错误支撑链跨出当前 ownership，就先重写 support layer，再同步更新门禁与文档
 
 ### `lib/query`
 
@@ -168,6 +170,21 @@ apps/desktop-v3/
 - 集中管理 `QueryClient`
 - 集中管理 query retry 策略
 - 当前骨架固定：`not_ready` 不重试，其他错误最多重试一次
+- 当前 `pnpm qa:desktop-v3-support-governance` 会同时冻结 `query-client.ts`、`query-retry-policy.ts` 的文件集、顶层声明面和 ownership；`queryClient` 只允许由 `app-providers.tsx` 直接持有，`shouldRetryDesktopQuery` 只允许由 `query-client.ts` 直接持有，不允许继续补丁式扩 query singleton、重试分支或跨页面实例化入口
+
+### shared renderer support
+
+职责：
+
+- `notify.ts` 统一承接 renderer toast 支撑，不让页面和 hook 各自再包一套消息层
+- `typography.ts` 统一承接基础 type token，不让页面和 layout 壳层各自散落标题/说明文字等级
+- `utils.ts` 统一承接 `cn` class merge helper，不让 UI primitive 与页面层重复引入第二套 class merge 工具
+
+补充规则：
+
+- 当前 `pnpm qa:desktop-v3-support-governance` 会同时冻结 `notify.ts`、`typography.ts`、`utils.ts` 的文件集、顶层声明面、`notify` key 集、`typography` token 集与 `cn` helper ownership
+- `notify` 当前只允许由 `PreferencesPage` 与 `useKeyboardShortcuts` 直接持有；`typography` 当前只允许由 `PageHeader` 与三张骨架页面直接持有；`cn` 当前只允许留在 `ShellScaffold`、`Sidebar`、`NavItem` 与当前 `components/ui/*` primitive 内
+- 只要 toast 支撑、type token 或 class merge helper 要跨出当前最小边界，就必须先结构化重写 shared support layer，再同步更新门禁与文档
 
 ## Rust 侧模块设计
 

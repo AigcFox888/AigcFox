@@ -18,6 +18,7 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-page-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-support-governance");
     expect(text).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-platform-config-governance");
@@ -33,6 +34,9 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("DiagnosticsPage");
     expect(text).toContain("NavItem");
     expect(text).toContain("useShellLayout");
+    expect(text).toContain("AppErrorShape");
+    expect(text).toContain("queryClient");
+    expect(text).toContain("notify");
     expect(text).toContain("runtime/models.rs");
     expect(text).toContain("src/lib/runtime/contracts.ts");
     expect(text).toContain("SecureStore");

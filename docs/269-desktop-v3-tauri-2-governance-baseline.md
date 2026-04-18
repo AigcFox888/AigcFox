@@ -46,6 +46,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
 - 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、路由拓扑、导航 href 和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
 - 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 route/sidebar/page-state/app-shell ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 page helper、状态组件变体或 shell hook
+- 当前用 `pnpm qa:desktop-v3-support-governance` 对 `src/lib/errors/*`、`src/lib/query/*`、`src/lib/notify.ts`、`src/lib/typography.ts`、`src/lib/utils.ts` 做静态门禁；错误归一、query singleton、toast 支撑、type token、`cn` helper 的公开面和 provider/page/runtime/ui primitive ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 support helper、query 分支或 token/helper 变体
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
@@ -254,6 +255,32 @@ React UI
 - `useKeyboardShortcuts` 与 `useShellLayout` 只允许由 `app-shell.tsx` 持有；`NavItem` 只允许由 `sidebar.tsx` 持有；shared state component 只允许由当前页面组合边界直接持有
 
 只要要扩当前 presentation boundary，就先结构化重写 renderer page / state / hook 分层，再同步更新门禁与文档。
+
+## Renderer Support Boundary Rules
+
+当前 renderer 侧的 `src/lib/errors`、`src/lib/query`、`notify.ts`、`typography.ts`、`utils.ts` 也不是可以随手堆 helper 的缓冲区，而是 Wave 1 受控 shared support boundary。
+
+当前 `pnpm qa:desktop-v3-support-governance` 一起冻结：
+
+- `src/lib/errors/app-error.ts`
+- `src/lib/errors/error-support-details.ts`
+- `src/lib/errors/normalize-command-error.ts`
+- `src/lib/query/query-client.ts`
+- `src/lib/query/query-retry-policy.ts`
+- `src/lib/notify.ts`
+- `src/lib/typography.ts`
+- `src/lib/utils.ts`
+
+以及它们在当前 renderer support boundary 内的固定文件集、顶层声明面、`AppErrorShape / ErrorSupportDetail / CommandErrorPayload`、`notify` key 集、`typography` token 集与 source-level ownership。
+
+规则：
+
+- `AppError` 只允许由 `normalize-command-error.ts` 与 `mock-command-runtime.ts` 直接持有；`buildErrorSupportDetails` 只允许由 `ErrorState`、`DiagnosticsPage`、`PreferencesPage` 直接持有
+- `queryClient` 只允许由 `app-providers.tsx` 直接持有；`shouldRetryDesktopQuery` 只允许由 `query-client.ts` 直接持有
+- `notify` 只允许由 `PreferencesPage` 与 `useKeyboardShortcuts` 直接持有；`typography` 只允许由 `PageHeader` 与当前三张骨架页面直接持有
+- `cn` 只允许留在当前 `ShellScaffold`、`Sidebar`、`NavItem` 与 `components/ui/*` primitive 内，不允许页面、feature 或更多 helper 再横向扩第二套 class merge 入口
+
+只要要扩当前 support boundary，就先结构化重写 renderer shared support layer，再同步更新门禁与文档。
 
 ## Renderer Feature Boundary Rules
 

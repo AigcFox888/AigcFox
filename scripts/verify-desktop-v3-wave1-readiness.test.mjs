@@ -32,6 +32,7 @@ describe("verify-desktop-v3-wave1-readiness", () => {
     expect(helpText).toContain("source-of-truth document gate");
     expect(helpText).toContain("app shell governance");
     expect(helpText).toContain("page governance");
+    expect(helpText).toContain("support governance");
     expect(helpText).toContain("LocalDatabase governance");
     expect(helpText).toContain("backend-client governance");
     expect(helpText).toContain("feature governance");
