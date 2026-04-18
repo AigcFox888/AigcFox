@@ -23,6 +23,8 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("rusqlite (bundled) + rusqlite_migration");
     expect(baselineText).toContain("自有 HTTPS 下载源");
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
+    expect(baselineText).toContain("维护者从 GitHub Actions 下载 `Windows + macOS` bundle");
+    expect(baselineText).toContain("中国用户分发");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-page-governance");
@@ -119,6 +121,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("runtime/mod.rs");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 七牛或自有 HTTPS 更新源");
+    expect(governanceText).toContain("维护者从 GitHub Actions 下载构件");
 
     expect(executionText).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(executionText).toContain("desktop-v3-document-check");

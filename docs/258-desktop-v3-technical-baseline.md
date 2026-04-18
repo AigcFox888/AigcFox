@@ -123,6 +123,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 - 生产更新源必须使用自有 HTTPS 下载源
 - 不以 GitHub 作为中国用户的生产更新源
 - 当前更新源优先落到七牛对象存储或自有 HTTPS 服务器，GitHub Actions 只负责产出构件
+- 当前实际分发路径固定为：维护者从 GitHub Actions 下载 `Windows + macOS` bundle，再上传到七牛对象存储或自有 HTTPS 下载源，随后面向中国用户分发
 - 更新能力后续进入实现时，必须采用受控、可审计、可签名的方式
 
 这些是设计约束，不代表当前已进入实现。

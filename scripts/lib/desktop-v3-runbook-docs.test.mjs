@@ -56,6 +56,10 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("fast-test entrypoint wiring");
     expect(text).toContain("desktop-v3-package.yml");
     expect(text).toContain("Windows + macOS");
+    expect(text).toContain("desktop-v3-windows-bundle-<sha>");
+    expect(text).toContain("desktop-v3-macos-bundle-<sha>");
+    expect(text).toContain("七牛对象存储或自有 HTTPS 下载源");
+    expect(text).toContain("GitHub Releases URL");
     expect(text).toContain("默认分支 `main`");
     expect(text).toContain("promotion PR");
   });

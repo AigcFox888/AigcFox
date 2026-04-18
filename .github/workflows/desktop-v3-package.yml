@@ -138,8 +138,9 @@ jobs:
       - name: Upload package bundle
         uses: actions/upload-artifact@v6
         with:
-          # These artifacts are CI delivery outputs only.
-          # End-user updates must be mirrored to Qiniu or a self-hosted HTTPS origin, not served from GitHub.
+          # These artifacts are maintainer-retrieval outputs only.
+          # Maintainers must download them from GitHub Actions, then redistribute them
+          # through Qiniu or a self-hosted HTTPS origin that users in China can reach.
           name: desktop-v3-${{ matrix.label }}-bundle-${{ github.sha }}
           path: ${{ matrix.artifact_path }}
           if-no-files-found: error
