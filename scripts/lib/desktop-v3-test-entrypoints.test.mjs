@@ -18,6 +18,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/lib/desktop-v3-command-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-localdb-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-platform-config-governance.test.mjs");
+    expect(script).toContain("scripts/lib/desktop-v3-runtime-adapter-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-runtime-contract-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-runtime-skeleton-governance.test.mjs");
     expect(script).toContain("scripts/lib/desktop-v3-updater-governance.test.mjs");
@@ -35,6 +36,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
     expect(script).toContain("scripts/verify-desktop-v3-command-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-localdb-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-platform-config-governance.test.mjs");
+    expect(script).toContain("scripts/verify-desktop-v3-runtime-adapter-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-runtime-contract-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-runtime-skeleton-governance.test.mjs");
     expect(script).toContain("scripts/verify-desktop-v3-updater-governance.test.mjs");
@@ -57,6 +59,7 @@ describe("desktop-v3 Wave 1 fast-test entrypoint", () => {
         "verify-desktop-v3-command-governance.test.mjs",
         "verify-desktop-v3-localdb-governance.test.mjs",
         "verify-desktop-v3-platform-config-governance.test.mjs",
+        "verify-desktop-v3-runtime-adapter-governance.test.mjs",
         "verify-desktop-v3-runtime-contract-governance.test.mjs",
         "verify-desktop-v3-runtime-skeleton-governance.test.mjs",
         "verify-desktop-v3-updater-governance.test.mjs",

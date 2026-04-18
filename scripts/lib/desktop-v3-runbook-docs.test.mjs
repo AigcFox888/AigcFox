@@ -19,10 +19,13 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-platform-config-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(text).toContain("runtime/localdb/mod.rs + migrations.rs");
+    expect(text).toContain("tauri-bridge");
+    expect(text).toContain("runtime-registry");
     expect(text).toContain("runtime/models.rs");
     expect(text).toContain("src/lib/runtime/contracts.ts");
     expect(text).toContain("SecureStore");

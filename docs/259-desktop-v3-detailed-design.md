@@ -94,6 +94,7 @@ apps/desktop-v3/
 - 不让组件层散落原始 command 调用
 - 做 TypeScript 侧错误归一和契约对齐
 - `contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 与 Rust `runtime/models.rs` 共同组成跨边界 contract truth chain，当前由 `pnpm qa:desktop-v3-runtime-contract-governance` 冻结；字段、联合类型、方法签名和 command payload/result map 不允许各改各的
+- `mock-command-runtime.ts / mock-fixtures.ts / runtime-mode.ts / runtime-registry.ts / tauri-bridge.ts / tauri-command-runtime.ts / tauri-invoke.ts` 组成 renderer runtime adapter skeleton，当前由 `pnpm qa:desktop-v3-runtime-adapter-governance` 冻结；不允许继续在现结构上散落实例化入口、bridge helper 或 Tauri import
 - Tauri command adapter 需要可独立验证 command 名、payload 透传和 invoke 错误归一
 - Windows 宿主验证拆成两段：`tauri dev` 只证明宿主窗口真实启动；packaged runtime smoke 才作为 renderer / invoke / backend 主证据
 - 当前默认开发环境固定为 `Windows + WSL2`，真实窗口 proof 默认在固定 `WSL` 单执行面下通过 `WSLg` 完成；不要把 `WSLg` 特定图形兼容处理当作唯一主链前提，也不要把同一条验证链切回 `PowerShell`
@@ -105,6 +106,8 @@ apps/desktop-v3/
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
 - renderer 进入宿主能力的唯一入口保持在 `src/lib/runtime/*`
 - 新增宿主能力时，先改 runtime adapter，再改页面
+- `getDesktopRuntime` 当前只允许被 `renderer-ready`、diagnostics API 和 preferences API 直接持有；`resolveDesktopRuntimeMode` 只允许留在 `runtime-registry` 与 `renderer-ready`
+- `@tauri-apps/*` import 与 `__TAURI_INTERNALS__` bridge probing 当前只允许收敛在 `tauri-bridge.ts`
 
 ### `lib/errors`
 

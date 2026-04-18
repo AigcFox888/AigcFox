@@ -41,6 +41,7 @@
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client` 文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面做静态门禁；远端 Go API 边界当前只允许停留在 health/readiness skeleton，不允许继续在现结构上补丁式扩业务接口
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security`、`runtime/state`、`runtime/diagnostics` 做静态门禁；`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都冻结在当前 Wave 1 骨架，任何真实 secure-store 写入、会话态扩张或诊断编排扩张都必须先结构化重写
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust `ThemeMode / ThemePreference / DiagnosticsSnapshot / BackendProbe` 与 TypeScript `DesktopRuntime / DesktopCommandPayloadMap / DesktopCommandResultMap` 的跨边界真相链必须保持同一组冻结契约，任何字段、命令或类型扩张都必须先重写 contract boundary
+- 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter 层做静态门禁；`MockCommandRuntime`、`TauriCommandRuntime`、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke` 和 mock fixtures 的文件集、导出面、Tauri bridge 触点与 source-level ownership 都冻结在当前 Wave 1 骨架，不允许继续在现结构上补丁式加 helper、分叉实例化入口或散落 bridge 逻辑
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
@@ -98,6 +99,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 - `secure store` 当前只暴露结构化 skeleton 诊断快照：`provider / status / writesEnabled`
 - 上述 `secure store` skeleton 当前由 `pnpm qa:desktop-v3-runtime-skeleton-governance` 与 Rust 单测共同冻结；`writesEnabled=false` 只表示当前骨架未开放写入，不允许被补丁式演变成真实密钥写入能力
 - Rust `runtime/models.rs` 与 TypeScript `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 当前由 `pnpm qa:desktop-v3-runtime-contract-governance` 共同冻结，renderer 与 Rust 之间不允许各自偷改字段、联合类型或 command payload/result map
+- TypeScript `src/lib/runtime` adapter 层当前由 `pnpm qa:desktop-v3-runtime-adapter-governance` 共同冻结，renderer 侧不允许绕开 `runtime-registry` 私自实例化 runtime，不允许把 `@tauri-apps/*` 或 bridge globals 扩散到更多 adapter 文件
 - Wave 1 不把上述诊断快照等同于真实密钥写入能力
 
 ## 交付与更新约束

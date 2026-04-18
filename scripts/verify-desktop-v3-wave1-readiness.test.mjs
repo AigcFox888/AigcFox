@@ -33,6 +33,7 @@ describe("verify-desktop-v3-wave1-readiness", () => {
     expect(helpText).toContain("LocalDatabase governance");
     expect(helpText).toContain("backend-client governance");
     expect(helpText).toContain("runtime skeleton governance");
+    expect(helpText).toContain("runtime adapter governance");
     expect(helpText).toContain("runtime contract governance");
     expect(helpText).toContain("Rust command governance");
     expect(helpText).toContain("capability governance");

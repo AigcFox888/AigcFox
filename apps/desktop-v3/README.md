@@ -60,6 +60,7 @@ pnpm qa:desktop-v3-capability-governance
 pnpm qa:desktop-v3-command-governance
 pnpm qa:desktop-v3-localdb-governance
 pnpm qa:desktop-v3-platform-config-governance
+pnpm qa:desktop-v3-runtime-adapter-governance
 pnpm qa:desktop-v3-runtime-contract-governance
 pnpm qa:desktop-v3-runtime-skeleton-governance
 pnpm qa:desktop-v3-updater-governance
@@ -101,8 +102,9 @@ cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 当前 `LocalDatabase` 边界由 `pnpm qa:desktop-v3-localdb-governance` 单独冻结，除了 `new / initialize / get_preference / set_preference / probe / get_sync_cache_stats` 公开面外，还会同时冻结 `runtime/localdb/mod.rs + migrations.rs` 文件集、`rusqlite` 触点和 `LocalDatabase` 仅由 `runtime/mod.rs` 在模块外持有的单一边界；任何扩张一律先失败，要求先重写 adapter / blocking bridge；
 当前 `pnpm qa:desktop-v3-backend-client-governance` 会冻结 `runtime/client` 远端 skeleton 边界：文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都不允许继续补丁式扩张；任何真实业务 API 扩张都必须先重写 remote client 分层；
 当前 `pnpm qa:desktop-v3-runtime-skeleton-governance` 会冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 三个 runtime skeleton 模块：`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都不允许继续补丁式扩张；任何 secure-store 写入、会话态扩张或诊断编排扩张都必须先结构化重写；
+当前 `pnpm qa:desktop-v3-runtime-adapter-governance` 会冻结 `src/lib/runtime` adapter skeleton：文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 都不允许继续补丁式漂移；
 当前 `pnpm qa:desktop-v3-runtime-contract-governance` 会冻结 `runtime/models.rs + src/lib/runtime/contracts.ts + src/lib/runtime/desktop-runtime.ts + src/lib/runtime/tauri-command-types.ts` 的跨边界契约真相链；Rust model、TypeScript union/interface、`DesktopRuntime` 方法签名和 command payload/result map 不允许继续补丁式漂移；
 当前 shared `tauri.conf.json` 边界由 `pnpm qa:desktop-v3-platform-config-governance` 单独冻结，除了当前共享字段集外，不允许把平台打包细节、updater 配置或平台特有开关继续堆回共享配置；未来平台拆分必须先重写配置分层方案；
 当前 `pnpm qa:desktop-v3-updater-governance` 会冻结 updater 的未实现边界：在结构化重写落地前，`Cargo.toml`、共享 `tauri.conf.json`、capability / permission、Rust / renderer source 都不允许提前引入 updater plugin、manifest / policy endpoint、强更策略字段、GitHub Releases 客户端更新源或 `update-guard` 壳层文件；
 当前顶层 `desktop-v3-wave1-readiness` summary 还会绑定 `responsive / tauri dev / packaged app` 三段 child smoke 的 archive/latest 摘要路径，并在 runner 内二次回读 child `summary.json` 校验一致性；
-当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、backend-client governance、runtime contract governance、capability governance、Rust command governance、LocalDatabase governance、platform-config governance、updater governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。
+当前 `pnpm test:desktop-v3-wave1-readiness` 会固定覆盖 README docs、active-doc explicit coverage、acceptance docs、runbook docs、backend-client governance、runtime adapter governance、runtime contract governance、capability governance、Rust command governance、LocalDatabase governance、platform-config governance、updater governance、runtime boundary governance、fast-test entrypoint wiring 与 smoke contract 测试。

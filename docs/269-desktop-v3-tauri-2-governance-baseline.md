@@ -43,6 +43,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client/*` 做静态门禁；当前 Go API 边界只允许停留在 probe-only skeleton，文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都被冻结在 Wave 1 范围
 - 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
+- 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
@@ -162,6 +163,33 @@ React UI
 - 不允许继续在当前 contract surface 上补丁式加字段、加命令、加 boot stage
 
 只要要扩当前 contract surface，就先结构化重写 runtime contract boundary，再同步更新文档与门禁。
+
+## Renderer Runtime Adapter Rules
+
+当前 renderer 侧的 `src/lib/runtime` 不是“随便放 helper 的目录”，而是 Wave 1 受控 adapter skeleton。
+
+当前 `pnpm qa:desktop-v3-runtime-adapter-governance` 一起冻结：
+
+- `mock-command-runtime.ts`
+- `mock-fixtures.ts`
+- `runtime-mode.ts`
+- `runtime-registry.ts`
+- `tauri-bridge.ts`
+- `tauri-command-runtime.ts`
+- `tauri-invoke.ts`
+
+以及它们在 `src/lib/runtime` 内的固定文件集、导出面、Tauri 触点和 source-level ownership。
+
+规则：
+
+- `MockCommandRuntime` 与 `TauriCommandRuntime` 不允许继续补丁式长新公开方法
+- `runtime-registry` 继续是 renderer 侧唯一 runtime 实例化入口
+- `runtime-mode` 不允许扩成多种 preview / browser / hybrid 模式开关
+- `@tauri-apps/*` import 与 `__TAURI_INTERNALS__` bridge probing 继续只允许留在 `tauri-bridge.ts`
+- feature/page/bootstrap 不允许绕过 `runtime-registry` 直接 new runtime adapter
+- mock fixtures 不允许在更多页面或 feature 里横向扩散
+
+只要要扩当前 adapter boundary，就先结构化重写 renderer runtime adapter layer，再同步更新门禁与文档。
 
 ### 2. 有 I/O 的 command 默认走 `async`
 

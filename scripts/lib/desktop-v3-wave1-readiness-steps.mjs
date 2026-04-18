@@ -121,6 +121,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-runtime-contract-governance",
     }),
+    buildPnpmStep("desktop-v3-runtime-adapter-governance", ["qa:desktop-v3-runtime-adapter-governance"], {
+      artifacts: {
+        latestSummaryPath: config.runtimeAdapterGovernanceLatestSummaryPath,
+        outputDir: config.runtimeAdapterGovernanceOutputDir,
+        summaryPath: path.join(config.runtimeAdapterGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_RUNTIME_ADAPTER_GOVERNANCE_OUTPUT_DIR: config.runtimeAdapterGovernanceOutputDir,
+      },
+      label: "desktop-v3-runtime-adapter-governance",
+    }),
     buildPnpmStep("desktop-v3-command-governance", ["qa:desktop-v3-command-governance"], {
       artifacts: {
         latestSummaryPath: config.commandGovernanceLatestSummaryPath,

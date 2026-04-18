@@ -23,7 +23,10 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("rusqlite (bundled) + rusqlite_migration");
     expect(baselineText).toContain("自有 HTTPS 下载源");
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
+    expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
+    expect(baselineText).toContain("MockCommandRuntime");
+    expect(baselineText).toContain("TauriCommandRuntime");
     expect(baselineText).toContain("runtime/models.rs");
     expect(baselineText).toContain("src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts");
   });
@@ -42,6 +45,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("localdb/");
     expect(designText).toContain("not_ready");
     expect(designText).toContain("其他错误最多重试一次");
+    expect(designText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
+    expect(designText).toContain("runtime-registry");
+    expect(designText).toContain("tauri-bridge.ts");
     expect(designText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(designText).toContain("runtime/models");
     expect(designText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap");
@@ -55,6 +61,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-platform-config-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
     expect(governanceText).toContain("LocalDatabase");
@@ -62,6 +69,9 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("SessionState");
     expect(governanceText).toContain("DiagnosticsService");
     expect(governanceText).toContain("Runtime Contract Truth Chain");
+    expect(governanceText).toContain("Renderer Runtime Adapter Rules");
+    expect(governanceText).toContain("runtime-registry");
+    expect(governanceText).toContain("tauri-bridge.ts");
     expect(governanceText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
@@ -75,6 +85,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-command-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
     expect(executionText).toContain("desktop-v3-platform-config-governance");
+    expect(executionText).toContain("desktop-v3-runtime-adapter-governance");
     expect(executionText).toContain("desktop-v3-runtime-contract-governance");
     expect(executionText).toContain("desktop-v3-runtime-skeleton-governance");
     expect(executionText).toContain("runtime/localdb/mod.rs + migrations.rs");
