@@ -58,7 +58,10 @@ describe("desktop-v3 runbook docs", () => {
     expect(text).toContain("Windows + macOS");
     expect(text).toContain("desktop-v3-windows-bundle-<sha>");
     expect(text).toContain("desktop-v3-macos-bundle-<sha>");
-    expect(text).toContain("七牛对象存储或自有 HTTPS 下载源");
+    expect(text).toContain("七牛对象存储（Kodo）");
+    expect(text).toContain("首次安装完整包");
+    expect(text).toContain("后续在线更新策略已冻结");
+    expect(text).toContain("下次重新打开客户端");
     expect(text).toContain("GitHub Releases URL");
     expect(text).toContain("默认分支 `main`");
     expect(text).toContain("promotion PR");

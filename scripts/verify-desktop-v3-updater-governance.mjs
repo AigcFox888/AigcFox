@@ -18,6 +18,7 @@ export function buildDesktopV3UpdaterGovernanceHelpText() {
     "desktop-v3 updater governance verifier",
     "",
     "Scans desktop-v3 code/config surfaces and fails closed while updater remains outside the frozen Wave 1 implementation boundary.",
+    "GitHub Actions currently serves first-install packages only; later in-app updates are reserved for the future Qiniu Kodo / self-hosted HTTPS updater rewrite.",
     "",
     "Environment overrides:",
     "  AIGCFOX_DESKTOP_V3_UPDATER_GOVERNANCE_RUN_ID=<run-id>",
@@ -27,8 +28,9 @@ export function buildDesktopV3UpdaterGovernanceHelpText() {
     "  - Cargo.toml does not add tauri-plugin-updater yet",
     "  - renderer / Rust / capability / permission sources stay free of updater implementation markers",
     "  - shared tauri.conf.json does not pre-enable updater plugin or updater artifacts",
-    "  - code does not hardcode latest.json / policy.json / minSupportedVersion / required_on_startup updater policy markers",
-    "  - client code does not point updater traffic at GitHub Releases URLs",
+    "  - code does not hardcode latest.json / policy.json / minSupportedVersion / required_on_startup / must_update_on_next_launch updater policy markers",
+    "  - client code does not point later update traffic at GitHub Releases URLs",
+    "  - future forced-update semantics stay frozen at: do not interrupt the running session; require update on the next launch only",
   ].join("\n");
 }
 

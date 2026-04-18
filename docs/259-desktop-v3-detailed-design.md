@@ -323,7 +323,7 @@ src-tauri/
 - 不把 smoke 环境变量演变成业务开关
 - 当前用 `pnpm qa:desktop-v3-host-governance` 冻结 `src-tauri/src/env.rs + window/* + lib.rs + commands/mod.rs + runtime/mod.rs + renderer-ready.ts + route-registry.ts + runtime-mode.ts` 的宿主 env / log truth chain；当前 Rust 宿主 env 名称统一收拢在 `src-tauri/src/env.rs`，`lib.rs / commands/mod.rs / runtime/mod.rs / window/*` 只允许通过该模块读取 `AIGCFOX_BACKEND_BASE_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_TARGET_MODE`、`AIGCFOX_DESKTOP_V3_DEV_WINDOW_URL`、`AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE`、`AIGCFOX_DESKTOP_V3_TRACE_COMMANDS`、`AIGCFOX_DESKTOP_V3_STARTUP_BACKEND_PROBE`，renderer 侧只允许读取 `VITE_DESKTOP_V3_INITIAL_ROUTE`、`VITE_DESKTOP_V3_RUNTIME_MODE`、`VITE_DESKTOP_V3_RENDERER_BOOT_PROBE`，并只允许输出 `desktop-v3.main-window.* / desktop-v3.command.invoke / desktop-v3.renderer.boot / desktop-v3.startup-backend-probe.*`；同一条 gate 还会交叉冻结 `route-registry.ts` 与 `window/initial_route.rs` 的允许初始路由集合，避免 renderer 与宿主各自漂移
 - `tauri.conf.json` 只放共享配置；平台差异未来进入 `tauri.<platform>.conf.json`
-- updater 进入实现前，先补签名、公钥、HTTPS 发布源与产物流向设计
+- updater 进入实现前，先补签名、公钥、七牛对象存储（Kodo）或自有 HTTPS 发布源、首次安装包与后续在线更新的产物流向设计，并冻结“当前会话不打断、下一次启动时再执行强更”的策略
 
 详细规则见 [269-desktop-v3-tauri-2-governance-baseline.md](./269-desktop-v3-tauri-2-governance-baseline.md)。
 

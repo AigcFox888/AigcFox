@@ -31,6 +31,10 @@ describe("verify-desktop-v3-updater-governance", () => {
     expect(result).toEqual({ help: true });
     expect(invoked).toBe(false);
     expect(logs).toEqual([buildDesktopV3UpdaterGovernanceHelpText()]);
+    expect(logs[0]).toContain("first-install packages only");
+    expect(logs[0]).toContain("Qiniu Kodo / self-hosted HTTPS");
+    expect(logs[0]).toContain("must_update_on_next_launch");
+    expect(logs[0]).toContain("do not interrupt the running session");
   });
 
   it("persists a passing summary before logging success", async () => {

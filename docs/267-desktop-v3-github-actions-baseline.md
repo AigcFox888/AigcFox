@@ -67,9 +67,10 @@
   - `docs/267-desktop-v3-github-actions-baseline.md`
   - `docs/269-desktop-v3-tauri-2-governance-baseline.md`
 - `desktop-v3-ci.yml` 固定在 `ubuntu-24.04` 做治理、测试与 smoke proof
-- `desktop-v3-package.yml` 只产出 `Windows + macOS` bundle
-- `desktop-v3-package.yml` 的 Windows job 固定先通过 Chocolatey 预装并导出 `WiX Toolset 3.14.1`，并对安装步骤做重试；不要再把 MSI 打包成功与否绑定到 `tauri build` 内部对 `wix314-binaries.zip` 的单次在线下载
-- `desktop-v3-package.yml` 只负责为维护者产出可下载 artifact；维护者必须从 GitHub Actions 下载 `Windows + macOS` bundle，再上传到七牛对象存储或自有 HTTPS 下载源后分发给中国区用户
+- `desktop-v3-package.yml` 只产出 `Windows + macOS` 首次安装 bundle
+- `desktop-v3-package.yml` 的 Windows job 固定先通过 Chocolatey 预装并导出 `WiX Toolset 3.14.1`，并对安装步骤做重试；同时把 Windows bundle 目标固定收敛到 `msi`，不要再把 MSI 打包成功与否绑定到 `tauri build` 内部对 `wix314-binaries.zip` 或 NSIS 压缩包的单次在线下载
+- `desktop-v3-package.yml` 只负责为维护者产出可下载 artifact；维护者必须从 GitHub Actions 下载 `Windows + macOS` 首次安装 bundle，再上传到七牛对象存储（Kodo）或自有 HTTPS 下载源后分发给中国区用户
+- 已安装用户后续版本不走 GitHub 重新下载安装包；后续在线更新固定走七牛对象存储（Kodo）或自有 HTTPS 下载源，并采用“当前会话不打断、下一次启动命中强更才执行”的策略
 - 不直接把 GitHub Actions artifact URL 或 GitHub Releases URL 发给终端用户
 - `qa:desktop-v3-linux-package` 已退出当前 CI / QA 主链；不要把 Linux bundle matrix、artifact 上传或本地 Linux 包收口重新塞回 active scope
 - 不自动发布到 GitHub Releases

@@ -38,5 +38,6 @@ pnpm qa:governance-command-docs
 
 - 当前默认不进入业务层实现，也不保留历史业务或新功能实现文档。
 - 当前文档真相层以 `docs/`、`apps/desktop-v3/README.md` 与 `AGENTS.md` 为准。
-- GitHub Actions 只负责 CI 与 `Windows + macOS` bundle 产出，不作为客户端更新源。
-- 当前正式分发路径固定为：`GitHub Actions 出包 -> 维护者下载 Actions artifact -> 上传到七牛或自有 HTTPS 下载源 -> 中国区用户下载`。
+- GitHub Actions 只负责 CI 与 `Windows + macOS` 首次安装 bundle 产出，不作为客户端更新源。
+- 当前首次交付路径固定为：`GitHub Actions 出完整安装包 -> 维护者下载 Actions artifact -> 上传到七牛对象存储（Kodo）或自有 HTTPS 下载源 -> 中国区用户首次下载安装`。
+- 后续在线更新策略已冻结为：已安装用户不再重复下载安装包；运行中的客户端不强制打断；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新。
