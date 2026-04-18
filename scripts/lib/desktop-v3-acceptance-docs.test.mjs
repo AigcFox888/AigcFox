@@ -43,6 +43,9 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("不作为客户端更新源");
     expect(acceptanceDocText).toContain("Windows + macOS");
     expect(acceptanceDocText).toContain("windows-latest + macos-latest");
+    expect(acceptanceDocText).toContain("默认发布线收口");
+    expect(acceptanceDocText).toContain("默认分支 `main`");
+    expect(acceptanceDocText).toContain("promotion PR");
 
     expect(baselineDocText).toContain("desktop-v3-ci.yml");
     expect(baselineDocText).toContain("desktop-v3-package.yml");
@@ -51,5 +54,6 @@ describe("desktop-v3 acceptance docs", () => {
     expect(baselineDocText).toContain("support governance");
     expect(baselineDocText).toContain("不自动作为客户端更新源");
     expect(baselineDocText).toContain("Windows + macOS");
+    expect(baselineDocText).toContain("默认分支 `main`");
   });
 });
