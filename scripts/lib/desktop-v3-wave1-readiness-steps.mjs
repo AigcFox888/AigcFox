@@ -99,6 +99,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-backend-client-governance",
     }),
+    buildPnpmStep("desktop-v3-runtime-skeleton-governance", ["qa:desktop-v3-runtime-skeleton-governance"], {
+      artifacts: {
+        latestSummaryPath: config.runtimeSkeletonGovernanceLatestSummaryPath,
+        outputDir: config.runtimeSkeletonGovernanceOutputDir,
+        summaryPath: path.join(config.runtimeSkeletonGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_RUNTIME_SKELETON_GOVERNANCE_OUTPUT_DIR: config.runtimeSkeletonGovernanceOutputDir,
+      },
+      label: "desktop-v3-runtime-skeleton-governance",
+    }),
     buildPnpmStep("desktop-v3-command-governance", ["qa:desktop-v3-command-governance"], {
       artifacts: {
         latestSummaryPath: config.commandGovernanceLatestSummaryPath,

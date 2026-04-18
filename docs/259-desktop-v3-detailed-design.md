@@ -185,6 +185,7 @@ src-tauri/
 
 - 记录本地诊断信息
 - 为 UI 提供最小健康快照
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 冻结 `DiagnosticsService` 的文件集、私有字段、`new / snapshot` 公开面和外部持有面；如果诊断聚合要扩成多层编排、缓存或附加 service，就先重写该模块
 
 ### `runtime/state`
 
@@ -192,6 +193,7 @@ src-tauri/
 
 - 承接本地会话态、缓存索引和轻量运行态
 - 为 diagnostics 提供最小运行态快照，例如最近一次 backend probe 时间
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 冻结 `SessionSnapshot.last_backend_probe_at` 与 `SessionState.record_backend_probe / snapshot`；如果要把更多会话上下文、缓存索引或派生状态塞进当前模块，必须先重写 runtime state 边界
 
 ### `runtime/security`
 
@@ -201,6 +203,7 @@ src-tauri/
 - 敏感数据裁剪
 - 输出结构化 secure store skeleton 快照：`provider / status / writes_enabled`
 - Wave 1 只保留边界与诊断合同，不落真实密钥写入实现
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 冻结 `SecureStoreStatus`、`SecureStoreSnapshot` 和 `SecureStore::snapshot()` 的骨架边界；只要 secure store 要从保留态转成真实探测、真实写入或多 provider 适配，就不能继续在当前结构上打补丁，必须先重写安全模块
 
 ## 布局系统设计
 

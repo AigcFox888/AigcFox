@@ -19,9 +19,11 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-command-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-platform-config-governance");
+    expect(acceptanceDocText).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
     expect(acceptanceDocText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(acceptanceDocText).toContain("desktop-v3-localdb-governance-summary.json");
     expect(acceptanceDocText).toContain("desktop-v3-platform-config-governance-summary.json");
+    expect(acceptanceDocText).toContain("desktop-v3-runtime-skeleton-governance-summary.json");
     expect(acceptanceDocText).toContain("只上传 CI artifacts");
     expect(acceptanceDocText).toContain("不作为客户端更新源");
 

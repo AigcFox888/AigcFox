@@ -39,6 +39,7 @@
 - 有 I/O 的 command 默认按 `async` 设计；SQLite 扩张前禁止继续在当前同步 localdb 路径上堆逻辑
 - 当前用 `pnpm qa:desktop-v3-localdb-governance` 对 `runtime/localdb` 文件集、`rusqlite` 触点和 `LocalDatabase` 外部使用面做静态门禁；SQLite 依赖当前只允许停留在 `runtime/localdb/* + error.rs`，`LocalDatabase` 在模块外只允许由 `runtime/mod.rs` 持有
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client` 文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面做静态门禁；远端 Go API 边界当前只允许停留在 health/readiness skeleton，不允许继续在现结构上补丁式扩业务接口
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security`、`runtime/state`、`runtime/diagnostics` 做静态门禁；`SecureStoreStatus / SecureStoreSnapshot / SecureStore`、`SessionSnapshot / SessionState`、`DiagnosticsService` 的文件集、公开面和模块外持有面都冻结在当前 Wave 1 骨架，任何真实 secure-store 写入、会话态扩张或诊断编排扩张都必须先结构化重写
 - 当前用 `pnpm qa:desktop-v3-platform-config-governance` 对 `tauri.conf.json` 共享字段集做静态门禁；平台覆盖配置仍只保留在未来拆分方案里，当前不允许把平台打包细节、updater 配置或平台特有开关继续塞回共享配置
 - 当前用 `pnpm qa:desktop-v3-updater-governance` 对 `Cargo.toml`、`tauri.conf.json`、capability / permission、Rust / renderer source 的 updater 前置实现边界做静态门禁；在结构化重写落地前，不允许提前引入 updater plugin 依赖、manifest / policy endpoint、强更策略字段或 GitHub Releases 客户端更新源
 - `tauri.conf.json` 只放跨平台稳定项；当前主窗口 URL 与尺寸由 Rust `window.rs` 显式创建，平台打包和更新实现开始后，必须拆平台覆盖配置
@@ -94,6 +95,7 @@ React UI -> Tauri commands -> Rust local runtime -> Go API / SQLite
 - 敏感凭据不进入本地 SQLite
 - 本地命令必须显式暴露，不能任意透出系统能力
 - `secure store` 当前只暴露结构化 skeleton 诊断快照：`provider / status / writesEnabled`
+- 上述 `secure store` skeleton 当前由 `pnpm qa:desktop-v3-runtime-skeleton-governance` 与 Rust 单测共同冻结；`writesEnabled=false` 只表示当前骨架未开放写入，不允许被补丁式演变成真实密钥写入能力
 - Wave 1 不把上述诊断快照等同于真实密钥写入能力
 
 ## 交付与更新约束

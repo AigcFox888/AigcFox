@@ -41,6 +41,7 @@ React UI
 - 页面、hooks、features 不直接 import 其他 Tauri JS API
 - 当前用 `pnpm qa:desktop-v3-runtime-boundary` 对上述边界做静态门禁；`src/lib/runtime/*` 之外一旦出现 `@tauri-apps/*`、直接 `invoke()` 或全局 Tauri bridge 访问，就视为治理回退
 - 当前用 `pnpm qa:desktop-v3-backend-client-governance` 对 `runtime/client/*` 做静态门禁；当前 Go API 边界只允许停留在 probe-only skeleton，文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面都被冻结在 Wave 1 范围
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 对 `runtime/security/*`、`runtime/state/*`、`runtime/diagnostics/*` 做静态门禁；当前 skeleton 只允许保留 `SecureStore` 保留态诊断快照、`SessionState` 最小 probe 时间戳和 `DiagnosticsService` 最小聚合面，不允许在现结构上继续补丁式扩 secure-store 写入、会话态或诊断编排
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
 - 任何新的宿主能力先进入 `src/lib/runtime/*`，再决定是否暴露给页面
@@ -162,6 +163,26 @@ React UI
 
 - 当前不是立即重构
 - 但后续扩展时禁止在现结构上继续补丁堆叠
+
+## Runtime Skeleton 规则
+
+当前 `runtime/security`、`runtime/state`、`runtime/diagnostics` 虽然还是骨架，但也不再允许自由扩张。
+
+从现在起固定规则：
+
+- 当前用 `pnpm qa:desktop-v3-runtime-skeleton-governance` 把 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 文件集固定死在当前 Wave 1 骨架
+- `SecureStoreStatus / SecureStoreSnapshot / SecureStore` 只允许保留当前 diagnostics-only surface；`provider / status / writes_enabled` 之外不再继续扩字段，`snapshot()` 之外不再继续加真实 secure-store helper
+- `SessionSnapshot / SessionState` 只允许保留最近一次 backend probe 时间戳与 `record_backend_probe / snapshot`；如果要扩缓存索引、会话上下文或派生态，就先重写 runtime state 模块
+- `DiagnosticsService` 只允许保留 `new / snapshot` 与当前最小字段面；如果要继续堆 service、缓存或复杂聚合编排，就先重写 diagnostics 分层
+- 模块外持有面固定收敛：`SecureStore` 相关类型只允许停留在 `runtime/mod.rs + runtime/models.rs + runtime/diagnostics/mod.rs`，`SessionState` 与 `DiagnosticsService` 在模块外只允许由 `runtime/mod.rs` 直接持有
+
+换句话说：
+
+- Wave 1 的 secure store skeleton 不等于已经开放真实 keyring 写入
+- Wave 1 的 session state 不等于可以继续当通用运行态容器
+- Wave 1 的 diagnostics service 不等于可以继续在原结构上补编排
+
+后续只要任一能力要跨出当前最小边界，就必须先结构化重写，不允许继续碎片补丁。
 
 ## 配置分层规则
 
