@@ -25,11 +25,13 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
+    expect(baselineText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(baselineText).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(baselineText).toContain("MockCommandRuntime");
     expect(baselineText).toContain("TauriCommandRuntime");
     expect(baselineText).toContain("runtime/models.rs");
     expect(baselineText).toContain("src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts");
+    expect(baselineText).toContain("src/pages / src/components/navigation/nav-item.tsx / src/components/states / src/hooks");
   });
 
   it("keeps the desktop detailed design governance and execution baseline aligned with the frozen skeleton boundary", async () => {
@@ -49,12 +51,15 @@ describe("desktop-v3 baseline docs", () => {
     expect(designText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(designText).toContain("runtime-registry");
     expect(designText).toContain("tauri-bridge.ts");
+    expect(designText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(designText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(designText).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(designText).toContain("runtime/models");
     expect(designText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap");
     expect(designText).toContain("features/diagnostics");
     expect(designText).toContain("features/preferences");
+    expect(designText).toContain("components/navigation/nav-item.tsx");
+    expect(designText).toContain("useShellLayout");
 
     expect(governanceText).toContain("src-tauri/capabilities/*");
     expect(governanceText).toContain("label");
@@ -66,6 +71,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-platform-config-governance");
+    expect(governanceText).toContain("pnpm qa:desktop-v3-page-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-adapter-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-contract-governance");
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
@@ -75,12 +81,15 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("DiagnosticsService");
     expect(governanceText).toContain("Runtime Contract Truth Chain");
     expect(governanceText).toContain("Renderer Runtime Adapter Rules");
+    expect(governanceText).toContain("Renderer Presentation Boundary Rules");
     expect(governanceText).toContain("Renderer Feature Boundary Rules");
     expect(governanceText).toContain("runtime-registry");
     expect(governanceText).toContain("tauri-bridge.ts");
     expect(governanceText).toContain("ThemeProvider");
     expect(governanceText).toContain("PreferencesPage");
     expect(governanceText).toContain("DiagnosticsPage");
+    expect(governanceText).toContain("NavItem");
+    expect(governanceText).toContain("useShellLayout");
     expect(governanceText).toContain("DesktopCommandPayloadMap / DesktopCommandResultMap / DesktopCommandName");
     expect(governanceText).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(governanceText).toContain("tauri.linux.conf.json / tauri.windows.conf.json / tauri.macos.conf.json");
@@ -92,6 +101,7 @@ describe("desktop-v3 baseline docs", () => {
     expect(executionText).toContain("desktop-v3-document-check");
     expect(executionText).toContain("desktop-v3-capability-governance");
     expect(executionText).toContain("desktop-v3-command-governance");
+    expect(executionText).toContain("desktop-v3-page-governance");
     expect(executionText).toContain("desktop-v3-feature-governance");
     expect(executionText).toContain("desktop-v3-localdb-governance");
     expect(executionText).toContain("desktop-v3-platform-config-governance");

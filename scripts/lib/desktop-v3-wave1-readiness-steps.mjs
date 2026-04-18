@@ -110,6 +110,17 @@ export function buildDesktopV3Wave1ReadinessSteps(config) {
       },
       label: "desktop-v3-app-shell-governance",
     }),
+    buildPnpmStep("desktop-v3-page-governance", ["qa:desktop-v3-page-governance"], {
+      artifacts: {
+        latestSummaryPath: config.pageGovernanceLatestSummaryPath,
+        outputDir: config.pageGovernanceOutputDir,
+        summaryPath: path.join(config.pageGovernanceOutputDir, "summary.json"),
+      },
+      env: {
+        AIGCFOX_DESKTOP_V3_PAGE_GOVERNANCE_OUTPUT_DIR: config.pageGovernanceOutputDir,
+      },
+      label: "desktop-v3-page-governance",
+    }),
     buildPnpmStep("desktop-v3-runtime-skeleton-governance", ["qa:desktop-v3-runtime-skeleton-governance"], {
       artifacts: {
         latestSummaryPath: config.runtimeSkeletonGovernanceLatestSummaryPath,

@@ -14,6 +14,7 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-wave1-readiness");
     expect(text).toContain("pnpm qa:desktop-v3-capability-governance");
     expect(text).toContain("pnpm qa:desktop-v3-command-governance");
+    expect(text).toContain("pnpm qa:desktop-v3-page-governance");
     expect(text).toContain("pnpm qa:desktop-v3-feature-governance");
     expect(text).toContain("pnpm qa:desktop-v3-localdb-governance");
     expect(text).toContain("pnpm qa:desktop-v3-platform-config-governance");
@@ -22,6 +23,8 @@ describe("desktop-v3 README docs", () => {
     expect(text).toContain("pnpm qa:desktop-v3-runtime-skeleton-governance");
     expect(text).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(text).toContain("src/lib/runtime");
+    expect(text).toContain("src/pages");
+    expect(text).toContain("useShellLayout");
     expect(text).toContain("runtime/localdb/mod.rs + migrations.rs");
     expect(text).toContain("runtime/models.rs + src/lib/runtime/contracts.ts + src/lib/runtime/desktop-runtime.ts + src/lib/runtime/tauri-command-types.ts");
     expect(text).toContain("src/features/diagnostics");

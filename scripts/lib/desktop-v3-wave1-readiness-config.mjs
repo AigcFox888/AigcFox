@@ -66,6 +66,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
       "desktop-v3-app-shell-governance-summary.json",
     ),
     appShellGovernanceOutputDir: path.join(outputDir, "app-shell-governance"),
+    pageGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-page-governance-summary.json",
+    ),
+    pageGovernanceOutputDir: path.join(outputDir, "page-governance"),
     runtimeSkeletonGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-runtime-skeleton-governance-summary.json",

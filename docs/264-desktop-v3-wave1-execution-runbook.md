@@ -41,6 +41,7 @@ pnpm test:desktop-v3-wave1-readiness
 - GitHub baseline docs
 - backend-client governance
 - app shell governance
+- page governance
 - runtime skeleton governance
 - runtime adapter governance
 - runtime contract governance
@@ -69,23 +70,24 @@ pnpm qa:desktop-v3-wave1-readiness
 3. `pnpm qa:desktop-v3-localdb-governance`
 4. `pnpm qa:desktop-v3-backend-client-governance`
 5. `pnpm qa:desktop-v3-app-shell-governance`
-6. `pnpm qa:desktop-v3-runtime-skeleton-governance`
-7. `pnpm qa:desktop-v3-runtime-contract-governance`
-8. `pnpm qa:desktop-v3-runtime-adapter-governance`
-9. `pnpm qa:desktop-v3-feature-governance`
-10. `pnpm qa:desktop-v3-command-governance`
-11. `pnpm qa:desktop-v3-capability-governance`
-12. `pnpm qa:desktop-v3-platform-config-governance`
-13. `pnpm qa:desktop-v3-updater-governance`
-14. `pnpm --filter @aigcfox/desktop-v3 lint`
-15. `pnpm --filter @aigcfox/desktop-v3 typecheck`
-16. `pnpm --filter @aigcfox/desktop-v3 test`
-17. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
-18. `pnpm --filter @aigcfox/desktop-v3 build`
-19. `pnpm qa:desktop-v3-responsive-smoke`
-20. `pnpm qa:desktop-v3-tauri-dev-smoke`
-21. `pnpm qa:desktop-v3-linux-package`
-22. `pnpm qa:desktop-v3-packaged-app-smoke`
+6. `pnpm qa:desktop-v3-page-governance`
+7. `pnpm qa:desktop-v3-runtime-skeleton-governance`
+8. `pnpm qa:desktop-v3-runtime-contract-governance`
+9. `pnpm qa:desktop-v3-runtime-adapter-governance`
+10. `pnpm qa:desktop-v3-feature-governance`
+11. `pnpm qa:desktop-v3-command-governance`
+12. `pnpm qa:desktop-v3-capability-governance`
+13. `pnpm qa:desktop-v3-platform-config-governance`
+14. `pnpm qa:desktop-v3-updater-governance`
+15. `pnpm --filter @aigcfox/desktop-v3 lint`
+16. `pnpm --filter @aigcfox/desktop-v3 typecheck`
+17. `pnpm --filter @aigcfox/desktop-v3 test`
+18. `cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml`
+19. `pnpm --filter @aigcfox/desktop-v3 build`
+20. `pnpm qa:desktop-v3-responsive-smoke`
+21. `pnpm qa:desktop-v3-tauri-dev-smoke`
+22. `pnpm qa:desktop-v3-linux-package`
+23. `pnpm qa:desktop-v3-packaged-app-smoke`
 
 ## 输出
 
@@ -98,6 +100,7 @@ pnpm qa:desktop-v3-wave1-readiness
 - 当前 capability / permission / IPC 对齐回归由 `pnpm qa:desktop-v3-capability-governance` 先行拦截
 - 当前 `runtime/client` 远端 skeleton 回归由 `pnpm qa:desktop-v3-backend-client-governance` 先行拦截；它会同时冻结 `runtime/client` 文件集、`BackendClient` 公开面、probe-only endpoint、`reqwest` 触点和模块外持有面，防止把真实业务 API 继续补丁式塞进当前远端客户端
 - 当前 renderer app shell 回归由 `pnpm qa:desktop-v3-app-shell-governance` 先行拦截；它会同时冻结 `src/app/App.tsx`、`bootstrap/renderer-ready.ts`、`app/layout/*`、`app/providers/*`、`app/router/*` 的文件集、顶层声明面、`"/" / "/diagnostics" / "/preferences"` 路由拓扑、导航 href 与 source-level ownership，防止继续补丁式扩 provider、layout、router 或 bootstrap 壳层
+- 当前 renderer presentation 回归由 `pnpm qa:desktop-v3-page-governance` 先行拦截；它会同时冻结 `src/pages/*`、`components/navigation/nav-item.tsx`、`components/states/*`、`hooks/*` 的文件集、顶层声明面、quick link / query key / theme option 常量、`NavItem` 与 shared state props、`LayoutMode / ShellLayoutState / useShellLayout` 与 route/sidebar/page-state/app-shell ownership，防止继续补丁式扩 page composition、状态组件或 shell hook
 - 当前 `runtime/security / state / diagnostics` skeleton 回归由 `pnpm qa:desktop-v3-runtime-skeleton-governance` 先行拦截；它会同时冻结 `runtime/security/mod.rs + runtime/state/mod.rs + runtime/diagnostics/mod.rs` 文件集，以及 `SecureStore`、`SessionState`、`DiagnosticsService` 的公开面和模块外持有面，防止把真实 secure-store 写入、会话态扩张或诊断编排继续补丁式塞进当前骨架
 - 当前 Rust / TypeScript runtime contract truth chain 回归由 `pnpm qa:desktop-v3-runtime-contract-governance` 先行拦截；它会同时冻结 `runtime/models.rs`、`src/lib/runtime/contracts.ts`、`src/lib/runtime/desktop-runtime.ts`、`src/lib/runtime/tauri-command-types.ts`，防止 Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 继续补丁式漂移
 - 当前 renderer runtime adapter skeleton 回归由 `pnpm qa:desktop-v3-runtime-adapter-governance` 先行拦截；它会同时冻结 `src/lib/runtime` adapter 文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership，防止继续补丁式加 helper、分叉实例化入口或 bridge 逻辑

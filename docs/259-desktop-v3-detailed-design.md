@@ -100,6 +100,23 @@ apps/desktop-v3/
 - `main.tsx` 只允许直接持有 `App` 与 `renderer-ready`；`App` 只允许直接持有 `AppProviders` 与 `appRouter`；`routes.tsx` 只允许直接持有 `AppShell`；`app-shell.tsx` 只允许直接持有 `PageHeader / ShellScaffold / Sidebar`
 - 只要 app shell 要新增 provider、bootstrap 阶段、layout helper、路由层或跨页面壳层状态，就不能继续在当前结构上叠补丁，必须先重写 `src/app` boundary，再同步更新门禁与文档
 
+### `pages` / `components` / `hooks` presentation boundary
+
+职责：
+
+- `src/pages/*` 只做页面组合与静态展示，不直接持有 runtime adapter 或额外壳层编排
+- `components/navigation/nav-item.tsx` 只承接 sidebar 单项导航展示
+- `components/states/*` 只承接共享 `empty / error / loading` 状态展示
+- `hooks/*` 只承接 app shell 范围内的交互与布局辅助，不演化成跨页面运行态容器
+
+补充规则：
+
+- 当前 `pnpm qa:desktop-v3-page-governance` 会同时冻结 `src/pages/dashboard-page.tsx`、`diagnostics-page.tsx`、`preferences-page.tsx`、`components/navigation/nav-item.tsx`、`components/states/*`、`hooks/use-keyboard-shortcuts.ts`、`hooks/use-shell-layout.ts` 的文件集与顶层声明面
+- `DashboardPage` 当前只允许保留 `highlights / quickLinks / DashboardPage`，并把 quick link href 固定在 `"/diagnostics"` 与 `"/preferences"`
+- `DiagnosticsPage` 当前只允许保留 `diagnosticsOverviewQueryKey / DiagnosticsCard / DiagnosticsPage`；`PreferencesPage` 当前只允许保留 `themeOptions / PreferencesPage`
+- `NavItem`、`EmptyState`、`ErrorState`、`LoadingState` 的 props contract，以及 `LayoutMode / ShellLayoutState / getLayoutState / useShellLayout / isEditableElement / useKeyboardShortcuts` 的公开面，都由同一条 gate 冻结
+- `routes.tsx`、`sidebar.tsx`、`diagnostics-page.tsx`、`preferences-page.tsx`、`app-shell.tsx` 当前分别固定承接 page、nav item、state component 与 shell hook ownership；只要要新增页面、横向扩 shared state 或让 hook 继续长成通用运行态，就必须先重写 renderer presentation boundary，再同步更新门禁与文档
+
 ### `features/diagnostics` / `features/preferences`
 
 职责：

@@ -45,6 +45,7 @@ React UI
 - 当前用 `pnpm qa:desktop-v3-runtime-contract-governance` 对 `runtime/models.rs` 与 `src/lib/runtime/contracts.ts / desktop-runtime.ts / tauri-command-types.ts` 做静态门禁；Rust model、TypeScript contract、`DesktopRuntime` 方法签名和 command payload/result map 必须保持一条冻结 truth chain，不允许 renderer 和 Rust 各自漂移
 - 当前用 `pnpm qa:desktop-v3-runtime-adapter-governance` 对 `src/lib/runtime` adapter skeleton 做静态门禁；文件集、`MockCommandRuntime / TauriCommandRuntime` 公开面、`runtime-registry`、`runtime-mode`、`tauri-bridge`、`tauri-invoke`、mock fixtures、`@tauri-apps/*` 触点和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落实例化入口或 bridge helper
 - 当前用 `pnpm qa:desktop-v3-app-shell-governance` 对 `src/app` renderer app shell 做静态门禁；`App / renderer-ready / app/layout / app/providers / app/router` 的文件集、顶层声明面、路由拓扑、导航 href 和 source-level ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 bootstrap helper、provider 或 route shell
+- 当前用 `pnpm qa:desktop-v3-page-governance` 对 `src/pages/*`、`src/components/navigation/nav-item.tsx`、`src/components/states/*`、`src/hooks/*` 做静态门禁；页面组合、shared state props、`useKeyboardShortcuts / useShellLayout` 的公开面、layout mode 与 route/sidebar/page-state/app-shell ownership 必须保持一条冻结 truth chain，不允许 renderer 侧继续散落 page helper、状态组件变体或 shell hook
 - 当前用 `pnpm qa:desktop-v3-feature-governance` 对 `src/features/diagnostics` 与 `src/features/preferences` 做静态门禁；文件集、顶层声明面、`DiagnosticsOverview / ThemePreferenceState` 形状，以及 `DiagnosticsPage / PreferencesPage / ThemeProvider` 的 source-level ownership 必须保持一条冻结 truth chain，不允许页面、provider 或新 feature 继续散落 runtime access 与主题状态持有
 - 当前用 `pnpm qa:desktop-v3-command-governance` 对 `src-tauri/src/commands/*` 做静态门禁；commands 模块集、命令名、import 面和 helper 扩张都被冻结在当前 Wave 1 骨架范围
 - 当前用 `pnpm qa:desktop-v3-capability-governance` 对 `main-window` capability、`permissions/main-window.toml`、`invoke_handler` 和 `tauri-command-types.ts` 做静态门禁；授权面与 IPC surface 必须保持同一条真相链
@@ -225,6 +226,34 @@ React UI
 - provider、bootstrap、layout、router 之间不允许继续补丁式横向扩 source-level ownership
 
 只要要扩当前 app shell boundary，就先结构化重写 `src/app` 分层，再同步更新门禁与文档。
+
+## Renderer Presentation Boundary Rules
+
+当前 renderer 侧的 `src/pages`、shared state components、nav item 与 shell hooks 也不是可以随手堆 page helper 或补丁式状态分支的层，而是 Wave 1 受控 presentation boundary。
+
+当前 `pnpm qa:desktop-v3-page-governance` 一起冻结：
+
+- `src/pages/dashboard-page.tsx`
+- `src/pages/diagnostics-page.tsx`
+- `src/pages/preferences-page.tsx`
+- `src/components/navigation/nav-item.tsx`
+- `src/components/states/empty-state.tsx`
+- `src/components/states/error-state.tsx`
+- `src/components/states/loading-state.tsx`
+- `src/hooks/use-keyboard-shortcuts.ts`
+- `src/hooks/use-shell-layout.ts`
+
+以及它们在当前 renderer presentation boundary 内的固定文件集、顶层声明面、quick link / query key / theme option 常量、shared state props、`LayoutMode / ShellLayoutState` 与 source-level ownership。
+
+规则：
+
+- `DashboardPage` 只允许保留 `highlights / quickLinks / DashboardPage`，并把 quick link href 固定在 `"/diagnostics"` 与 `"/preferences"`
+- `DiagnosticsPage` 只允许保留 `diagnosticsOverviewQueryKey / DiagnosticsCard / DiagnosticsPage`；`PreferencesPage` 只允许保留 `themeOptions / PreferencesPage`
+- `NavItem` props 固定为 `href / label / description / icon / compact`，不允许继续补丁式长成通用菜单项容器
+- `EmptyState / ErrorState / LoadingState` 的 props contract 当前固定为页面共用展示边界，不允许各页面各自再长一套漂移版本
+- `useKeyboardShortcuts` 与 `useShellLayout` 只允许由 `app-shell.tsx` 持有；`NavItem` 只允许由 `sidebar.tsx` 持有；shared state component 只允许由当前页面组合边界直接持有
+
+只要要扩当前 presentation boundary，就先结构化重写 renderer page / state / hook 分层，再同步更新门禁与文档。
 
 ## Renderer Feature Boundary Rules
 
