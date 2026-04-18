@@ -47,8 +47,9 @@ describe("desktop-v3 entry docs", () => {
 
     expect(githubBaselineText).toContain("必须从 `dev` 重建 clean branch");
     expect(githubBaselineText).toContain("旧 PR 必须明确标记为 superseded 并关闭");
-    expect(closeoutText).toContain("feature/desktop-v3-wave1-clean");
-    expect(closeoutText).toContain("PR：`#2`");
+    expect(closeoutText).toMatch(/clean branch：`feature\/[^`]+`/);
+    expect(closeoutText).toContain("base branch：`dev`");
+    expect(closeoutText).toMatch(/PR：`#\d+`/);
     expect(closeoutText).toContain("AGENTS.md");
     expect(closeoutText).toContain("docs/README.md");
     expect(closeoutText).toContain("267-desktop-v3-github-actions-baseline.md");

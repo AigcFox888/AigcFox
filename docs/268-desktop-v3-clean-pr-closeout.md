@@ -4,10 +4,12 @@
 
 当前 `desktop-v3 Wave 1 Skeleton` 的 clean PR 收口记录固定保留如下关键信息：
 
-- clean branch：`feature/desktop-v3-wave1-clean`
-- PR：`#2`
+- clean branch：`feature/docs-wsl-default-host`
+- base branch：`dev`
+- PR：`#1`
 - workflow：`desktop-v3-ci`
 - workflow：`desktop-v3-package`
+- verified package hardening：`WiX Toolset 3.14.1` preinstall on Windows package job
 
 ## 目的
 
@@ -18,3 +20,4 @@
 - 发现 PR 污染
 - 从 `dev` 重建 clean branch
 - 旧 PR 标记 superseded 并关闭
+- 当前 PR head 已拿到 `desktop-v3-ci` 与 `desktop-v3-package` 的真实通过证明
