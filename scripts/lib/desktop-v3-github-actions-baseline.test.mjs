@@ -65,6 +65,8 @@ describe("desktop-v3 GitHub Actions baseline", () => {
     ]);
 
     expectDocumentContainsEntries(baselineDocText, baselineDocPath, [
+      "向默认分支 `main` 发起 promotion PR",
+      "`main` head 再次真实通过",
       "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true",
       "AIGCFOX_DESKTOP_V3_WAVE1_PROFILE=ci",
       "pnpm exec playwright install --with-deps chromium",
@@ -157,6 +159,7 @@ describe("desktop-v3 GitHub Actions baseline", () => {
       "desktop-v3-package.yml",
       "feature/**",
       "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true",
+      "默认发布线收口",
       "当前 `push` 触发面固定覆盖",
       "docs/258-desktop-v3-technical-baseline.md",
       "docs/267-desktop-v3-github-actions-baseline.md",
