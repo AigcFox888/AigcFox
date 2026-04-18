@@ -47,9 +47,13 @@ describe("desktop-v3 entry docs", () => {
 
     expect(githubBaselineText).toContain("必须从 `dev` 重建 clean branch");
     expect(githubBaselineText).toContain("旧 PR 必须明确标记为 superseded 并关闭");
+    expect(githubBaselineText).toContain("向默认分支 `main` 发起 promotion PR");
+    expect(githubBaselineText).toContain("`main` head 再次真实通过");
     expect(closeoutText).toMatch(/clean branch：`feature\/[^`]+`/);
     expect(closeoutText).toContain("base branch：`dev`");
-    expect(closeoutText).toMatch(/PR：`#\d+`/);
+    expect(closeoutText).toMatch(/clean PR：`#\d+`/);
+    expect(closeoutText).toMatch(/promotion PR：`#\d+`/);
+    expect(closeoutText).toContain("promotion target branch：`main`");
     expect(closeoutText).toContain("AGENTS.md");
     expect(closeoutText).toContain("docs/README.md");
     expect(closeoutText).toContain("267-desktop-v3-github-actions-baseline.md");

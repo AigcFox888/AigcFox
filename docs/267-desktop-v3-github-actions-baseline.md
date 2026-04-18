@@ -9,6 +9,8 @@
 
 - 出现 PR 污染时，必须从 `dev` 重建 clean branch
 - 旧 PR 必须明确标记为 superseded 并关闭
+- clean branch 在 `dev` 拿到 `desktop-v3-ci` 与 `desktop-v3-package` 的真实通过后，必须再从 `dev` 向默认分支 `main` 发起 promotion PR
+- promotion PR 合并到 `main` 后，`desktop-v3-ci` 与 `desktop-v3-package` 必须在 `main` head 再次真实通过，才算默认发布线收口
 
 ## desktop-v3-ci.yml
 
