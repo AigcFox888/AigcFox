@@ -98,7 +98,7 @@ cargo test --manifest-path apps/desktop-v3/src-tauri/Cargo.toml
 - 如果当前机器刚重装、刚切回 `WSL` 宿主、Rust toolchain / linker 有漂移，先运行 `pnpm qa:rust-host-readiness`；它会对 `apps/desktop-v3/src-tauri/Cargo.toml` 做真实 `cargo build --manifest-path ... --quiet` 探针，并把结果写到 `output/verification/rust-host-readiness-<run-id>/summary.json` 与 `output/verification/latest/rust-host-readiness-summary.json`
 - 如果必须经过 Windows 宿主，只允许做单次桥接型操作，不在 Windows 侧重复启动同一仓库的依赖安装、dev server、watcher、构建或测试
 - `Windows + macOS` 正式构件仍由 `GitHub Actions` 统一产出；`ubuntu-24.04` 只保留 CI 验证宿主，不再作为当前交付目标
-- 当前首次交付路径固定为：`desktop-v3-package.yml` 产出 `Windows + macOS` 完整安装包 -> 维护者从 GitHub Actions 下载 artifact -> 上传到七牛对象存储（Kodo）或自有 HTTPS 下载源 -> 中国区用户首次下载安装
+- 当前首次交付路径固定为：`desktop-v3-package.yml` 产出 `Windows + macOS` 完整安装包 -> 维护者从 GitHub Actions 下载 artifact，并核对 `release-manifest.json` 与 `SHA256SUMS.txt` -> 上传到七牛对象存储（Kodo）或自有 HTTPS 下载源 -> 中国区用户首次下载安装
 - 后续在线更新策略已冻结为：已安装用户不再重复下载安装包；运行中的客户端不强制打断；如果用户下次重新打开客户端时命中强更策略，则必须先完成在线更新
 - 不直接把 GitHub Actions artifact URL 或 GitHub Releases URL 发给中国区用户
 - `qa:desktop-v3-linux-package` 已退出当前 active scope；不要再把 Linux 终端用户安装包收口塞回本地 `Wave 1` 链

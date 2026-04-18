@@ -45,6 +45,8 @@ describe("desktop-v3 acceptance docs", () => {
     expect(acceptanceDocText).toContain("windows-latest + macos-latest");
     expect(acceptanceDocText).toContain("中国区用户首次安装不直接从 GitHub 获取安装包");
     expect(acceptanceDocText).toContain("七牛对象存储（Kodo）");
+    expect(acceptanceDocText).toContain("release-manifest.json");
+    expect(acceptanceDocText).toContain("SHA256SUMS.txt");
     expect(acceptanceDocText).toContain("后续版本不重复下载安装包");
     expect(acceptanceDocText).toContain("下一次启动生效");
     expect(acceptanceDocText).toContain("GitHub Releases URL");
@@ -61,6 +63,8 @@ describe("desktop-v3 acceptance docs", () => {
     expect(baselineDocText).toContain("Windows + macOS");
     expect(baselineDocText).toContain("首次安装 bundle");
     expect(baselineDocText).toContain("后续在线更新");
+    expect(baselineDocText).toContain("release-manifest.json");
+    expect(baselineDocText).toContain("SHA256SUMS.txt");
     expect(baselineDocText).toContain("默认分支 `main`");
     expect(baselineDocText).toContain("中国区用户");
   });

@@ -25,6 +25,8 @@ describe("desktop-v3 baseline docs", () => {
     expect(baselineText).toContain("七牛对象存储（Kodo）");
     expect(baselineText).toContain("GitHub Actions 只负责产出构件");
     expect(baselineText).toContain("维护者从 GitHub Actions 下载 `Windows + macOS` bundle");
+    expect(baselineText).toContain("release-manifest.json");
+    expect(baselineText).toContain("SHA256SUMS.txt");
     expect(baselineText).toContain("完整安装包");
     expect(baselineText).toContain("在线更新");
     expect(baselineText).toContain("强制更新策略已冻结");
@@ -129,6 +131,8 @@ describe("desktop-v3 baseline docs", () => {
     expect(governanceText).toContain("pnpm qa:desktop-v3-runtime-boundary");
     expect(governanceText).toContain("Tauri 2 updater plugin + 签名 + 七牛对象存储（Kodo）或自有 HTTPS 更新源");
     expect(governanceText).toContain("维护者从 GitHub Actions 下载构件");
+    expect(governanceText).toContain("release-manifest.json");
+    expect(governanceText).toContain("SHA256SUMS.txt");
     expect(governanceText).toContain("仍下载完整安装包");
     expect(governanceText).toContain("已安装用户后续版本只允许走在线更新");
     expect(governanceText).toContain("不打断当前正在使用的会话");
