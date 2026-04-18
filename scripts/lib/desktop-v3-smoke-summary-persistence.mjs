@@ -3,7 +3,6 @@ import { isDeepStrictEqual } from "node:util";
 
 import {
   assertDesktopV3ResponsiveSmokeSummaryContract,
-  assertDesktopV3PackagedAppSmokeSummaryContract,
   assertDesktopV3TauriDevSmokeSummaryContract,
 } from "./desktop-v3-smoke-summary-contract.mjs";
 
@@ -38,12 +37,7 @@ function getSmokeSummaryContract(kind) {
     };
   }
 
-  if (kind === "packaged-app") {
-    return {
-      assertSummaryContract: assertDesktopV3PackagedAppSmokeSummaryContract,
-      label: "desktop-v3 packaged app smoke summary",
-    };
-  }
+  throw new Error(`Unsupported desktop-v3 smoke summary kind: ${kind}.`);
 }
 
 async function assertPersistedSmokeSummary(kind, summary, config, options = {}) {
@@ -76,8 +70,4 @@ export function assertDesktopV3ResponsiveSmokeSummaryCopies(summary, config, opt
 
 export function assertDesktopV3TauriDevSmokeSummaryCopies(summary, config, options = {}) {
   return assertPersistedSmokeSummary("tauri-dev", summary, config, options);
-}
-
-export function assertDesktopV3PackagedAppSmokeSummaryCopies(summary, config, options = {}) {
-  return assertPersistedSmokeSummary("packaged-app", summary, config, options);
 }

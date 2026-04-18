@@ -4,7 +4,7 @@ import { Outlet, useMatches } from "react-router-dom";
 import { PageHeader } from "@/app/layout/page-header";
 import { ShellScaffold } from "@/app/layout/shell-scaffold";
 import { Sidebar } from "@/app/layout/sidebar";
-import type { AppRouteHandle } from "@/app/router/route-handle";
+import type { AppRouteHandle } from "@/app/router/route-registry";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useShellLayout } from "@/hooks/use-shell-layout";
 

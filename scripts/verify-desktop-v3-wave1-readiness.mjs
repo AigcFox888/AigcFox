@@ -22,9 +22,10 @@ export function buildDesktopV3Wave1ReadinessHelpText() {
     "",
     "Notes:",
     "  The runner starts with a source-of-truth document gate: git diff --check for tracked docs, equivalent format checks for untracked docs, then markdown links + forbidden legacy term scan.",
+    "  The runner then enforces renderer runtime, LocalDatabase governance, backend-client governance, app shell governance, page governance, support governance, runtime skeleton governance, runtime contract governance, runtime adapter governance, feature governance, Rust command governance, capability governance, shared Tauri platform-config governance, and updater governance before lint / test / smoke proof steps.",
     "  On Ubuntu + WSL, the host tauri proof step uses qa:desktop-v3-tauri-dev-smoke.",
-    "  On Ubuntu + WSL, packaged renderer proof uses qa:desktop-v3-packaged-app-smoke after qa:desktop-v3-linux-package.",
-    "  The top-level readiness summary keeps archive/latest copies and binds the child smoke archive/latest summary paths for responsive, tauri dev, and packaged app.",
+    "  The top-level readiness summary keeps archive/latest copies and binds the child smoke archive/latest summary paths for responsive and tauri dev.",
+    "  End-user Windows + macOS packages are produced by the GitHub Actions desktop-v3-package workflow, not by the local Wave 1 readiness chain.",
     "  On other non-CI hosts, the runner stops at the tauri dev step and records that manual host proof is still required.",
     "  In GitHub Actions, the runner auto-switches to the ci profile and skips the host-window proof step.",
   ].join("\n");

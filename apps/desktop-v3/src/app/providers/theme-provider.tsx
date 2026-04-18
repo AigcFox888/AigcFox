@@ -28,14 +28,19 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     queryFn: getThemePreference,
     staleTime: Number.POSITIVE_INFINITY,
   });
+  const resolvedThemeMode = themeQuery.data?.mode ?? null;
 
   useEffect(() => {
-    if (themeQuery.data) {
-      setThemeMode(themeQuery.data.mode);
+    if (resolvedThemeMode && themeMode !== resolvedThemeMode) {
+      setThemeMode(resolvedThemeMode);
     }
-  }, [setThemeMode, themeQuery.data]);
+  }, [resolvedThemeMode, setThemeMode, themeMode]);
 
   useEffect(() => {
+    if (!resolvedThemeMode || themeMode !== resolvedThemeMode) {
+      return undefined;
+    }
+
     applyThemeMode(themeMode);
 
     if (themeMode !== "system") {
@@ -49,7 +54,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
     };
-  }, [themeMode]);
+  }, [resolvedThemeMode, themeMode]);
 
   return children;
 }

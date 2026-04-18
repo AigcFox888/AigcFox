@@ -10,6 +10,7 @@ import {
   getPnpmRootScriptName,
 } from "./lib/desktop-v3-command-surface.mjs";
 import { pathExists, readJsonFile, writeJsonFile } from "./lib/script-io.mjs";
+import { persistVerificationSummary } from "./lib/verification-summary-output.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 export const rootDir = path.resolve(currentDir, "..");
@@ -22,19 +23,34 @@ const readCliValue = (flagName) => {
 };
 const readPathOverride = (flagName, envName, defaultPath) =>
   readCliValue(flagName) || process.env[envName]?.trim() || defaultPath;
+const resolveRunId = (now = new Date()) =>
+  readCliValue("run-id") ||
+  process.env.AIGCFOX_GOVERNANCE_COMMAND_DOCS_RUN_ID?.trim() ||
+  now.toISOString().replace(/[:.]/g, "-");
 
 export const governanceCommandDocsCommand = "pnpm qa:governance-command-docs";
 export const registryPath = path.join(rootDir, "config", "governance-command-docs-registry.json");
 export const packageJsonPath = path.join(rootDir, "package.json");
+export const runId = resolveRunId();
+export const outputDir = readPathOverride(
+  "output-dir",
+  "AIGCFOX_GOVERNANCE_COMMAND_DOCS_OUTPUT_DIR",
+  path.join(verificationDir, `governance-command-docs-${runId}`),
+);
 export const summaryPath = readPathOverride(
   "summary-path",
   "AIGCFOX_GOVERNANCE_COMMAND_DOCS_SUMMARY_PATH",
-  path.join(verificationDir, "governance-command-docs-summary.json")
+  path.join(outputDir, "summary.json")
+);
+export const latestSummaryPath = readPathOverride(
+  "latest-summary-path",
+  "AIGCFOX_GOVERNANCE_COMMAND_DOCS_LATEST_SUMMARY_PATH",
+  path.join(verificationDir, "latest", "governance-command-docs-summary.json"),
 );
 export const reportPath = readPathOverride(
   "report-path",
   "AIGCFOX_GOVERNANCE_COMMAND_DOCS_REPORT_PATH",
-  path.join(verificationDir, "governance-command-docs-report.md")
+  path.join(outputDir, "report.md")
 );
 
 function getNonEmptyString(value) {
@@ -210,10 +226,13 @@ export function buildGovernanceCommandDocsSummary({
 
   return {
     checkedAt,
+    latestSummaryPath,
+    outputDir,
     summaryPath,
     reportPath,
     registryPath,
     packageJsonPath,
+    runId,
     passed,
     totalCommandCount,
     packageScriptPresentCount,
@@ -276,7 +295,9 @@ function buildMarkdown(summary) {
     `- 总体状态：${summary.passed === true ? "已通过" : "未通过"}`,
     `- Registry：${registryPath}`,
     `- package.json：${packageJsonPath}`,
+    `- Output：${outputDir}`,
     `- Summary：${summaryPath}`,
+    `- Latest Summary：${latestSummaryPath}`,
     `- Report：${reportPath}`,
     `- 命令总数：${formatValue(summary.totalCommandCount)}`,
     `- scripts 已定义：${formatValue(summary.packageScriptPresentCount)}/${formatValue(summary.totalCommandCount)}`,
@@ -399,19 +420,36 @@ async function loadInputs() {
 }
 
 export async function persistGovernanceCommandDocsSummary(summary, options = {}) {
+  const persistVerificationSummaryImpl =
+    typeof options.persistVerificationSummaryImpl === "function"
+      ? options.persistVerificationSummaryImpl
+      : persistVerificationSummary;
   const writeJsonFileImpl =
     typeof options.writeJsonFileImpl === "function" ? options.writeJsonFileImpl : writeJsonFile;
   const writeFileImpl = typeof options.writeFileImpl === "function" ? options.writeFileImpl : fs.writeFile;
   const mkdirImpl = typeof options.mkdirImpl === "function" ? options.mkdirImpl : fs.mkdir;
   const nextSummary = {
     ...summary,
+    latestSummaryPath,
+    outputDir,
+    runId,
     summaryPath,
     reportPath,
     registryPath,
     packageJsonPath
   };
 
-  await writeJsonFileImpl(summaryPath, nextSummary);
+  await mkdirImpl(outputDir, { recursive: true });
+  await persistVerificationSummaryImpl(
+    nextSummary,
+    {
+      archiveSummaryPath: summaryPath,
+      latestSummaryPath,
+    },
+    {
+      writeJsonFileImpl,
+    },
+  );
   await mkdirImpl(path.dirname(reportPath), { recursive: true });
   await writeFileImpl(reportPath, `${buildMarkdown(nextSummary)}\n`, "utf8");
 
@@ -424,6 +462,9 @@ export function createBaseGovernanceCommandDocsSummary(overrides = {}) {
       typeof overrides.checkedAt === "string" && overrides.checkedAt.length > 0
         ? overrides.checkedAt
         : new Date().toISOString(),
+    latestSummaryPath,
+    outputDir,
+    runId,
     summaryPath,
     reportPath,
     registryPath,
@@ -461,6 +502,9 @@ export function createBaseGovernanceCommandDocsSummary(overrides = {}) {
     ),
     error: null,
     ...overrides,
+    latestSummaryPath,
+    outputDir,
+    runId,
     summaryPath,
     reportPath,
     registryPath,
@@ -498,6 +542,7 @@ export async function runGovernanceCommandDocsVerify(options = {}) {
       [
         "Governance command docs check passed.",
         `Summary: ${summaryPath}.`,
+        `Latest: ${latestSummaryPath}.`,
         `Report: ${reportPath}.`
       ].join(" ")
     );

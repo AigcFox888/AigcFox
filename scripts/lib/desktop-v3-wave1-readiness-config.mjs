@@ -7,17 +7,22 @@ import { resolveLatestVerificationSummaryPath } from "./verification-summary-out
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, "..", "..");
 const documentFiles = [
-  "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
   "docs/README.md",
   "docs/248-autonomous-execution-baseline.md",
   "docs/257-desktop-v3-replatform-proposal.md",
   "docs/258-desktop-v3-technical-baseline.md",
   "docs/259-desktop-v3-detailed-design.md",
+  "docs/269-desktop-v3-tauri-2-governance-baseline.md",
   "docs/260-desktop-v3-wave1-execution-baseline.md",
   "docs/263-desktop-v3-wave1-acceptance-matrix.md",
   "docs/264-desktop-v3-wave1-execution-runbook.md",
   "docs/267-desktop-v3-github-actions-baseline.md",
-  "docs/269-desktop-v3-tauri-2-governance-baseline.md",
+  "docs/268-desktop-v3-clean-pr-closeout.md",
+  "docs/ui-client/system.md",
+  "docs/ui-client/layout.md",
+  "docs/ui-client/components.md",
+  "docs/ui-client/interaction.md",
+  "docs/ui-client/charts.md",
   "apps/desktop-v3/README.md",
 ];
 
@@ -51,12 +56,82 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
     hostPlatform: process.platform,
     isWslHost: isDesktopV3Wave1WslHost(env),
     latestSummaryPath: resolveLatestVerificationSummaryPath(rootDir, "desktop-v3-wave1-readiness-summary.json"),
-    outputDir,
-    packagedAppSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
+    commandGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
-      "desktop-v3-packaged-app-smoke-summary.json",
+      "desktop-v3-command-governance-summary.json",
     ),
-    packagedAppSmokeOutputDir: path.join(outputDir, "packaged-app-smoke"),
+    commandGovernanceOutputDir: path.join(outputDir, "command-governance"),
+    backendClientGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-backend-client-governance-summary.json",
+    ),
+    backendClientGovernanceOutputDir: path.join(outputDir, "backend-client-governance"),
+    appShellGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-app-shell-governance-summary.json",
+    ),
+    appShellGovernanceOutputDir: path.join(outputDir, "app-shell-governance"),
+    supportGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-support-governance-summary.json",
+    ),
+    supportGovernanceOutputDir: path.join(outputDir, "support-governance"),
+    errorContractGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-error-contract-governance-summary.json",
+    ),
+    errorContractGovernanceOutputDir: path.join(outputDir, "error-contract-governance"),
+    pageGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-page-governance-summary.json",
+    ),
+    pageGovernanceOutputDir: path.join(outputDir, "page-governance"),
+    runtimeSkeletonGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-runtime-skeleton-governance-summary.json",
+    ),
+    runtimeSkeletonGovernanceOutputDir: path.join(outputDir, "runtime-skeleton-governance"),
+    runtimeContractGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-runtime-contract-governance-summary.json",
+    ),
+    runtimeContractGovernanceOutputDir: path.join(outputDir, "runtime-contract-governance"),
+    runtimeAdapterGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-runtime-adapter-governance-summary.json",
+    ),
+    runtimeAdapterGovernanceOutputDir: path.join(outputDir, "runtime-adapter-governance"),
+    featureGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-feature-governance-summary.json",
+    ),
+    featureGovernanceOutputDir: path.join(outputDir, "feature-governance"),
+    hostGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-host-governance-summary.json",
+    ),
+    hostGovernanceOutputDir: path.join(outputDir, "host-governance"),
+    platformConfigGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-platform-config-governance-summary.json",
+    ),
+    platformConfigGovernanceOutputDir: path.join(outputDir, "platform-config-governance"),
+    updaterGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-updater-governance-summary.json",
+    ),
+    updaterGovernanceOutputDir: path.join(outputDir, "updater-governance"),
+    capabilityGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-capability-governance-summary.json",
+    ),
+    capabilityGovernanceOutputDir: path.join(outputDir, "capability-governance"),
+    localdbGovernanceLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-localdb-governance-summary.json",
+    ),
+    localdbGovernanceOutputDir: path.join(outputDir, "localdb-governance"),
+    outputDir,
     profile,
     responsiveSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
@@ -64,6 +139,11 @@ export function resolveDesktopV3Wave1ReadinessConfig(options = {}) {
     ),
     responsiveSmokeOutputDir: path.join(outputDir, "responsive-smoke"),
     rootDir,
+    runtimeBoundaryLatestSummaryPath: resolveLatestVerificationSummaryPath(
+      rootDir,
+      "desktop-v3-runtime-boundary-summary.json",
+    ),
+    runtimeBoundaryOutputDir: path.join(outputDir, "runtime-boundary"),
     runId,
     summaryPath: path.join(outputDir, "summary.json"),
     tauriDevSmokeLatestSummaryPath: resolveLatestVerificationSummaryPath(

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { desktopV3RoutePathById } from "@/app/router/route-registry";
 import { notify } from "@/lib/notify";
 
 function isEditableElement(target: EventTarget | null): boolean {
@@ -32,7 +33,7 @@ export function useKeyboardShortcuts() {
 
       if (event.key === ",") {
         event.preventDefault();
-        void navigate("/preferences");
+        void navigate(desktopV3RoutePathById.preferences);
         return;
       }
 

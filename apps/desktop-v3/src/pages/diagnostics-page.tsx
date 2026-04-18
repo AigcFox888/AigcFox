@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RefreshCcw } from "lucide-react";
 
 import { getDiagnosticsOverview } from "@/features/diagnostics/diagnostics-api";
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildErrorSupportDetails } from "@/lib/errors/error-support-details";
 import { typography } from "@/lib/typography";
+
+const diagnosticsOverviewQueryKey = ["diagnostics", "overview"] as const;
 
 function DiagnosticsCard({
   "data-testid": dataTestId,
@@ -45,13 +47,16 @@ function DiagnosticsCard({
 }
 
 export function DiagnosticsPage() {
+  const queryClient = useQueryClient();
   const diagnosticsOverviewQuery = useQuery({
-    queryKey: ["diagnostics", "overview"],
+    queryKey: diagnosticsOverviewQueryKey,
     queryFn: getDiagnosticsOverview,
+    refetchOnWindowFocus: false,
+    staleTime: 30_000,
   });
 
   const refetchAll = async () => {
-    await diagnosticsOverviewQuery.refetch();
+    await queryClient.invalidateQueries({ queryKey: diagnosticsOverviewQueryKey });
   };
 
   useEffect(() => {
@@ -63,7 +68,7 @@ export function DiagnosticsPage() {
     return () => {
       window.removeEventListener("desktop-v3:refresh-requested", handleRefresh);
     };
-  }, [diagnosticsOverviewQuery]);
+  }, [queryClient]);
 
   if (diagnosticsOverviewQuery.isLoading) {
     return <LoadingState description="正在读取本地 runtime 与远端健康快照。" title="加载诊断信息" />;
@@ -82,7 +87,19 @@ export function DiagnosticsPage() {
     );
   }
 
-  const diagnosticsOverview = diagnosticsOverviewQuery.data!;
+  if (!diagnosticsOverviewQuery.data) {
+    return (
+      <ErrorState
+        description="诊断命令返回了空结果。请重新触发一次刷新；如果仍为空，说明 runtime 契约已经漂移。"
+        onRetry={() => {
+          void refetchAll();
+        }}
+        title="诊断结果异常"
+      />
+    );
+  }
+
+  const diagnosticsOverview = diagnosticsOverviewQuery.data;
   const diagnostics = diagnosticsOverview.local;
   const liveness = diagnosticsOverview.liveness;
   const readiness = diagnosticsOverview.readiness;

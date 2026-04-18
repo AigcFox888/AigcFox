@@ -1,6 +1,7 @@
 import {
   desktopV3ResponsiveSmokeRoutes,
   desktopV3ResponsiveSmokeViewports,
+  findDesktopV3ResponsiveSmokeRoute,
 } from "./desktop-v3-smoke-contract.mjs";
 
 function resolveOutputConfig(kind, config = {}) {
@@ -51,7 +52,7 @@ export function buildDesktopV3ResponsiveSmokeSummary(config = {}) {
     preview: {
       logPath: `${resolvedConfig.outputDir}/desktop-v3-preview.log`,
       startedByScript: true,
-      url: "http://127.0.0.1:1421",
+      url: "http://127.0.0.1:31421",
     },
     requestFailures: [],
     routes: desktopV3ResponsiveSmokeViewports.flatMap((viewport) =>
@@ -92,6 +93,11 @@ export function buildDesktopV3ResponsiveSmokeSummary(config = {}) {
 
 export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
   const resolvedConfig = resolveOutputConfig("desktop-v3-tauri-dev-smoke", config);
+  const dashboardRoute = findDesktopV3ResponsiveSmokeRoute("dashboard");
+
+  if (!dashboardRoute) {
+    throw new Error("desktop-v3 smoke route truth is missing the dashboard route.");
+  }
 
   return {
     appId: "aigcfox-desktop-v3",
@@ -116,24 +122,24 @@ export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
       devRequests: [
         {
           method: "GET",
-          url: "http://127.0.0.1:1420/",
+          url: "http://127.0.0.1:31420/",
         },
       ],
       mainWindowNavigations: [
         {
           allowed: true,
-          url: "http://127.0.0.1:1420/#/",
+          url: `http://127.0.0.1:31420/${dashboardRoute.hash}`,
         },
       ],
       pageLoads: [
         {
           event: "finished",
-          url: "http://127.0.0.1:1420/#/",
+          url: `http://127.0.0.1:31420/${dashboardRoute.hash}`,
         },
       ],
       rendererBoots: [
         {
-          route: "#/",
+          route: dashboardRoute.hash,
           runtime: "tauri",
           stage: "app",
         },
@@ -141,68 +147,6 @@ export function buildDesktopV3TauriDevSmokeSummary(config = {}) {
     },
     outputDir: resolvedConfig.outputDir,
     postReadyDelayMs: 0,
-    status: "passed",
-    summaryPath: resolvedConfig.summaryPath,
-    timeoutMs: 90000,
-    warnings: [],
-    westonLogPath: "/mnt/wslg/weston.log",
-  };
-}
-
-export function buildDesktopV3PackagedAppSmokeSummary(config = {}) {
-  const resolvedConfig = resolveOutputConfig("desktop-v3-packaged-app-smoke", config);
-
-  return {
-    appId: "aigcfox-desktop-v3",
-    appliedEnvOverrides: {
-      AIGCFOX_DESKTOP_V3_TRACE_COMMANDS: "1",
-      LIBGL_ALWAYS_SOFTWARE: "1",
-    },
-    binaryPath: "/workspace/apps/desktop-v3/src-tauri/target/release/aigcfox-desktop-v3",
-    checkedAt: "2026-04-14T10:00:00.000Z",
-    error: null,
-    initialRoute: "/preferences",
-    latestSummaryPath: resolvedConfig.latestSummaryPath,
-    logPath: `${resolvedConfig.outputDir}/packaged-app.log`,
-    markers: {
-      documentBootSeen: true,
-      mainWindowPageLoadFinished: true,
-      mainWindowPageLoadStarted: true,
-      rendererBootSeen: true,
-      wslgWindowRegistered: true,
-    },
-    observed: {
-      commandInvocations: [
-        "desktop_report_renderer_boot",
-        "desktop_get_theme_preference",
-      ],
-      devRequests: [],
-      mainWindowNavigations: [
-        {
-          allowed: true,
-          url: "tauri://localhost#/preferences",
-        },
-      ],
-      pageLoads: [
-        {
-          event: "finished",
-          url: "tauri://localhost#/preferences",
-        },
-      ],
-      rendererBoots: [
-        {
-          route: "#/preferences",
-          runtime: "tauri",
-          stage: "app",
-        },
-      ],
-    },
-    outputDir: resolvedConfig.outputDir,
-    postReadyDelayMs: 750,
-    requiredCommandInvocations: [
-      "desktop_report_renderer_boot",
-      "desktop_get_theme_preference",
-    ],
     status: "passed",
     summaryPath: resolvedConfig.summaryPath,
     timeoutMs: 90000,

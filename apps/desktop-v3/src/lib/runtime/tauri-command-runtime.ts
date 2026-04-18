@@ -5,7 +5,7 @@ import type {
 } from "@/lib/runtime/tauri-command-types";
 import { normalizeCommandError } from "@/lib/errors/normalize-command-error";
 import type { ThemeMode } from "@/lib/runtime/contracts";
-import type { DesktopRuntime } from "@/lib/runtime/desktop-runtime";
+import type { DesktopRuntime, RendererBootStage } from "@/lib/runtime/desktop-runtime";
 import { loadTauriInvoke } from "@/lib/runtime/tauri-bridge";
 import type { TauriInvoke } from "@/lib/runtime/tauri-invoke";
 
@@ -35,6 +35,14 @@ export class TauriCommandRuntime implements DesktopRuntime {
 
   getThemePreference() {
     return this.invokeCommand("desktop_get_theme_preference");
+  }
+
+  reportRendererBoot(route: string, runtime: string, stage: RendererBootStage) {
+    return this.invokeCommand("desktop_report_renderer_boot", {
+      route,
+      runtime,
+      stage,
+    });
   }
 
   setThemePreference(mode: ThemeMode) {

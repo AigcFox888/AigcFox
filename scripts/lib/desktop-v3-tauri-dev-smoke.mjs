@@ -2,7 +2,11 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-export { detectDesktopV3DevMarkers, stripAnsi } from "./desktop-v3-tauri-dev-log-signals.mjs";
+export {
+  detectDesktopV3DevMarkers,
+  detectDesktopV3DevStartupFailure,
+  stripAnsi,
+} from "./desktop-v3-tauri-dev-log-signals.mjs";
 import { resolveLatestVerificationSummaryPath } from "./verification-summary-output.mjs";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -25,6 +29,7 @@ export function resolveDesktopV3TauriDevSmokeConfig(env = process.env) {
 
   return {
     appId: env.AIGCFOX_DESKTOP_V3_TAURI_DEV_APP_ID?.trim() || "aigcfox-desktop-v3",
+    devServerPort: parseInteger(env.AIGCFOX_DESKTOP_V3_TAURI_DEV_PORT, 31420),
     latestSummaryPath: resolveLatestVerificationSummaryPath(
       rootDir,
       "desktop-v3-tauri-dev-smoke-summary.json",

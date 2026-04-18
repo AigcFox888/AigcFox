@@ -1,11 +1,8 @@
 use std::error::Error;
 
-const MAIN_WINDOW_INITIAL_ROUTE_ENV: &str = "AIGCFOX_DESKTOP_V3_WINDOW_INITIAL_ROUTE";
-
 pub fn build_main_window_initialization_script() -> Result<Option<String>, Box<dyn Error>> {
-    build_main_window_initialization_script_for_route(
-        std::env::var(MAIN_WINDOW_INITIAL_ROUTE_ENV).ok().as_deref(),
-    )
+    let route = crate::env::optional_env(crate::env::MAIN_WINDOW_INITIAL_ROUTE_ENV);
+    build_main_window_initialization_script_for_route(route.as_deref())
 }
 
 fn resolve_main_window_initial_route(raw_route: Option<&str>) -> Result<Option<String>, Box<dyn Error>> {
@@ -15,7 +12,8 @@ fn resolve_main_window_initial_route(raw_route: Option<&str>) -> Result<Option<S
         None => Ok(None),
         Some("/") | Some("/diagnostics") | Some("/preferences") => Ok(normalized_route),
         Some(other) => Err(format!(
-            "{MAIN_WINDOW_INITIAL_ROUTE_ENV} must be one of: /, /diagnostics, /preferences (received {other})"
+            "{} must be one of: /, /diagnostics, /preferences (received {other})",
+            crate::env::MAIN_WINDOW_INITIAL_ROUTE_ENV
         )
         .into()),
     }

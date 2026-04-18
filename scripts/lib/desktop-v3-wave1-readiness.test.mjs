@@ -22,22 +22,42 @@ describe("desktop-v3 wave1 readiness config", () => {
     expect(config.outputDir).toContain("desktop-v3-wave1-readiness-2026-04-13T10-20-30-456Z");
     expect(config.documentFiles).toEqual(
       expect.arrayContaining([
-        "docs/281-desktop-v3-post-reinstall-recovery-entry.md",
+        "docs/README.md",
         "docs/257-desktop-v3-replatform-proposal.md",
         "docs/258-desktop-v3-technical-baseline.md",
         "docs/259-desktop-v3-detailed-design.md",
+        "docs/269-desktop-v3-tauri-2-governance-baseline.md",
         "docs/260-desktop-v3-wave1-execution-baseline.md",
         "docs/263-desktop-v3-wave1-acceptance-matrix.md",
         "docs/264-desktop-v3-wave1-execution-runbook.md",
         "docs/267-desktop-v3-github-actions-baseline.md",
-        "docs/269-desktop-v3-tauri-2-governance-baseline.md",
+        "docs/268-desktop-v3-clean-pr-closeout.md",
+        "docs/ui-client/system.md",
+        "docs/ui-client/layout.md",
+        "docs/ui-client/components.md",
+        "docs/ui-client/interaction.md",
+        "docs/ui-client/charts.md",
         "apps/desktop-v3/README.md",
       ]),
     );
     expect(config.latestSummaryPath).toContain(
       path.join("output", "verification", "latest", "desktop-v3-wave1-readiness-summary.json"),
     );
-    expect(config.packagedAppSmokeOutputDir).toBe(path.join(config.outputDir, "packaged-app-smoke"));
+    expect(config.backendClientGovernanceOutputDir).toBe(path.join(config.outputDir, "backend-client-governance"));
+    expect(config.appShellGovernanceOutputDir).toBe(path.join(config.outputDir, "app-shell-governance"));
+    expect(config.pageGovernanceOutputDir).toBe(path.join(config.outputDir, "page-governance"));
+    expect(config.supportGovernanceOutputDir).toBe(path.join(config.outputDir, "support-governance"));
+    expect(config.errorContractGovernanceOutputDir).toBe(path.join(config.outputDir, "error-contract-governance"));
+    expect(config.capabilityGovernanceOutputDir).toBe(path.join(config.outputDir, "capability-governance"));
+    expect(config.commandGovernanceOutputDir).toBe(path.join(config.outputDir, "command-governance"));
+    expect(config.featureGovernanceOutputDir).toBe(path.join(config.outputDir, "feature-governance"));
+    expect(config.hostGovernanceOutputDir).toBe(path.join(config.outputDir, "host-governance"));
+    expect(config.localdbGovernanceOutputDir).toBe(path.join(config.outputDir, "localdb-governance"));
+    expect(config.platformConfigGovernanceOutputDir).toBe(path.join(config.outputDir, "platform-config-governance"));
+    expect(config.runtimeAdapterGovernanceOutputDir).toBe(path.join(config.outputDir, "runtime-adapter-governance"));
+    expect(config.runtimeContractGovernanceOutputDir).toBe(path.join(config.outputDir, "runtime-contract-governance"));
+    expect(config.runtimeSkeletonGovernanceOutputDir).toBe(path.join(config.outputDir, "runtime-skeleton-governance"));
+    expect(config.updaterGovernanceOutputDir).toBe(path.join(config.outputDir, "updater-governance"));
     expect(config.responsiveSmokeOutputDir).toBe(path.join(config.outputDir, "responsive-smoke"));
     expect(config.tauriDevSmokeOutputDir).toBe(path.join(config.outputDir, "tauri-dev-smoke"));
   });
@@ -67,13 +87,74 @@ describe("desktop-v3 wave1 readiness steps", () => {
     const steps = buildDesktopV3Wave1ReadinessSteps(config);
 
     expect(steps.at(0)?.key).toBe("desktop-v3-document-check");
+    expect(steps.at(1)?.key).toBe("desktop-v3-runtime-boundary");
+    expect(steps.at(2)?.key).toBe("desktop-v3-localdb-governance");
+    expect(steps.at(3)?.key).toBe("desktop-v3-backend-client-governance");
+    expect(steps.at(4)?.key).toBe("desktop-v3-app-shell-governance");
+    expect(steps.at(5)?.key).toBe("desktop-v3-page-governance");
+    expect(steps.at(6)?.key).toBe("desktop-v3-support-governance");
+    expect(steps.at(7)?.key).toBe("desktop-v3-runtime-skeleton-governance");
+    expect(steps.at(8)?.key).toBe("desktop-v3-runtime-contract-governance");
+    expect(steps.at(9)?.key).toBe("desktop-v3-error-contract-governance");
+    expect(steps.at(10)?.key).toBe("desktop-v3-runtime-adapter-governance");
+    expect(steps.at(11)?.key).toBe("desktop-v3-feature-governance");
+    expect(steps.at(12)?.key).toBe("desktop-v3-command-governance");
+    expect(steps.at(13)?.key).toBe("desktop-v3-capability-governance");
+    expect(steps.at(14)?.key).toBe("desktop-v3-platform-config-governance");
+    expect(steps.at(15)?.key).toBe("desktop-v3-host-governance");
+    expect(steps.at(16)?.key).toBe("desktop-v3-updater-governance");
     expect(steps.map((step) => step.key)).toContain("desktop-v3-tauri-dev-smoke");
-    expect(steps.map((step) => step.key)).toContain("desktop-v3-packaged-app-smoke");
+    expect(steps.map((step) => step.key)).not.toContain("desktop-v3-packaged-app-smoke");
+    expect(steps.find((step) => step.key === "desktop-v3-runtime-boundary")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_RUNTIME_BOUNDARY_OUTPUT_DIR: "/tmp/wave1-ready/runtime-boundary",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-localdb-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_LOCALDB_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/localdb-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-backend-client-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_BACKEND_CLIENT_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/backend-client-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-app-shell-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_APP_SHELL_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/app-shell-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-page-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_PAGE_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/page-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-support-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_SUPPORT_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/support-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-runtime-skeleton-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_RUNTIME_SKELETON_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/runtime-skeleton-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-runtime-contract-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_RUNTIME_CONTRACT_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/runtime-contract-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-error-contract-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_ERROR_CONTRACT_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/error-contract-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-runtime-adapter-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_RUNTIME_ADAPTER_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/runtime-adapter-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-feature-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_FEATURE_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/feature-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-command-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_COMMAND_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/command-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-capability-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_CAPABILITY_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/capability-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-platform-config-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_PLATFORM_CONFIG_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/platform-config-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-host-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_HOST_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/host-governance",
+    });
+    expect(steps.find((step) => step.key === "desktop-v3-updater-governance")?.env).toEqual({
+      AIGCFOX_DESKTOP_V3_UPDATER_GOVERNANCE_OUTPUT_DIR: "/tmp/wave1-ready/updater-governance",
+    });
     expect(steps.find((step) => step.key === "desktop-v3-responsive-smoke")?.env).toEqual({
       AIGCFOX_DESKTOP_V3_SMOKE_OUTPUT_DIR: "/tmp/wave1-ready/responsive-smoke",
-    });
-    expect(steps.find((step) => step.key === "desktop-v3-packaged-app-smoke")?.env).toEqual({
-      AIGCFOX_DESKTOP_V3_PACKAGED_APP_SMOKE_OUTPUT_DIR: "/tmp/wave1-ready/packaged-app-smoke",
     });
   });
 
@@ -105,7 +186,23 @@ describe("desktop-v3 wave1 readiness steps", () => {
 
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-smoke");
     expect(steps.map((step) => step.key)).not.toContain("desktop-v3-tauri-dev-manual");
-    expect(steps.at(-1)?.key).toBe("desktop-v3-linux-package");
+    expect(steps.at(-1)?.key).toBe("desktop-v3-responsive-smoke");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-app-shell-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-page-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-support-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-backend-client-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-capability-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-command-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-error-contract-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-localdb-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-platform-config-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-host-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-feature-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-adapter-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-contract-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-skeleton-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-updater-governance");
+    expect(steps.map((step) => step.key)).toContain("desktop-v3-runtime-boundary");
   });
 });
 

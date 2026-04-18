@@ -33,8 +33,7 @@ const themeOptions: Array<{ description: string; label: string; value: ThemeMode
 
 export function PreferencesPage() {
   const queryClient = useQueryClient();
-  const themeMode = useThemePreferenceStore((state) => state.themeMode);
-  const setThemeModeInStore = useThemePreferenceStore((state) => state.setThemeMode);
+  const appliedThemeMode = useThemePreferenceStore((state) => state.themeMode);
 
   const preferenceQuery = useQuery({
     queryKey: ["preferences", "theme-mode"],
@@ -45,7 +44,6 @@ export function PreferencesPage() {
   const updateThemeMutation = useMutation({
     mutationFn: setThemePreference,
     onSuccess: (preference) => {
-      setThemeModeInStore(preference.mode);
       queryClient.setQueryData(["preferences", "theme-mode"], preference);
       notify.success("主题偏好已写入本地 SQLite。");
     },
@@ -53,6 +51,7 @@ export function PreferencesPage() {
       notify.error(error instanceof Error ? error.message : "写入主题偏好失败。");
     },
   });
+  const selectedThemeMode = preferenceQuery.data?.mode ?? null;
 
   if (preferenceQuery.isLoading) {
     return <LoadingState description="正在读取本地主题偏好。" title="加载本地偏好" />;
@@ -102,14 +101,15 @@ export function PreferencesPage() {
                   <div className="text-sm text-muted-foreground">{option.description}</div>
                 </div>
                 <Button
+                  data-theme-applied={appliedThemeMode === option.value ? "true" : "false"}
                   data-testid={`desktop-v3-theme-apply-${option.value}`}
                   disabled={updateThemeMutation.isPending}
                   onClick={() => {
                     updateThemeMutation.mutate(option.value);
                   }}
-                  variant={themeMode === option.value ? "default" : "outline"}
+                  variant={selectedThemeMode === option.value ? "default" : "outline"}
                 >
-                  {themeMode === option.value ? "当前模式" : "应用"}
+                  {selectedThemeMode === option.value ? "当前模式" : "应用"}
                 </Button>
               </div>
             </div>

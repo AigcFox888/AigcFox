@@ -33,6 +33,10 @@ export class MockCommandRuntime implements DesktopRuntime {
     return Promise.resolve(buildMockThemePreference(this.themeMode));
   }
 
+  reportRendererBoot() {
+    return Promise.resolve();
+  }
+
   setThemePreference(mode: ThemeMode) {
     if (!mode) {
       return Promise.reject(

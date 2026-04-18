@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, LayoutGrid, ShieldCheck, Workflow } from "lucide-react";
 
+import { desktopV3RoutePathById } from "@/app/router/route-registry";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { typography } from "@/lib/typography";
 
@@ -24,12 +25,12 @@ const highlights = [
 
 const quickLinks = [
   {
-    href: "/diagnostics",
+    href: desktopV3RoutePathById.diagnostics,
     label: "查看运行诊断",
     description: "验证本地 runtime、SQLite baseline 与远端健康探针。",
   },
   {
-    href: "/preferences",
+    href: desktopV3RoutePathById.preferences,
     label: "查看本地偏好",
     description: "验证 user_preferences 的最小本地链路与主题切换。",
   },

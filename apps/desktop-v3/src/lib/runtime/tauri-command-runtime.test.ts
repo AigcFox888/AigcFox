@@ -18,6 +18,21 @@ describe("TauriCommandRuntime", () => {
     expect(invoke).toHaveBeenCalledWith("desktop_set_theme_preference", { mode: "dark" });
   });
 
+  it("routes renderer boot telemetry through the command runtime boundary", async () => {
+    const invoke = vi.fn(async () => undefined);
+    const runtime = new TauriCommandRuntime({
+      loadInvoke: vi.fn().mockResolvedValue(invoke as TauriInvoke),
+    });
+
+    await runtime.reportRendererBoot("#/diagnostics", "tauri", "app");
+
+    expect(invoke).toHaveBeenCalledWith("desktop_report_renderer_boot", {
+      route: "#/diagnostics",
+      runtime: "tauri",
+      stage: "app",
+    });
+  });
+
   it("normalizes tauri invoke failures into app errors", async () => {
     const invoke = vi.fn(async () => {
       throw new Error(

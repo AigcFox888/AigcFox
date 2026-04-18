@@ -6,7 +6,7 @@ use crate::runtime::DesktopRuntime;
 use crate::runtime::models::{ThemeMode, ThemePreference};
 
 #[tauri::command]
-pub fn desktop_get_theme_preference(
+pub async fn desktop_get_theme_preference(
     runtime: State<'_, DesktopRuntime>,
 ) -> Result<ThemePreference, CommandError> {
     trace_desktop_command("desktop_get_theme_preference");
@@ -14,7 +14,7 @@ pub fn desktop_get_theme_preference(
 }
 
 #[tauri::command]
-pub fn desktop_set_theme_preference(
+pub async fn desktop_set_theme_preference(
     mode: ThemeMode,
     runtime: State<'_, DesktopRuntime>,
 ) -> Result<ThemePreference, CommandError> {
